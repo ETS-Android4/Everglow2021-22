@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.Tutorials;
 
 public class Tutorial {
     public static void main(String[] args) {
