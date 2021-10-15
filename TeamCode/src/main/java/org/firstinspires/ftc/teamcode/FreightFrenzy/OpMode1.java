@@ -21,6 +21,10 @@ public class OpMode1 extends LinearOpMode {
         while (opModeIsActive()) {
             drivingSystem.driveByJoystick(gamepad1.left_stick_x, gamepad1.left_stick_y,
                     gamepad1.right_stick_x);
+
+            //
+
+            gamepad.update();
         }
     }
 }
