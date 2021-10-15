@@ -30,22 +30,14 @@ public class DrivingSystem {
 
         if(Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1
         || Math.abs(backRightPower) > 1 || Math.abs(backRightPower) > 1) {
-            frontRightPower /= Math.max(
+            double norm = Math.max(
                     Math.max(Math.abs(frontRightPower), Math.abs(frontLeftPower)),
                     Math.max(Math.abs(backRightPower), Math.abs(backLeftPower))
             );
-            frontLeftPower /= Math.max(
-                    Math.max(Math.abs(frontRightPower), Math.abs(frontLeftPower)),
-                    Math.max(Math.abs(backRightPower), Math.abs(backLeftPower))
-            );
-            backRightPower /= Math.max(
-                    Math.max(Math.abs(frontRightPower), Math.abs(frontLeftPower)),
-                    Math.max(Math.abs(backRightPower), Math.abs(backLeftPower))
-            );
-            backLeftPower /= Math.max(
-                    Math.max(Math.abs(frontRightPower), Math.abs(frontLeftPower)),
-                    Math.max(Math.abs(backRightPower), Math.abs(backLeftPower))
-            );
+            frontRightPower /= norm;
+            frontLeftPower /= norm;
+            backRightPower /= norm;
+            backLeftPower /= norm;
         }
 
         frontRight.setPower(frontRightPower);
