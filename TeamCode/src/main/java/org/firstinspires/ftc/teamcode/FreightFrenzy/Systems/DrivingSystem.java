@@ -4,21 +4,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
 public class DrivingSystem {
     DcMotor frontRight;
     DcMotor frontLeft;
     DcMotor backRight;
     DcMotor backLeft;
 
-    BNO055IMU imu;
 
     public DrivingSystem(LinearOpMode opMode) {
         this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");
         this.frontLeft = opMode.hardwareMap.get(DcMotor.class, "front_left");
         this.backRight = opMode.hardwareMap.get(DcMotor.class, "back_right");
         this.backLeft = opMode.hardwareMap.get(DcMotor.class, "back_left");
-
-        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
     }
 
     public void driveByJoystick(double x1, double y1,
