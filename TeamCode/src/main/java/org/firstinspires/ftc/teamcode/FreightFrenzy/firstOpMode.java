@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 
 
+*/
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -30,7 +32,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+ *//*
+
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 public class firstOpMode extends LinearOpMode {
@@ -82,3 +85,4 @@ public class firstOpMode extends LinearOpMode {
     }
 }
 
+*/
