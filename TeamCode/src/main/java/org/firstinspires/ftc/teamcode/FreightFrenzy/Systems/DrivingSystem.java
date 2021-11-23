@@ -2,11 +2,6 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class DrivingSystem {
     DcMotor frontRight;
@@ -24,10 +19,10 @@ public class DrivingSystem {
 
     public void driveByJoystick(double x1, double y1,
                                 double x2) {
-        double frontRightPower = -x1-y1-x2;
-        double frontLeftPower = -(-y1+x1+x2);
-        double backRightPower = -y1+x1-x2;
-        double backLeftPower = -(-y1-x1+x2);
+        double frontRightPower = x1+y1+x2;
+        double frontLeftPower = -y1+x1+x2;
+        double backRightPower = y1-x1+x2;
+        double backLeftPower = -y1-x1+x2;
 
         if(Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1
         || Math.abs(backRightPower) > 1 || Math.abs(backRightPower) > 1) {
