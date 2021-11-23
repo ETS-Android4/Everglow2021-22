@@ -40,7 +40,6 @@ public class DrivingSystem {
         frontLeft.setPower(frontLeftPower);
         backRight.setPower(backRightPower);
         backLeft.setPower(backLeftPower);
-
     }
 
     public void stöp() {
