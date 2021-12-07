@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
+import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.NormalizeAngle;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 
 public class DrivingSystem {
     private final DcMotor frontRight;
@@ -52,25 +55,8 @@ public class DrivingSystem {
     }
 
     private double getAngleDeviation(){
-        return angleSubtraction(getCurrentAngle(), targetAngle);
+        return MathUtils.relativeAngle(targetAngle, getCurrentAngle());
     }
-
-    /**
-     * Given Two Angles, return the distance between the two angles, ensuring that the difference is less than 180 degrees.
-     * If angle2 > angle1, the return value will be positive. If angle1 > angle2, the value will be negative.
-     */
-    static private double angleSubtraction(double angle1, double angle2) {
-        double angleDeviation = angle2 - angle1;
-        if (angleDeviation < -180){
-            return 360 + angleDeviation;
-        }
-        else if(angleDeviation > 180){
-            return -360 + angleDeviation;
-        }else {
-            return angleDeviation;
-        }
-    }
-
 
     public void driveByJoystick(double x1, double y1,
                                 double x2) {
@@ -95,6 +81,25 @@ public class DrivingSystem {
         frontLeft.setPower(frontLeftPower);
         backRight.setPower(backRightPower);
         backLeft.setPower(backLeftPower);
+    }
+
+    public void rotateInPlace(double rotationDegrees){
+        rotationDegrees = NormalizeAngle(rotationDegrees);
+        double startAngle = getCurrentAngle();
+        targetAngle = NormalizeAngle(startAngle + rotationDegrees);
+        boolean rotatingClockwise = rotationDegrees < 0;
+        if (rotatingClockwise){
+            driveByJoystick(0,0, -1);
+            while (getAngleDeviation() < 0){
+                // wait
+            }
+        }else {
+            driveByJoystick(0,0, 1);
+            while (getAngleDeviation() > 0){
+                // wait
+            }
+        }
+        stöp();
     }
 
     public void stöp() {
