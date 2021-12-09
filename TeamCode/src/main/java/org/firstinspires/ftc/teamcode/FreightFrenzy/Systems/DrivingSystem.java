@@ -145,4 +145,17 @@ public class DrivingSystem {
         backRight.setPower(0);
         backLeft.setPower(0);
     }
+
+    public void DriveStraight(double distance){
+        ResetDistance();
+        final double WHEEL_Radius_CM   = 4.8 ;
+        double AverageMotars = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition())/4;
+        while((distance*1440)/(2*Math.PI*WHEEL_Radius_CM) > AverageMotars){
+            driveByJoystick(0,0.5,0);
+        }
+    }
+
+
+
+
 }
