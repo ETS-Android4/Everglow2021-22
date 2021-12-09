@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
@@ -10,13 +11,14 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 public class Autonomous extends LinearOpMode {
     DrivingSystem   drivingSystem;
     EverglowGamepad gamepad;
+    ArmSystem armSystem;
 
     @Override
     public void runOpMode() {
         drivingSystem = new DrivingSystem(this);
         gamepad       = new EverglowGamepad(gamepad1);
-
-
+        armSystem = new ArmSystem(this);
+        boolean toggle =false;
         waitForStart();
 
         while (opModeIsActive()) {
@@ -30,7 +32,15 @@ public class Autonomous extends LinearOpMode {
             if (gamepad.buttonPress("b")) {
                 drivingSystem.rotateInPlace(90);
             }
-
+            if(gamepad.buttonPress("y")){
+                if(!toggle){
+                    armSystem.pull();
+                    toggle = true;
+                } else {
+                    armSystem.push();
+                    toggle = false;
+                }
+            }
 
             gamepad.update();
             telemetry.update();

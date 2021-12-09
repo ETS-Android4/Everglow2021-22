@@ -155,16 +155,7 @@ public class DrivingSystem {
         }
     }
 
-    public void ResetDistance(){
-        this.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
+
 
 
 }
