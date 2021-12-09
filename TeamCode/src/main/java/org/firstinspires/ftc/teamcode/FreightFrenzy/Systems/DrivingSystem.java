@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 
 public class DrivingSystem {
     private final DcMotor frontRight;
@@ -59,7 +58,7 @@ public class DrivingSystem {
     }
 
     private double getAngleDeviation(){
-        return MathUtils.relativeAngle(targetAngle, getCurrentAngle());
+        return NormalizeAngle(getCurrentAngle() - targetAngle);
     }
 
     public void driveByJoystick(double x1, double y1,
@@ -87,21 +86,43 @@ public class DrivingSystem {
         backLeft.setPower(backLeftPower);
     }
 
-    public void rotateInPlace(double rotationDegrees){
+    public void rotateInPlace(double rotationDegrees, double maxSpeed, double minSpeed, boolean mock){
+        final int TIMES_TO_PASS_TARGET = 4;
+
         targetAngle = NormalizeAngle(getCurrentAngle() + rotationDegrees);
+        this.opMode.telemetry.addData("targetAngle",targetAngle);
+        this.opMode.telemetry.addData("isRotatingInPlace", true);
+        this.opMode.telemetry.update();
+
         boolean rotatingClockwise = getAngleDeviation() < 0;
-        if (rotatingClockwise){
-            driveByJoystick(0,0, -1);
-            while (getAngleDeviation() < 0){
-                // wait
+        int numTimesPastTarget = 0;
+        while (numTimesPastTarget < TIMES_TO_PASS_TARGET){
+            double currentAngle = getCurrentAngle();
+            double angleDeviation = getAngleDeviation();
+            double motorPower = -angleDeviation/180 * (maxSpeed - minSpeed) + minSpeed;
+            if (mock){
+                driveByJoystick(0,0,0);
+            }else {
+                driveByJoystick(0,0, motorPower);
             }
-        }else {
-            driveByJoystick(0,0, 1);
-            while (getAngleDeviation() > 0){
-                // wait
+            if (angleDeviation > 0 && rotatingClockwise){
+                numTimesPastTarget++;
+                rotatingClockwise = false;
+            }else if(angleDeviation < 0 && !rotatingClockwise){
+                numTimesPastTarget++;
+                rotatingClockwise = true;
             }
+            this.opMode.telemetry.addData("currentAngle",currentAngle);
+            this.opMode.telemetry.addData("motorPower",motorPower);
+            this.opMode.telemetry.addData("angleDeviation", angleDeviation);
+            this.opMode.telemetry.addData("numTimesPastTarget", numTimesPastTarget);
+            this.opMode.telemetry.update();
+
         }
         stöp();
+        this.opMode.telemetry.addData("isRotatingInPlace", false);
+        this.opMode.telemetry.update();
+
     }
 
     public void driveStraight(double distance, double power){
@@ -109,9 +130,9 @@ public class DrivingSystem {
         final double WHEEL_Radius_CM   = 4.8 ;
         double AverageMotars = 0;
         this.opMode.telemetry.addData("distance",AverageMotars);
-        while((Math.abs(distance)*1440)/(2*Math.PI*WHEEL_Radius_CM) > AverageMotars){
+        while((Math.abs(distance)*535)/(2*Math.PI*WHEEL_Radius_CM) > AverageMotars){
             driveByJoystick(-getAngleDeviation()/40,power,0);
-            AverageMotars = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition())/4;
+            AverageMotars = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition())/4.0;
             AverageMotars = Math.abs(AverageMotars);
             this.opMode.telemetry.addData("distance",AverageMotars);
             this.opMode.telemetry.update();
@@ -123,7 +144,7 @@ public class DrivingSystem {
         ResetDistance();
         final double WHEEL_Radius_CM   = 4.8 ;
         double AverageMotars = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition())/4;
-        while((Math.abs(distance)*1440)/(2*Math.PI*WHEEL_Radius_CM) > AverageMotars){
+        while((Math.abs(distance)*535)/(2*Math.PI*WHEEL_Radius_CM) > AverageMotars){
             driveByJoystick(power,0,0);
             AverageMotars = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition())/4;
         }

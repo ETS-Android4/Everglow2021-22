@@ -28,8 +28,14 @@ public class Autonomous extends LinearOpMode {
             }
 
             if (gamepad.buttonPress("b")) {
-                drivingSystem.rotateInPlace(90);
+                drivingSystem.rotateInPlace(90, 0.3, 0, true);
             }
+
+            if (gamepad.buttonPress("y")) {
+                drivingSystem.rotateInPlace(90, 0.3, 0, false);
+            }
+
+
 
 
             gamepad.update();
