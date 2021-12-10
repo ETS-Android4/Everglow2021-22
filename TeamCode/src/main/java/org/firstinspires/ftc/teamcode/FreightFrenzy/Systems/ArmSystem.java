@@ -16,7 +16,9 @@ public class ArmSystem {
     }
 
     public void pull() {
-        double position = flyWheels.getCurrentPosition();
+        flyWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double position = 0;
         flyWheels.setPower(0.5);
         while (position < 268) {
             position = flyWheels.getCurrentPosition();
@@ -25,9 +27,11 @@ public class ArmSystem {
     }
 
     public void push() {
-        double position = flyWheels.getCurrentPosition();
+        flyWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double position = 0;
         flyWheels.setPower(-0.5);
-        while (position < 268) {
+        while (position > -268) {
             position = flyWheels.getCurrentPosition();
         }
         flyWheels.setPower(0);
