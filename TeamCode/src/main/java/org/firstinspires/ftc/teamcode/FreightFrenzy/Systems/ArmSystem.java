@@ -40,7 +40,9 @@ public class ArmSystem {
 
 
     public void MoveArm(Floors level){
-        double ArmPosition = arm.getCurrentPosition();
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double ArmPosition = 0;
         switch (level){
             case FIRST:
                 arm.setPower(0.5);
