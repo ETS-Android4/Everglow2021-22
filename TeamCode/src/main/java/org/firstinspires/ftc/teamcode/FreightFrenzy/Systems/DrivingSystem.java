@@ -146,6 +146,7 @@ public class DrivingSystem {
     }
 
     public void smartDriveStraight(double distance, double power) {
+        // not done
         resetDistance();
         double startAngle = getCurrentAngle();
         double targetX = distance * MathUtils.cosDegrees(startAngle);
