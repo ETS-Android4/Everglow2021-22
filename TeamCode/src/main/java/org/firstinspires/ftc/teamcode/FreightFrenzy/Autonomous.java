@@ -34,10 +34,10 @@ public class Autonomous extends LinearOpMode {
             }
             if(gamepad.buttonPress("y")){
                 if(!toggle){
-                    armSystem.pull();
+                    armSystem.collect();
                     toggle = true;
                 } else {
-                    armSystem.push();
+                    armSystem.spit();
                     toggle = false;
                 }
             }

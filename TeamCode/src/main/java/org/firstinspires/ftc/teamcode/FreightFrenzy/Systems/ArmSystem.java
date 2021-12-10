@@ -15,7 +15,7 @@ public class ArmSystem {
         this.arm = opMode.hardwareMap.get(DcMotor.class, "front_left");//arm
     }
 
-    public void pull() {
+    public void collect() {
         flyWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double position = 0;
@@ -26,7 +26,7 @@ public class ArmSystem {
         flyWheels.setPower(0);
     }
 
-    public void push() {
+    public void spit() {
         flyWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double position = 0;
