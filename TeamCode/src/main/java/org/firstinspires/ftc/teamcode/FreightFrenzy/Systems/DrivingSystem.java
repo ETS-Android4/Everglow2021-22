@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
-import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.NormalizeAngle;
+import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -23,11 +23,12 @@ public class DrivingSystem {
 
     private double targetAngle = 0;
 
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_MM    = 50;     // For figuring circumference
-    static final double COUNTS_PER_mm        = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final        double COUNTS_PER_MOTOR_REV = 535;    // eg: GoBILDA Motor Encoder
+    static final        double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    static final        double WHEEL_DIAMETER_MM    = 50;     // For figuring circumference
+    static final        double COUNTS_PER_mm        = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_MM * 3.1415);
+    public static final double WHEEL_RADIUS_CM      = 4.8;
 
     public DrivingSystem(LinearOpMode opMode) {
         this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");
@@ -58,7 +59,11 @@ public class DrivingSystem {
     }
 
     private double getAngleDeviation() {
-        return MathUtils.relativeAngle(targetAngle, getCurrentAngle());
+        return normalizeAngle(getCurrentAngle() - targetAngle);
+    }
+
+    private double motorDistanceTraveled() {
+        return (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
     }
 
     public void driveByJoystick(double x1, double y1,
@@ -86,29 +91,53 @@ public class DrivingSystem {
         backLeft.setPower(backLeftPower);
     }
 
-    public void rotateInPlace(double rotationDegrees) {
-        targetAngle = NormalizeAngle(getCurrentAngle() + rotationDegrees);
+    public void rotateInPlace(double rotationDegrees, double maxSpeed, double minSpeed, boolean mock) {
+        final int TIMES_TO_PASS_TARGET = 4;
+
+        targetAngle = normalizeAngle(getCurrentAngle() + rotationDegrees);
+        this.opMode.telemetry.addData("targetAngle", targetAngle);
+        this.opMode.telemetry.addData("isRotatingInPlace", true);
+        this.opMode.telemetry.update();
+
         boolean rotatingClockwise = getAngleDeviation() < 0;
-        if (rotatingClockwise) {
-            driveByJoystick(0, 0, -1);
-            while (getAngleDeviation() < 0) {
+        int numTimesPastTarget = 0;
+        while (numTimesPastTarget < TIMES_TO_PASS_TARGET) {
+            double currentAngle = getCurrentAngle();
+            double angleDeviation = getAngleDeviation();
+            double motorPower = -angleDeviation / 180 * (maxSpeed - minSpeed) + minSpeed;
+            if (mock) {
+                driveByJoystick(0, 0, 0);
+            } else {
+                driveByJoystick(0, 0, motorPower);
             }
-        } else {
-            driveByJoystick(0, 0, 1);
-            while (getAngleDeviation() > 0) {
+            if (angleDeviation > 0 && rotatingClockwise) {
+                numTimesPastTarget++;
+                rotatingClockwise = false;
+            } else if (angleDeviation < 0 && !rotatingClockwise) {
+                numTimesPastTarget++;
+                rotatingClockwise = true;
             }
+            this.opMode.telemetry.addData("currentAngle", currentAngle);
+            this.opMode.telemetry.addData("motorPower", motorPower);
+            this.opMode.telemetry.addData("angleDeviation", angleDeviation);
+            this.opMode.telemetry.addData("numTimesPastTarget", numTimesPastTarget);
+            this.opMode.telemetry.update();
+
         }
         stöp();
+        this.opMode.telemetry.addData("isRotatingInPlace", false);
+        this.opMode.telemetry.update();
+
     }
 
     public void driveStraight(double distance, double power) {
-        ResetDistance();
-        final double WHEEL_Radius_CM = 4.8;
+        targetAngle = getCurrentAngle();
+        resetDistance();
         double AverageMotors = 0;
         this.opMode.telemetry.addData("distance", AverageMotors);
-        while ((Math.abs(distance) * 1440) / (2 * Math.PI * WHEEL_Radius_CM) > AverageMotors) {
+        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
             driveByJoystick(-getAngleDeviation() / 40, power, 0);
-            AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4;
+            AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
             AverageMotors = Math.abs(AverageMotors);
             this.opMode.telemetry.addData("distance", AverageMotors);
             this.opMode.telemetry.update();
@@ -116,27 +145,48 @@ public class DrivingSystem {
         stöp();
     }
 
+    public void smartDriveStraight(double distance, double power) {
+        // not done
+        resetDistance();
+        double startAngle = getCurrentAngle();
+        double targetX = distance * MathUtils.cosDegrees(startAngle);
+        double targetY = distance * MathUtils.sinDegrees(startAngle);
+
+        double currentX = 0;
+        double currentY = 0;
+
+        double prevMotorDistanceTraveled = 0;
+
+        while (Math.hypot(currentX, currentY) < distance) {
+            double currentAngle = getCurrentAngle();
+            double motorDistanceTraveled = motorDistanceTraveled();
+            double motorDistanceTraveledInTick = motorDistanceTraveled - prevMotorDistanceTraveled;
+            currentX +=
+            prevMotorDistanceTraveled = motorDistanceTraveled;
+        }
+    }
+
     public void driveSideways(double distance, double power) {
-        ResetDistance();
+        resetDistance();
         final double WHEEL_Radius_CM = 4.8;
-        double AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()) / 4;
-        while ((Math.abs(distance) * 1440) / (2 * Math.PI * WHEEL_Radius_CM) > AverageMotors) {
+        double AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()) / 4.0;
+        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2 * Math.PI * WHEEL_Radius_CM) > AverageMotors) {
             driveByJoystick(power, 0, 0);
-            AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()) / 4;
+            AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()) / 4.0;
         }
         stöp();
     }
 
 
-    public void ResetDistance() {
+    public void resetDistance() {
         this.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void stöp() {
@@ -145,17 +195,4 @@ public class DrivingSystem {
         backRight.setPower(0);
         backLeft.setPower(0);
     }
-
-    public void DriveStraight(double distance){
-        ResetDistance();
-        final double WHEEL_Radius_CM   = 4.8 ;
-        double AverageMotars = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition())/4;
-        while((distance*1440)/(2*Math.PI*WHEEL_Radius_CM) > AverageMotars){
-            driveByJoystick(0,0.5,0);
-        }
-    }
-
-
-
-
 }

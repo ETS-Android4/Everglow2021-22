@@ -12,8 +12,8 @@ public class ArmSystem {
     }
 
     public ArmSystem(LinearOpMode opMode) {
-        this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "front_right");//flyWheels
-        this.arm       = opMode.hardwareMap.get(DcMotor.class, "front_left");//arm
+        this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "front_right"); // flyWheels
+        this.arm       = opMode.hardwareMap.get(DcMotor.class, "front_left"); // arm
     }
 
     public void collect() {

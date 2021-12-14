@@ -23,10 +23,6 @@ public class OpMode1 extends LinearOpMode {
             drivingSystem.driveByJoystick(gamepad1.left_stick_x, gamepad1.left_stick_y,
                     gamepad1.right_stick_x);
 
-            if (gamepad.buttonPress("b")) {
-                drivingSystem.rotateInPlace(90);
-            }
-
             gamepad.update();
             telemetry.update();
         }
