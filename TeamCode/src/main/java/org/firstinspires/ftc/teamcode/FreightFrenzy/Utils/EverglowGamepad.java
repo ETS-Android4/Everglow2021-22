@@ -41,23 +41,23 @@ public class EverglowGamepad {
                     return true;
                 }
                 break;
-            case "DpadLeft":
-                if (previousLeft && !sus.y) {
+            case "dpad_left":
+                if (previousLeft && !sus.dpad_left) {
                     return true;
                 }
                 break;
-            case "DpadRight":
-                if (previousRight && !sus.y) {
+            case "dpad_right":
+                if (previousRight && !sus.dpad_right) {
                     return true;
                 }
                 break;
-            case "DpadUp":
-                if (previousUp && !sus.y) {
+            case "dpad_up":
+                if (previousUp && !sus.dpad_up) {
                     return true;
                 }
                 break;
-            case "DpadDown":
-                if (previousDown && !sus.y) {
+            case "dpad_down":
+                if (previousDown && !sus.dpad_down) {
                     return true;
                 }
                 break;
