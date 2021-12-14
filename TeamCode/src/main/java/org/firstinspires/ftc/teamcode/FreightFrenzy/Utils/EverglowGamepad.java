@@ -10,6 +10,11 @@ public class EverglowGamepad {
     boolean previousX;
     boolean previousY;
 
+    boolean previousRight;
+    boolean previousLeft;
+    boolean previousUp;
+    boolean previousDown;
+
     public EverglowGamepad(Gamepad gamepad) {
         this.sus = gamepad;
     }
@@ -33,6 +38,26 @@ public class EverglowGamepad {
                 break;
             case "y":
                 if (previousY && !sus.y) {
+                    return true;
+                }
+                break;
+            case "DpadLeft":
+                if (previousLeft && !sus.y) {
+                    return true;
+                }
+                break;
+            case "DpadRight":
+                if (previousRight && !sus.y) {
+                    return true;
+                }
+                break;
+            case "DpadUp":
+                if (previousUp && !sus.y) {
+                    return true;
+                }
+                break;
+            case "DpadDown":
+                if (previousDown && !sus.y) {
                     return true;
                 }
                 break;
