@@ -11,33 +11,33 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 public class Autonomous extends LinearOpMode {
     DrivingSystem   drivingSystem;
     EverglowGamepad gamepad;
-    ArmSystem armSystem;
+    ArmSystem       armSystem;
 
     @Override
     public void runOpMode() {
         drivingSystem = new DrivingSystem(this);
         gamepad       = new EverglowGamepad(gamepad1);
-        armSystem = new ArmSystem(this);
-        boolean toggle =false;
+        armSystem     = new ArmSystem(this);
+        boolean toggle = false;
         waitForStart();
 
         while (opModeIsActive()) {
             if (gamepad.buttonPress("a")) {
-                drivingSystem.driveStraight(100,0.3);
+                drivingSystem.driveStraight(100, 0.3);
             }
             if (gamepad.buttonPress("x")) {
-                drivingSystem.driveStraight(100,-0.3);
+                drivingSystem.driveStraight(100, -0.3);
             }
 
             if (gamepad.buttonPress("b")) {
-                drivingSystem.rotateInPlace(90);
+                drivingSystem.rotateInPlace(90, 0.3, 0, false);
             }
-            if(gamepad.buttonPress("y")){
-                if(!toggle){
-                    armSystem.pull();
+            if (gamepad.buttonPress("y")) {
+                if (!toggle) {
+                    armSystem.collect();
                     toggle = true;
                 } else {
-                    armSystem.push();
+                    armSystem.spit();
                     toggle = false;
                 }
             }
