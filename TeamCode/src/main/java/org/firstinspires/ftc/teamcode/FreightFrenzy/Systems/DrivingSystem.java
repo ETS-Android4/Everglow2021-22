@@ -23,7 +23,7 @@ public class DrivingSystem {
 
     private double targetAngle = 0;
 
-    static final        double COUNTS_PER_MOTOR_REV = 535;    // eg: GoBILDA Motor Encoder
+    static final        double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
     static final        double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
     static final        double WHEEL_DIAMETER_MM    = 50;     // For figuring circumference
     static final        double COUNTS_PER_mm        = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -37,6 +37,13 @@ public class DrivingSystem {
         this.backLeft   = opMode.hardwareMap.get(DcMotor.class, "back_left");
         this.opMode     = opMode;
 
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        stöp();
+        resetDistance();
 
         // Create IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -130,12 +137,24 @@ public class DrivingSystem {
 
     }
 
+    public void nutiRotate(float deg, float space, int speed) {
+        targetAngle = normalizeAngle(getCurrentAngle() + deg);
+        double d = -getAngleDeviation();
+        while(Math.abs(d) > space){
+            driveByJoystick(0,0,d/speed);
+            d = -getAngleDeviation();
+            this.opMode.telemetry.addData("rotation speed: ", d/speed);
+            this.opMode.telemetry.update();
+        }
+        stöp();
+    }
+
     public void driveStraight(double distance, double power) {
         targetAngle = getCurrentAngle();
         resetDistance();
         double AverageMotors = 0;
         this.opMode.telemetry.addData("distance", AverageMotors);
-        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
+        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
             driveByJoystick(-getAngleDeviation() / 40, power, 0);
             AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
             AverageMotors = Math.abs(AverageMotors);
