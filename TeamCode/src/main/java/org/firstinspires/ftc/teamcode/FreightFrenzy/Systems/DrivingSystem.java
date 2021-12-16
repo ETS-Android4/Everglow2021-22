@@ -137,14 +137,14 @@ public class DrivingSystem {
 
     }
 
-    public void nutiRotate(float deg, float space, int speed) {
+    public void nutiRotate(float deg, int speedDecrease) {
         targetAngle = normalizeAngle(getCurrentAngle() + deg);
-        double d = -getAngleDeviation();
-        while(Math.abs(d) > space){
-            driveByJoystick(0,0,d/speed);
-            d = -getAngleDeviation();
-            this.opMode.telemetry.addData("rotation speed: ", d/speed);
-            this.opMode.telemetry.update();
+        double d = getAngleDeviation();
+        while (Math.abs(d) > 0.5) {
+            d = getAngleDeviation();
+            double direction = (getAngleDeviation() / Math.abs(getAngleDeviation()));
+            driveByJoystick(0, 0, Math.max(Math.abs(getAngleDeviation() / speedDecrease), 0.1) * direction);
+            this.opMode.telemetry.addData("speed:", d);
         }
         stöp();
     }

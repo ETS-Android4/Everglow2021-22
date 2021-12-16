@@ -25,20 +25,20 @@ public class Autonomous extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (ourGamepad1.buttonPress("a")) {
-                drivingSystem.driveStraight(100, 0.3);
+                drivingSystem.nutiRotate(45, 200);
             }
             if (ourGamepad1.buttonPress("x")) {
-                drivingSystem.driveStraight(100, -0.3);
+                drivingSystem.nutiRotate(45, 100);
             }
 
 //            if (ourGamepad1.buttonPress("b")) {
 //                drivingSystem.rotateInPlace(90, 0.2, 0, false);
 //            }
             if (ourGamepad1.buttonPress("b")) {
-                drivingSystem.nutiRotate(90, 0.1f, 1000);
+                drivingSystem.nutiRotate(90, 200);
             }
             if (ourGamepad1.buttonPress("y")) {
-                drivingSystem.nutiRotate(90, 0.5f, 2000);
+                drivingSystem.nutiRotate(90, 100);
             }
             if (ourGamepad1.buttonPress("y")) {
 //                if (!toggle) {

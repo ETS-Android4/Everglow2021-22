@@ -13,11 +13,11 @@ public class ArmSystem {
     }
 
     public ArmSystem(LinearOpMode opMode) {
-//        this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "front_right"); // flyWheels
-//        this.arm       = opMode.hardwareMap.get(DcMotor.class, "front_left"); // arm
+        this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "front_right"); // flyWheels
+        this.arm       = opMode.hardwareMap.get(DcMotor.class, "front_left"); // arm
 //        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ArmPosition = 0;
     }
 
@@ -43,10 +43,12 @@ public class ArmSystem {
         flyWheels.setPower(0);
     }
 
-    public void load() {
-        arm.setTargetPosition(0);
+    public void moveArmm(int place) {
+        arm.setTargetPosition(place);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.5);
+        arm.setPower(1);
+
+
 //        while (ArmPosition > 0) {
 //            ArmPosition = arm.getCurrentPosition();
 //        }
@@ -56,31 +58,31 @@ public class ArmSystem {
     public void moveArm(Floors level) {
         switch (level) {
             case FIRST:
-                arm.setTargetPosition(343);
-                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                arm.setTargetPosition(343);
+//                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(0.5);
-//                while (ArmPosition < 342.5) {
-//                    ArmPosition = arm.getCurrentPosition();
-//                }
-//                arm.setPower(0);
+                while (ArmPosition < 343) {
+                    ArmPosition = arm.getCurrentPosition();
+                }
+                arm.setPower(0);
                 break;
             case SECOND:
-                arm.setTargetPosition(408);
-                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                arm.setTargetPosition(408);
+//                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(0.5);
-//                while (ArmPosition < 407.7) {
-//                    ArmPosition = arm.getCurrentPosition();
-//                }
-//                arm.setPower(0);
+                while (ArmPosition < 408) {
+                    ArmPosition = arm.getCurrentPosition();
+                }
+                arm.setPower(0);
                 break;
             case THIRD:
-                arm.setTargetPosition(430);
-                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                arm.setTargetPosition(430);
+//                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(0.5);
-//                while (ArmPosition < 430.1) {
-//                    ArmPosition = arm.getCurrentPosition();
-//                }
-//                arm.setPower(0);
+                while (ArmPosition < 430) {
+                    ArmPosition = arm.getCurrentPosition();
+                }
+                arm.setPower(0);
         }
     }
 }
