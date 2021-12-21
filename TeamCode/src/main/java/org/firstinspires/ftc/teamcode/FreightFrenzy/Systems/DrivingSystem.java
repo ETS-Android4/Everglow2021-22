@@ -137,7 +137,7 @@ public class DrivingSystem {
 
     }
 
-    public void nutiRotate(float deg, int speedDecrease) {
+    public void turn(float deg, int speedDecrease) {
         targetAngle = normalizeAngle(getCurrentAngle() + deg);
         double d = getAngleDeviation();
         while (Math.abs(d) > 0.5) {
