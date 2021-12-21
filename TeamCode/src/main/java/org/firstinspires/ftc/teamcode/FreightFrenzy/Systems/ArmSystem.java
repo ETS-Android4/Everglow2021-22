@@ -52,7 +52,7 @@ public class ArmSystem {
 
     public void reload() {
         arm.setPower(0.3);
-        while (ArmPosition > 20) {
+        while (ArmPosition > 100) {
             ArmPosition = arm.getCurrentPosition();
         }
         arm.setPower(0);
@@ -62,7 +62,7 @@ public class ArmSystem {
         switch (level) {
             case FIRST:
 //                arm.setTargetPosition(343);
-//                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+////                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(0.5);
                 while (ArmPosition < 343) {
                     ArmPosition = arm.getCurrentPosition();
