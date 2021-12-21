@@ -21,7 +21,7 @@ public class Carrouselle {
     }
 
     void basic(){
-        ArmSystem.Floor targetFloor = detectionSystem.findTargetFloor();
+        ArmSystem.Floors targetFloor = detectionSystem.findTargetFloor();
         drivingSystem.driveStraight(121,0.4);
         drivingSystem.turn(90,200);
         drivingSystem.driveStraight(10,0.4);

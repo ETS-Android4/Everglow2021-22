@@ -62,12 +62,12 @@ public class Autonomous extends LinearOpMode {
                 }
             }
             if (ourGamepad2.buttonPress("b")) {
-                armSystem.moveArm(ArmSystem.Floor.SECOND);
+                armSystem.moveArm(ArmSystem.Floors.SECOND);
 //                while (armSystem.arm.isBusy()) {
 //                }
             }
             if (ourGamepad2.buttonPress("x")) {
-                armSystem.moveArm(ArmSystem.Floor.THIRD);
+                armSystem.moveArm(ArmSystem.Floors.THIRD);
             }
             if (ourGamepad2.buttonPress("y")) {
                 armSystem.moveArm(0);

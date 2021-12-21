@@ -9,8 +9,8 @@ public class DetectionSystem {
         this.opMode = opMode;
     }
 
-    public ArmSystem.Floor findTargetFloor(){
+    public ArmSystem.Floors findTargetFloor(){
         // todo: use actual sensors
-        return ArmSystem.Floor.THIRD;
+        return ArmSystem.Floors.THIRD;
     }
 }

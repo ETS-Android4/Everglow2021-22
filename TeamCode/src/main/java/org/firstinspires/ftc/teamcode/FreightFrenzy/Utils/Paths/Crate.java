@@ -6,14 +6,14 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 
-public class RightAutonomous {
+public class Crate {
     DrivingSystem drivingSystem;
     ArmSystem armSystem;
     LinearOpMode opMode;
     DetectionSystem detectionSystem;
 
 
-    public RightAutonomous(LinearOpMode opMode){
+    public Crate(LinearOpMode opMode){
         this.opMode = opMode;
         drivingSystem = new DrivingSystem(opMode);
         armSystem = new ArmSystem(opMode);
@@ -21,7 +21,7 @@ public class RightAutonomous {
     }
 
     void R1(){
-        ArmSystem.Floor floor = detectionSystem.findTargetFloor();
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor();
         drivingSystem.driveStraight(121,0.4);
         drivingSystem.turn(90,200);
         drivingSystem.driveStraight(10,0.4);

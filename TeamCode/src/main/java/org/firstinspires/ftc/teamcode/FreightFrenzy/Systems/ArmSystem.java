@@ -8,7 +8,7 @@ public class ArmSystem {
     public DcMotor arm;
     double armPosition;
 
-    public enum Floor {
+    public enum Floors {
         FIRST, SECOND, THIRD
     }
 
@@ -58,7 +58,7 @@ public class ArmSystem {
         arm.setPower(0);
     }
 
-    public void moveArm(Floor level) {
+    public void moveArm(Floors level) {
         switch (level) {
             case FIRST:
 //                arm.setTargetPosition(343);
