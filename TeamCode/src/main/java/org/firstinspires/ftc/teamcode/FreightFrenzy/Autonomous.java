@@ -17,8 +17,8 @@ public class Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
         drivingSystem = new DrivingSystem(this);
-        ourGamepad1       = new EverglowGamepad(gamepad1);
-        ourGamepad2       = new EverglowGamepad(gamepad2);
+        ourGamepad1   = new EverglowGamepad(gamepad1);
+        ourGamepad2   = new EverglowGamepad(gamepad2);
         armSystem     = new ArmSystem(this);
         boolean toggle = false;
         waitForStart();
@@ -38,7 +38,7 @@ public class Autonomous extends LinearOpMode {
                 drivingSystem.turn(90, 200);
             }
             if (ourGamepad1.buttonPress("y")) {
-                drivingSystem.turn(90, 100);
+                drivingSystem.driveStraight(100, 0.5);
             }
             if (ourGamepad1.buttonPress("y")) {
 //                if (!toggle) {

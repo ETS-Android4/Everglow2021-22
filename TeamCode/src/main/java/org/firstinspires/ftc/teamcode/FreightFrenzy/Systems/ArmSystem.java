@@ -13,8 +13,8 @@ public class ArmSystem {
     }
 
     public ArmSystem(LinearOpMode opMode) {
-        this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "front_right"); // flyWheels
-        this.arm       = opMode.hardwareMap.get(DcMotor.class, "front_left"); // arm
+        this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "flywheels");
+        this.arm       = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

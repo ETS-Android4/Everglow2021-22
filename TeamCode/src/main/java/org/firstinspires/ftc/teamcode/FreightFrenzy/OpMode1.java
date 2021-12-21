@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 public class OpMode1 extends LinearOpMode {
     DrivingSystem   drivingSystem;
     EverglowGamepad gamepad;
-    ArmSystem armSystem;
+    ArmSystem       armSystem;
 
     @Override
     public void runOpMode() {
         drivingSystem = new DrivingSystem(this);
-        armSystem = new ArmSystem(this);
+        armSystem     = new ArmSystem(this);
         gamepad       = new EverglowGamepad(gamepad1);
 
 
@@ -26,10 +26,10 @@ public class OpMode1 extends LinearOpMode {
             drivingSystem.driveByJoystick(gamepad1.left_stick_x, gamepad1.left_stick_y,
                     gamepad1.right_stick_x);
 
-            if(gamepad.buttonPress("a")){
+            if (gamepad.buttonPress("a")) {
                 armSystem.moveArm(50);
             }
-            if(gamepad.buttonPress("b")){
+            if (gamepad.buttonPress("b")) {
                 armSystem.moveArm(250);
             }
 
