@@ -32,17 +32,4 @@ public class Crate {
         armSystem.collect();
     }
 
-    void R2(){
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor();
-        drivingSystem.driveStraight(121,0.4);
-        drivingSystem.turn(90,200);
-        drivingSystem.driveStraight(10,0.4);
-        armSystem.moveArm(floor);
-        armSystem.spit();
-        drivingSystem.driveSideways(50,0.4);
-        drivingSystem.driveStraight(150,0.4);
-        drivingSystem.turn(-90,200);
-        drivingSystem.driveSideways(71,0.4);
-        drivingSystem.driveStraight(240,-0.4);
-    }
 }
