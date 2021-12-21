@@ -27,10 +27,10 @@ public class OpMode1 extends LinearOpMode {
                     gamepad1.right_stick_x);
 
             if(gamepad.buttonPress("a")){
-                armSystem.moveArmm(50);
+                armSystem.moveArm(50);
             }
             if(gamepad.buttonPress("b")){
-                armSystem.moveArmm(250);
+                armSystem.moveArm(250);
             }
 
             gamepad.update();

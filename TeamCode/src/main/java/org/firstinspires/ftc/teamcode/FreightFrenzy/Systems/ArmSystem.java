@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class ArmSystem {
     DcMotor flyWheels;
     public DcMotor arm;
-    double ArmPosition;
+    double armPosition;
 
-    public enum Floors {
+    public enum Floor {
         FIRST, SECOND, THIRD
     }
 
@@ -19,7 +19,7 @@ public class ArmSystem {
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        ArmPosition = 0;
+        armPosition = 0;
     }
 
     public void collect() {
@@ -44,7 +44,7 @@ public class ArmSystem {
         flyWheels.setPower(0);
     }
 
-    public void moveArmm(int place) {
+    public void moveArm(int place) {
         arm.setTargetPosition(place);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(1);
@@ -52,20 +52,20 @@ public class ArmSystem {
 
     public void reload() {
         arm.setPower(0.3);
-        while (ArmPosition > 100) {
-            ArmPosition = arm.getCurrentPosition();
+        while (armPosition > 100) {
+            armPosition = arm.getCurrentPosition();
         }
         arm.setPower(0);
     }
 
-    public void moveArm(Floors level) {
+    public void moveArm(Floor level) {
         switch (level) {
             case FIRST:
 //                arm.setTargetPosition(343);
 ////                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(0.5);
-                while (ArmPosition < 343) {
-                    ArmPosition = arm.getCurrentPosition();
+                while (armPosition < 343) {
+                    armPosition = arm.getCurrentPosition();
                 }
                 arm.setPower(0);
                 break;
@@ -73,8 +73,8 @@ public class ArmSystem {
 //                arm.setTargetPosition(408);
 //                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(0.5);
-                while (ArmPosition < 408) {
-                    ArmPosition = arm.getCurrentPosition();
+                while (armPosition < 408) {
+                    armPosition = arm.getCurrentPosition();
                 }
                 arm.setPower(0);
                 break;
@@ -82,8 +82,8 @@ public class ArmSystem {
 //                arm.setTargetPosition(430);
 //                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(0.5);
-                while (ArmPosition < 430) {
-                    ArmPosition = arm.getCurrentPosition();
+                while (armPosition < 430) {
+                    armPosition = arm.getCurrentPosition();
                 }
                 arm.setPower(0);
         }

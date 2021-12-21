@@ -25,20 +25,20 @@ public class Autonomous extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (ourGamepad1.buttonPress("a")) {
-                drivingSystem.nutiRotate(45, 200);
+                drivingSystem.turn(45, 200);
             }
             if (ourGamepad1.buttonPress("x")) {
-                drivingSystem.nutiRotate(45, 100);
+                drivingSystem.turn(45, 100);
             }
 
 //            if (ourGamepad1.buttonPress("b")) {
 //                drivingSystem.rotateInPlace(90, 0.2, 0, false);
 //            }
             if (ourGamepad1.buttonPress("b")) {
-                drivingSystem.nutiRotate(90, 200);
+                drivingSystem.turn(90, 200);
             }
             if (ourGamepad1.buttonPress("y")) {
-                drivingSystem.nutiRotate(90, 100);
+                drivingSystem.turn(90, 100);
             }
             if (ourGamepad1.buttonPress("y")) {
 //                if (!toggle) {
@@ -62,15 +62,15 @@ public class Autonomous extends LinearOpMode {
                 }
             }
             if (ourGamepad2.buttonPress("b")) {
-                armSystem.moveArm(ArmSystem.Floors.SECOND);
+                armSystem.moveArm(ArmSystem.Floor.SECOND);
 //                while (armSystem.arm.isBusy()) {
 //                }
             }
             if (ourGamepad2.buttonPress("x")) {
-                armSystem.moveArm(ArmSystem.Floors.THIRD);
+                armSystem.moveArm(ArmSystem.Floor.THIRD);
             }
             if (ourGamepad2.buttonPress("y")) {
-                armSystem.moveArmm(0);
+                armSystem.moveArm(0);
 //                while (armSystem.arm.isBusy()) {
 //                }
             }
