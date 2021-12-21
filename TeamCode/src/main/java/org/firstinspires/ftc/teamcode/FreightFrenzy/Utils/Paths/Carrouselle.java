@@ -4,17 +4,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 
 public class Carrouselle {
+    // not used
     DrivingSystem drivingSystem;
     ArmSystem armSystem;
     DuckSystem duckSystem;
     LinearOpMode opMode;
     ElapsedTime timer;
 
-    public Carrouselle(LinearOpMode opMode){
+    public Carrouselle(LinearOpMode opMode, DetectionSystem detectionSystem){
         this.opMode = opMode;
         drivingSystem = new DrivingSystem(opMode);
         armSystem = new ArmSystem(opMode);
