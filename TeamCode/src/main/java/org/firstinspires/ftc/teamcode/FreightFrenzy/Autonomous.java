@@ -19,7 +19,7 @@ public class Autonomous extends LinearOpMode {
         drivingSystem = new DrivingSystem(this);
         ourGamepad1       = new EverglowGamepad(gamepad1);
         ourGamepad2       = new EverglowGamepad(gamepad2);
-//        armSystem     = new ArmSystem(this);
+        armSystem     = new ArmSystem(this);
         boolean toggle = false;
         waitForStart();
 
@@ -49,29 +49,37 @@ public class Autonomous extends LinearOpMode {
 //                    toggle = false;
 //                }
             }
-//            if (ourGamepad2.buttonPress("a")) {
+            if (ourGamepad2.buttonPress("a")) {
 //                armSystem.moveArm(ArmSystem.Floors.FIRST);
 //                while (armSystem.arm.isBusy()) {
 //                }
-//            }
-//            if (ourGamepad2.buttonPress("b")) {
-//                armSystem.moveArm(ArmSystem.Floors.SECOND);
+                if (!toggle) {
+                    armSystem.arm.setPower(0.5);
+                    toggle = true;
+                } else {
+                    armSystem.arm.setPower(0);
+                    toggle = false;
+                }
+            }
+            if (ourGamepad2.buttonPress("b")) {
+                armSystem.moveArm(ArmSystem.Floors.SECOND);
 //                while (armSystem.arm.isBusy()) {
 //                }
-//            }
-//            if (ourGamepad2.buttonPress("x")) {
-//                armSystem.moveArm(ArmSystem.Floors.THIRD);
+            }
+            if (ourGamepad2.buttonPress("x")) {
+                armSystem.moveArm(ArmSystem.Floors.THIRD);
+            }
+            if (ourGamepad2.buttonPress("y")) {
+                armSystem.moveArmm(0);
 //                while (armSystem.arm.isBusy()) {
 //                }
-//            }
-//            if (ourGamepad2.buttonPress("y")) {
-//                armSystem.load();
-//                while (armSystem.arm.isBusy()) {
-//                }
-//            }
+            }
 
             ourGamepad1.update();
-//            telemetry.addData("Arm Motor:", armSystem.arm.getCurrentPosition());
+            ourGamepad2.update();
+            telemetry.addData("Arm pos:", armSystem.arm.getCurrentPosition());
+            telemetry.addData("Arm power:", armSystem.arm.getPower());
+            telemetry.addData("Arm mode:", armSystem.arm.getMode());
             telemetry.update();
         }
     }
