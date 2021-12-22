@@ -142,8 +142,10 @@ public class DrivingSystem {
         double d = getAngleDeviation();
         while (Math.abs(d) > 0.5) {
             d = getAngleDeviation();
-            double direction = (getAngleDeviation() / Math.abs(getAngleDeviation()));
-            driveByJoystick(0, 0, Math.max(Math.abs(getAngleDeviation() / speedDecrease), 0.05) * direction);
+            double direction = (d / Math.abs(d));
+            driveByJoystick(0, 0,
+                    Math.max(Math.abs(d / speedDecrease),
+                            0.07) * direction);
             this.opMode.telemetry.addData("speed:", d);
         }
         stöp();

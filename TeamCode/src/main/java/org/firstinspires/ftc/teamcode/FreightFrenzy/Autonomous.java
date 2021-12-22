@@ -28,7 +28,7 @@ public class Autonomous extends LinearOpMode {
                 drivingSystem.turn(45, 200);
             }
             if (ourGamepad1.buttonPress("x")) {
-                drivingSystem.turn(45, 100);
+                drivingSystem.driveSideways(50, 0.5);
             }
 
 //            if (ourGamepad1.buttonPress("b")) {
