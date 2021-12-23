@@ -24,7 +24,7 @@ public class Crate {
     }
 
     public void R1() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor();
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(10, 0.4);
@@ -36,6 +36,7 @@ public class Crate {
     }
 
     public void R2(ArmSystem.Floors targetFloor) {
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(10, 0.4);
@@ -49,7 +50,7 @@ public class Crate {
     }
 
     public void R3() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor();
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         // drive to shared shipping hub
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);

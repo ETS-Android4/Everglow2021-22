@@ -13,18 +13,21 @@ public class Carrouselle {
     DrivingSystem drivingSystem;
     ArmSystem     armSystem;
     DuckSystem    duckSystem;
+    DetectionSystem detectionSystem;
     LinearOpMode  opMode;
     ElapsedTime   timer;
 
-    public Carrouselle(LinearOpMode opMode, DetectionSystem detectionSystem) {
+    public Carrouselle(LinearOpMode opMode) {
         this.opMode   = opMode;
         drivingSystem = new DrivingSystem(opMode);
         armSystem     = new ArmSystem(opMode);
         duckSystem    = new DuckSystem(opMode);
+        detectionSystem = new DetectionSystem(opMode);
         timer         = new ElapsedTime();
     }
 
-    public void basic() {
+    public void L1() {
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(20, 0.4);
@@ -38,10 +41,12 @@ public class Carrouselle {
         drivingSystem.driveStraight(250, 0.4);
     }
 
-    public void smallStorage() {
+    public void L2() {
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(20, 0.4);
+        armSystem.moveArm(floor);
         drivingSystem.driveSideways(121, 0.4);
         drivingSystem.driveStraight(80, -0.4);
         duckSystem.run();
