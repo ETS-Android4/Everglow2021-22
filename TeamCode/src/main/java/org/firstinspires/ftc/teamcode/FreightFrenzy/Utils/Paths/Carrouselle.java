@@ -31,6 +31,9 @@ public class Carrouselle {
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(20, 0.4);
+        armSystem.moveArm(floor);
+        armSystem.spit();
+        armSystem.reload();
         drivingSystem.driveSideways(121, 0.4);
         drivingSystem.driveStraight(80, -0.4);
         duckSystem.run();

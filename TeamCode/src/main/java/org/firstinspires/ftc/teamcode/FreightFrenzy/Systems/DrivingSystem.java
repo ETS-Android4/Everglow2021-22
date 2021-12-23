@@ -152,11 +152,12 @@ public class DrivingSystem {
     }
 
     public void driveStraight(double distance, double power) {
+        power *= -1;
         resetDistance();
         double AverageMotors = 0;
         this.opMode.telemetry.addData("distance", AverageMotors);
         while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
-            driveByJoystick(-getAngleDeviation() / 40, power, 0);
+            driveByJoystick(0, power, -getAngleDeviation() / 40);
             AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
             AverageMotors = Math.abs(AverageMotors);
             this.opMode.telemetry.addData("distance", AverageMotors);
@@ -188,11 +189,14 @@ public class DrivingSystem {
 
     public void driveSideways(double distance, double power) {
         resetDistance();
-        final double WHEEL_Radius_CM = 4.8;
-        double AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()) / 4.0;
-        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2 * Math.PI * WHEEL_Radius_CM) > AverageMotors) {
-            driveByJoystick(power, 0, 0);
+        double AverageMotors = 0;
+        this.opMode.telemetry.addData("distance", AverageMotors);
+        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
+            driveByJoystick(power, 0, -getAngleDeviation() / 40);
             AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()) / 4.0;
+            AverageMotors = Math.abs(AverageMotors);
+            this.opMode.telemetry.addData("distance", AverageMotors);
+            this.opMode.telemetry.update();
         }
         stöp();
     }

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 
-public class Crate {
+public class Crater {
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
     LinearOpMode    opMode;
@@ -15,7 +15,7 @@ public class Crate {
     private final DuckSystem duckSystem;
 
 
-    public Crate(LinearOpMode opMode) {
+    public Crater(LinearOpMode opMode) {
         this.opMode     = opMode;
         drivingSystem   = new DrivingSystem(opMode);
         armSystem       = new ArmSystem(opMode);
@@ -35,12 +35,12 @@ public class Crate {
         armSystem.collect();
     }
 
-    public void R2(ArmSystem.Floors targetFloor) {
+    public void R2() {
         ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(10, 0.4);
-        armSystem.moveArm(targetFloor);
+        armSystem.moveArm(floor);
         armSystem.spit();
         drivingSystem.driveSideways(50, 0.4);
         drivingSystem.driveStraight(150, 0.4);
@@ -68,17 +68,5 @@ public class Crate {
         duckSystem.runFor(1000);
         // move to aligance storage unit.
         drivingSystem.driveSideways(70, 0.4);
-    }
-    public void L1(){
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
-        drivingSystem.driveStraight(121, 0.4);
-        drivingSystem.turn(-90, 200);
-        drivingSystem.driveStraight(10, 0.4);
-        armSystem.moveArm(floor);
-        armSystem.spit();
-        armSystem.reload();
-        drivingSystem.driveSideways(121, -0.4);
-        drivingSystem.driveStraight(-80, 0.4);
-        armSystem.collect();
     }
 }

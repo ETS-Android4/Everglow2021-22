@@ -3,20 +3,20 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carrouselle;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Crater;
 
-@Autonomous(name = "L1RED", group = "Linear Opmode")
-public class L1RED extends LinearOpMode {
-    Carrouselle carrouselle;
+@Autonomous(name = "R2RED", group = "Autonomous")
+public class R2RED extends LinearOpMode {
+    Crater crater;
 
     @Override
     public void runOpMode() {
-        carrouselle = new Carrouselle(this);
+        crater = new Crater(this);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            carrouselle.L1();
+            crater.R2();
             stop();
         }
     }
