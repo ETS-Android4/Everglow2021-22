@@ -25,15 +25,11 @@ public class Autonomous extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (ourGamepad1.buttonPress("a")) {
-                drivingSystem.turn(45, 200);
+                drivingSystem.driveStraight(50, 0.5);
             }
             if (ourGamepad1.buttonPress("x")) {
                 drivingSystem.driveSideways(50, 0.5);
             }
-
-//            if (ourGamepad1.buttonPress("b")) {
-//                drivingSystem.rotateInPlace(90, 0.2, 0, false);
-//            }
             if (ourGamepad1.buttonPress("b")) {
                 drivingSystem.turn(90, 200);
             }
@@ -49,30 +45,26 @@ public class Autonomous extends LinearOpMode {
 //                    toggle = false;
 //                }
             }
+
             if (ourGamepad2.buttonPress("a")) {
-//                armSystem.moveArm(ArmSystem.Floors.FIRST);
-//                while (armSystem.arm.isBusy()) {
-//                }
-                if (!toggle) {
-                    armSystem.arm.setPower(0.5);
-                    toggle = true;
-                } else {
-                    armSystem.arm.setPower(0);
-                    toggle = false;
+                armSystem.moveArm(ArmSystem.Floors.FIRST);
+                while (armSystem.arm.isBusy()) {
                 }
             }
             if (ourGamepad2.buttonPress("b")) {
                 armSystem.moveArm(ArmSystem.Floors.SECOND);
-//                while (armSystem.arm.isBusy()) {
-//                }
+                while (armSystem.arm.isBusy()) {
+                }
             }
             if (ourGamepad2.buttonPress("x")) {
                 armSystem.moveArm(ArmSystem.Floors.THIRD);
+                while (armSystem.arm.isBusy()) {
+                }
             }
             if (ourGamepad2.buttonPress("y")) {
-                armSystem.moveArm(0);
-//                while (armSystem.arm.isBusy()) {
-//                }
+                armSystem.reload();
+                while (armSystem.arm.isBusy()) {
+                }
             }
 
             ourGamepad1.update();

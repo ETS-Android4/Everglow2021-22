@@ -166,33 +166,33 @@ public class DrivingSystem {
         stöp();
     }
 
-    public void smartDriveStraight(double distance, double power) {
-        // not done
-        resetDistance();
-        double startAngle = getCurrentAngle();
-        double targetX = distance * MathUtils.cosDegrees(startAngle);
-        double targetY = distance * MathUtils.sinDegrees(startAngle);
-
-        double currentX = 0;
-        double currentY = 0;
-
-        double prevMotorDistanceTraveled = 0;
-
-        while (Math.hypot(currentX, currentY) < distance) {
-            double currentAngle = getCurrentAngle();
-            double motorDistanceTraveled = motorDistanceTraveled();
-            double motorDistanceTraveledInTick = motorDistanceTraveled - prevMotorDistanceTraveled;
-            currentX +=
-            prevMotorDistanceTraveled = motorDistanceTraveled;
-        }
-    }
+//    public void smartDriveStraight(double distance, double power) {
+//        // not done
+//        resetDistance();
+//        double startAngle = getCurrentAngle();
+//        double targetX = distance * MathUtils.cosDegrees(startAngle);
+//        double targetY = distance * MathUtils.sinDegrees(startAngle);
+//
+//        double currentX = 0;
+//        double currentY = 0;
+//
+//        double prevMotorDistanceTraveled = 0;
+//
+//        while (Math.hypot(currentX, currentY) < distance) {
+//            double currentAngle = getCurrentAngle();
+//            double motorDistanceTraveled = motorDistanceTraveled();
+//            double motorDistanceTraveledInTick = motorDistanceTraveled - prevMotorDistanceTraveled;
+//            currentX +=
+//            prevMotorDistanceTraveled = motorDistanceTraveled;
+//        }
+//    }
 
     public void driveSideways(double distance, double power) {
         resetDistance();
         double AverageMotors = 0;
         this.opMode.telemetry.addData("distance", AverageMotors);
         while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
-            driveByJoystick(power, 0, -getAngleDeviation() / 40);
+            driveByJoystick(power, 0, 0);
             AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()) / 4.0;
             AverageMotors = Math.abs(AverageMotors);
             this.opMode.telemetry.addData("distance", AverageMotors);

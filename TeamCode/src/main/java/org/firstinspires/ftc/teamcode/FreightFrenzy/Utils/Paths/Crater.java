@@ -23,50 +23,66 @@ public class Crater {
         duckSystem      = new DuckSystem(opMode);
     }
 
-    public void R1() {
+    /**
+     * Goes to alliance shipping hub and places the loaded freight there.
+     */
+    public void placeFreight() {
         ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+        // drive to alliance shipping hub
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(10, 0.4);
+        // place freight on alliance shipping hub
         armSystem.moveArm(floor);
         armSystem.spit();
+        armSystem.reload();
+    }
+
+    /**
+     * Goes to crater.
+     */
+    public void R1() {
+        placeFreight();
+        // go to crater and collect
         drivingSystem.driveSideways(121, 0.4);
-        drivingSystem.driveStraight(-80, 0.4);
+        drivingSystem.turn(180, 200);
+        drivingSystem.driveStraight(80, 0.4);
         armSystem.collect();
     }
 
+    /**
+     * Goes to carousel, then to crater.
+     */
     public void R2() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
-        drivingSystem.driveStraight(121, 0.4);
+        placeFreight();
+        // move to carousel
+        drivingSystem.driveSideways(50, -0.4);
         drivingSystem.turn(90, 200);
-        drivingSystem.driveStraight(10, 0.4);
-        armSystem.moveArm(floor);
-        armSystem.spit();
-        drivingSystem.driveSideways(50, 0.4);
-        drivingSystem.driveStraight(150, 0.4);
-        drivingSystem.turn(-90, 200);
+        drivingSystem.driveSideways(150, -0.4);
+        drivingSystem.turn(90, 200);
         drivingSystem.driveSideways(71, 0.4);
-        drivingSystem.driveStraight(240, -0.4);
+        // drop duck
+        duckSystem.runFor(1000);
+        // move to crater
+        drivingSystem.driveSideways(80, -0.4);
+        drivingSystem.driveStraight(240, 0.4);
+        armSystem.collect();
     }
 
+    /**
+     * Goes to carousel, then to alliance storage unit.
+     */
     public void R3() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
-        // drive to shared shipping hub
-        drivingSystem.driveStraight(121, 0.4);
-        drivingSystem.turn(90, 200);
-        drivingSystem.driveStraight(32, 0.4);
-        // pace crate on shared shipping hib
-        armSystem.moveArm(floor);
-        armSystem.spit();
-        // move to duck area
+        placeFreight();
+        // move to carousel
         drivingSystem.driveSideways(35, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveSideways(165, 0.4);
         drivingSystem.turn(90, 200);
-        drivingSystem.driveSideways(130, -0.4);
-        // place duck
+        drivingSystem.driveSideways(130, 0.4);
+        // drop duck
         duckSystem.runFor(1000);
-        // move to aligance storage unit.
+        // move to alliance storage unit
         drivingSystem.driveSideways(70, 0.4);
     }
 }
