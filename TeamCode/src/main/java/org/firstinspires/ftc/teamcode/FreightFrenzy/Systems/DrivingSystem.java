@@ -23,7 +23,7 @@ public class DrivingSystem {
 
     private double targetAngle = 0;
 
-    static final        double COUNTS_PER_MOTOR_REV = 535;    // eg: GoBILDA Motor Encoder
+    static final        double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
     static final        double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
     static final        double WHEEL_DIAMETER_MM    = 50;     // For figuring circumference
     static final        double COUNTS_PER_mm        = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -37,6 +37,13 @@ public class DrivingSystem {
         this.backLeft   = opMode.hardwareMap.get(DcMotor.class, "back_left");
         this.opMode     = opMode;
 
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        stöp();
+        resetDistance();
 
         // Create IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -68,10 +75,10 @@ public class DrivingSystem {
 
     public void driveByJoystick(double x1, double y1,
                                 double x2) {
-        double frontRightPower = x1 - y1 - x2;
-        double frontLeftPower = y1 + x1 - x2;
-        double backRightPower = -y1 - x1 - x2;
-        double backLeftPower = y1 - x1 - x2;
+        double frontRightPower = -x1 - y1 - x2;
+        double frontLeftPower = y1 - x1 - x2;
+        double backRightPower = -y1 + x1 - x2;
+        double backLeftPower = y1 + x1 - x2;
 
         if (Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1
                 || Math.abs(backRightPower) > 1 || Math.abs(backRightPower) > 1) {
@@ -130,12 +137,25 @@ public class DrivingSystem {
 
     }
 
+    public void turn(float deg, int speedDecrease) {
+        targetAngle = normalizeAngle(targetAngle + deg);
+        double d = getAngleDeviation();
+        while (Math.abs(d) > 0.5) {
+            d = getAngleDeviation();
+            double direction = (d / Math.abs(d));
+            driveByJoystick(0, 0,
+                    Math.max(Math.abs(d / speedDecrease),
+                            0.07) * direction);
+            this.opMode.telemetry.addData("speed:", d);
+        }
+        stöp();
+    }
+
     public void driveStraight(double distance, double power) {
-        targetAngle = getCurrentAngle();
         resetDistance();
         double AverageMotors = 0;
         this.opMode.telemetry.addData("distance", AverageMotors);
-        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
+        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
             driveByJoystick(-getAngleDeviation() / 40, power, 0);
             AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
             AverageMotors = Math.abs(AverageMotors);
