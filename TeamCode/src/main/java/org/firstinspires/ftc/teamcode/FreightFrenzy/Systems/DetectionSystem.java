@@ -23,14 +23,6 @@ public class DetectionSystem {
         this.rightSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
     }
 
-    /**
-     * Mock Method to be used until we actually implement the sensors.
-     */
-    public ArmSystem.Floors findTargetFloor(){
-        // todo: use actual sensors
-        return ArmSystem.Floors.THIRD;
-    }
-
     public ArmSystem.Floors findTargetFloor2(){
         double distanceLeft = leftSensor.getDistance(DistanceUnit.CM);
         double distanceMid = midSensor.getDistance(DistanceUnit.CM);
