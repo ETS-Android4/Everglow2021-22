@@ -68,5 +68,16 @@ public class Crate {
         // move to aligance storage unit.
         drivingSystem.driveSideways(70, 0.4);
     }
-
+    public void L1(){
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+        drivingSystem.driveStraight(121, 0.4);
+        drivingSystem.turn(-90, 200);
+        drivingSystem.driveStraight(10, 0.4);
+        armSystem.moveArm(floor);
+        armSystem.spit();
+        armSystem.reload();
+        drivingSystem.driveSideways(121, -0.4);
+        drivingSystem.driveStraight(-80, 0.4);
+        armSystem.collect();
+    }
 }
