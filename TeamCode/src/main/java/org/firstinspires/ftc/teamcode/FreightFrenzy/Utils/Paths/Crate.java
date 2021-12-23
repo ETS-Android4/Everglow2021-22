@@ -23,7 +23,7 @@ public class Crate {
         duckSystem      = new DuckSystem(opMode);
     }
 
-    void R1() {
+    public void R1() {
         ArmSystem.Floors floor = detectionSystem.findTargetFloor();
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
@@ -35,12 +35,11 @@ public class Crate {
         armSystem.collect();
     }
 
-    void R2() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor();
+    public void R2(ArmSystem.Floors targetFloor) {
         drivingSystem.driveStraight(121, 0.4);
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(10, 0.4);
-        armSystem.moveArm(floor);
+        armSystem.moveArm(targetFloor);
         armSystem.spit();
         drivingSystem.driveSideways(50, 0.4);
         drivingSystem.driveStraight(150, 0.4);
@@ -49,7 +48,7 @@ public class Crate {
         drivingSystem.driveStraight(240, -0.4);
     }
 
-    void R3() {
+    public void R3() {
         ArmSystem.Floors floor = detectionSystem.findTargetFloor();
         // drive to shared shipping hub
         drivingSystem.driveStraight(121, 0.4);
