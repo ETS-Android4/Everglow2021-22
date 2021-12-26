@@ -23,14 +23,24 @@ public class OpMode1 extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            drivingSystem.driveByJoystick(gamepad1.left_stick_x, gamepad1.left_stick_y,
-                    gamepad1.right_stick_x);
+//            drivingSystem.driveByJoystick(gamepad1.left_stick_x, gamepad1.left_stick_y,
+//                    gamepad1.right_stick_x);
+
+//            armSystem.moveArm(-100 * (int) gamepad1.left_stick_y);
+            armSystem.arm.setPower(-100 * (int) gamepad1.left_stick_y);
 
             if (gamepad.buttonPress("a")) {
-                armSystem.moveArm(50);
+                armSystem.moveArm(-100);
             }
             if (gamepad.buttonPress("b")) {
-                armSystem.moveArm(250);
+                armSystem.moveArm(-800);
+            }
+
+            if(gamepad.buttonPress("x")){
+                armSystem.collect();
+            }
+            if(gamepad.buttonPress("y")){
+                armSystem.spit();
             }
 
             gamepad.update();
