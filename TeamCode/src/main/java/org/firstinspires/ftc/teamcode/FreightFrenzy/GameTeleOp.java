@@ -28,6 +28,9 @@ public class GameTeleOp extends LinearOpMode {
 
         boolean collecting = false;
         boolean spitting = false;
+        boolean onFloor1 = false;
+        boolean onFloor2 = false;
+        boolean onFloor3 = false;
 
         waitForStart();
 
@@ -37,15 +40,42 @@ public class GameTeleOp extends LinearOpMode {
 
             if (ourGamepad2.buttonPress("x")) {
                 armSystem.reload();
+                onFloor1 = false;
+                onFloor2 = false;
+                onFloor3 = false;
             }
             if (ourGamepad2.buttonPress("a")) {
-                armSystem.moveArm(ArmSystem.Floors.FIRST);
+                onFloor2 = false;
+                onFloor3 = false;
+                if (!onFloor1) {
+                    armSystem.moveArm(ArmSystem.Floors.FIRST);
+                    onFloor1 = true;
+                } else {
+                    armSystem.reload();
+                    onFloor1 = false;
+                }
             }
             if (ourGamepad2.buttonPress("b")) {
-                armSystem.moveArm(ArmSystem.Floors.SECOND);
+                onFloor1 = false;
+                onFloor3 = false;
+                if (!onFloor2) {
+                    armSystem.moveArm(ArmSystem.Floors.SECOND);
+                    onFloor2 = true;
+                } else {
+                    armSystem.reload();
+                    onFloor2 = false;
+                }
             }
             if (ourGamepad2.buttonPress("y")) {
-                armSystem.moveArm(ArmSystem.Floors.THIRD);
+                onFloor1 = false;
+                onFloor2 = false;
+                if (!onFloor3) {
+                    armSystem.moveArm(ArmSystem.Floors.THIRD);
+                    onFloor3 = true;
+                } else {
+                    armSystem.reload();
+                    onFloor3 = false;
+                }
             }
 
             if (ourGamepad2.buttonPress("Rt")) {
@@ -69,10 +99,10 @@ public class GameTeleOp extends LinearOpMode {
                 }
             }
 
-            if (ourGamepad2.buttonPress("Rb")) {
+            if (gamepad2.right_bumper) {
                 duckSystem.run();
             }
-            if (ourGamepad2.buttonPress("Lb")) {
+            if (gamepad2.left_bumper) {
                 duckSystem.stöp();
             }
 
