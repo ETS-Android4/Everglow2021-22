@@ -4,9 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class ArmSystem {
-    DcMotor flyWheels;
+    public DcMotor flyWheels;
     public DcMotor arm;
-    double armPosition;
+    double       armPosition;
+    boolean loaded = false;
+    boolean firstFloor = false;
+    LinearOpMode opMode;
 
     public enum Floors {
         FIRST, SECOND, THIRD
@@ -16,77 +19,63 @@ public class ArmSystem {
         this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "flywheels");
         this.arm       = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armPosition = 0;
+        this.opMode = opMode;
     }
 
     public void collect() {
-        flyWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double position = 0;
         flyWheels.setPower(0.5);
-        while (position < 268) {
-            position = flyWheels.getCurrentPosition();
-        }
-        flyWheels.setPower(0);
     }
 
     public void spit() {
-        flyWheels.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double position = 0;
         flyWheels.setPower(-0.5);
-        while (position > -268) {
-            position = flyWheels.getCurrentPosition();
-        }
+    }
+
+    public void stop() {
         flyWheels.setPower(0);
     }
 
     public void moveArm(int place) {
+        loaded = false;
+        firstFloor = false;
         arm.setTargetPosition(place);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(1);
+        arm.setPower(0.5);
     }
 
     public void reload() {
-        arm.setPower(0.3);
-        while (armPosition > 100) {
-            armPosition = arm.getCurrentPosition();
+        arm.setTargetPosition(-100);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(0.25);
+        loaded = true;
+    }
+
+    public void restOnLoad() {
+        if (-105 <= arm.getCurrentPosition() && loaded) {
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        arm.setPower(0);
+    }
+
+    public void restOnFirstFloor() {
+        if (-2500 >= arm.getCurrentPosition() && firstFloor) {
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
     }
 
     public void moveArm(Floors level) {
+        armPosition = arm.getCurrentPosition();
+        this.opMode.telemetry.addData("armPosition", armPosition);
+        this.opMode.telemetry.update();
         switch (level) {
-            case FIRST:
-//                arm.setTargetPosition(343);
-////                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                arm.setPower(0.5);
-                while (armPosition < 343) {
-                    armPosition = arm.getCurrentPosition();
-                }
-                arm.setPower(0);
+            case THIRD:
+                moveArm(-550);
                 break;
             case SECOND:
-//                arm.setTargetPosition(408);
-//                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                arm.setPower(0.5);
-                while (armPosition < 408) {
-                    armPosition = arm.getCurrentPosition();
-                }
-                arm.setPower(0);
+                moveArm(-350);
                 break;
-            case THIRD:
-//                arm.setTargetPosition(430);
-//                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                arm.setPower(0.5);
-                while (armPosition < 430) {
-                    armPosition = arm.getCurrentPosition();
-                }
-                arm.setPower(0);
+            case FIRST:
+                moveArm(-165);
         }
     }
-    //
 }
