@@ -11,6 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 
 /**
@@ -31,6 +33,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class firstOpMode extends LinearOpMode {
     BNO055IMU imu;
     DcMotor   motor;
+    EverglowGamepad gamepad;
+    ArmSystem armSystem;
 
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
@@ -41,6 +45,8 @@ public class firstOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        armSystem     = new ArmSystem(this);
+        gamepad       = new EverglowGamepad(gamepad1);
         telemetry.addData("data: ", 3);
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
