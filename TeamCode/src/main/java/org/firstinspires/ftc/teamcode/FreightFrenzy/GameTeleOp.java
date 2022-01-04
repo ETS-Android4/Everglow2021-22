@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
@@ -11,13 +12,13 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "GameTeleOp", group = "Linear Opmode")
 public class GameTeleOp extends LinearOpMode {
+
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
     DuckSystem      duckSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
-    //    TouchSensor    touch;
-    DigitalChannel  digitalTouch;
+    TouchSensor touch;
     int             counter = 0;
 
     @Override
@@ -27,11 +28,12 @@ public class GameTeleOp extends LinearOpMode {
         duckSystem    = new DuckSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
-//        touch         = hardwareMap.get(TouchSensor.class, "touch");
-        digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");
-        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+        touch         = hardwareMap.get(TouchSensor.class, "touch");
 
-        boolean toggle = false;
+        boolean collecting = false;
+
+        boolean prevTouchSensorPressed = false;
+
 
         waitForStart();
 
@@ -54,6 +56,7 @@ public class GameTeleOp extends LinearOpMode {
 
             if (gamepad2.right_trigger > 0.1) {
                 armSystem.collect();
+                collecting = true;
             }
             if (gamepad2.left_trigger > 0.1) {
                 armSystem.spit();
@@ -69,15 +72,21 @@ public class GameTeleOp extends LinearOpMode {
                 duckSystem.stöp();
             }
 
-//            if (collecting && touch.isPressed()) {
-//                armSystem.stop();
-//                telemetry.addLine("did");
-//            }
+            if (collecting && touch.isPressed()) {
+                armSystem.stop();
+                collecting = false;
+                telemetry.addLine("did");
+            }
 
-            if (digitalTouch.getState()) {
-                telemetry.addData("Digital Touch", "Is Not Pressed");
-            } else {
-                telemetry.addData("Digital Touch", "Is Pressed");
+            // rumble controller if touchSensor was just pressed
+            if (touch.isPressed()){
+                if (!prevTouchSensorPressed){
+                    gamepad1.rumble(1000);
+                }
+                prevTouchSensorPressed = true;
+            }else {
+                prevTouchSensorPressed = false;
+                gamepad1.stopRumble();
             }
 
             armSystem.restOnLoad();
