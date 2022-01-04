@@ -68,10 +68,10 @@ public class ArmSystem {
         this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
         switch (level) {
             case THIRD:
-                moveArm(-2000);
+                moveArm(-2150);
                 break;
             case SECOND:
-                moveArm(-2200);
+                moveArm(-2300);
                 break;
             case FIRST:
                 moveArm(-2400);

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
@@ -16,7 +16,8 @@ public class GameTeleOp extends LinearOpMode {
     DuckSystem      duckSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
-    TouchSensor     touch;
+    //    TouchSensor    touch;
+    DigitalChannel  digitalTouch;
     int             counter = 0;
 
     @Override
@@ -26,13 +27,11 @@ public class GameTeleOp extends LinearOpMode {
         duckSystem    = new DuckSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
-        touch         = hardwareMap.get(TouchSensor.class, "touch");
+//        touch         = hardwareMap.get(TouchSensor.class, "touch");
+        digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
 
-        boolean collecting = false;
-        boolean spitting = false;
-        boolean onFloor1 = false;
-        boolean onFloor2 = false;
-        boolean onFloor3 = false;
+        boolean toggle = false;
 
         waitForStart();
 
@@ -40,84 +39,46 @@ public class GameTeleOp extends LinearOpMode {
             drivingSystem.driveByJoystick(gamepad2.left_stick_x, gamepad2.left_stick_y,
                     gamepad2.right_stick_x);
 
-            if (ourGamepad2.buttonPress("x")) {
+            if (gamepad2.x) {
                 armSystem.reload();
-                onFloor1 = false;
-                onFloor2 = false;
-                onFloor3 = false;
             }
-            if (ourGamepad2.buttonPress("a")) {
-                onFloor2 = false;
-                onFloor3 = false;
-                if (!onFloor1) {
-                    armSystem.moveArm(ArmSystem.Floors.FIRST);
-                    onFloor1 = true;
-                } else {
-                    armSystem.reload();
-                    onFloor1 = false;
-                }
+            if (gamepad2.a) {
+                armSystem.moveArm(ArmSystem.Floors.FIRST);
             }
-            if (ourGamepad2.buttonPress("b")) {
-                onFloor1 = false;
-                onFloor3 = false;
-                if (!onFloor2) {
-                    armSystem.moveArm(ArmSystem.Floors.SECOND);
-                    onFloor2 = true;
-                } else {
-                    armSystem.reload();
-                    onFloor2 = false;
-                }
+            if (gamepad2.b) {
+                armSystem.moveArm(ArmSystem.Floors.SECOND);
             }
-            if (ourGamepad2.buttonPress("y")) {
-                onFloor1 = false;
-                onFloor2 = false;
-                if (!onFloor3) {
-                    armSystem.moveArm(ArmSystem.Floors.THIRD);
-                    onFloor3 = true;
-                } else {
-                    armSystem.reload();
-                    onFloor3 = false;
-                }
+            if (gamepad2.y) {
+                armSystem.moveArm(ArmSystem.Floors.THIRD);
             }
 
-            if (ourGamepad2.buttonPress("Rt")) {
-                spitting = false;
-                if (!collecting) {
-                    armSystem.collect();
-                    collecting = true;
-                } else {
-                    armSystem.stop();
-                    collecting = false;
-                }
+            if (gamepad2.right_trigger > 0.1) {
+                armSystem.collect();
             }
-            if (ourGamepad2.buttonPress("Lt")) {
-                collecting = false;
-                if (!spitting) {
-                    armSystem.spit();
-                    spitting = true;
-                } else {
-                    armSystem.stop();
-                    spitting = false;
-                }
+            if (gamepad2.left_trigger > 0.1) {
+                armSystem.spit();
             }
-            if (collecting && touch.isPressed()) {
+            if (gamepad2.right_bumper || gamepad2.left_bumper) {
                 armSystem.stop();
-                collecting = false;
             }
 
-            if (ourGamepad2.buttonPress("Rb")) {
+            if (gamepad2.dpad_up) {
                 duckSystem.run();
             }
-            if (ourGamepad2.buttonPress("Lb")) {
+            if (gamepad2.dpad_down) {
                 duckSystem.stöp();
             }
 
-//            if (gamepad2.right_bumper) {
-//                duckSystem.run();
+//            if (collecting && touch.isPressed()) {
+//                armSystem.stop();
+//                telemetry.addLine("did");
 //            }
-//            if (gamepad2.left_bumper) {
-//                duckSystem.stöp();
-//            }
+
+            if (digitalTouch.getState()) {
+                telemetry.addData("Digital Touch", "Is Not Pressed");
+            } else {
+                telemetry.addData("Digital Touch", "Is Pressed");
+            }
 
             armSystem.restOnLoad();
             armSystem.restOnFirstFloor();

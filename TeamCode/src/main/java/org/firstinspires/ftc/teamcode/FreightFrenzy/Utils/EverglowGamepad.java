@@ -16,9 +16,9 @@ public class EverglowGamepad {
     private boolean previousDown;
 
     private boolean previousRb;
-    private double previousRt;
+    private double  previousRt;
     private boolean previousLb;
-    private double previousLt;
+    private double  previousLt;
 
     public EverglowGamepad(Gamepad gamepad) {
         this.sus = gamepad;
@@ -97,9 +97,9 @@ public class EverglowGamepad {
         previousY = sus.y;
 
         previousRight = sus.dpad_right;
-        previousLeft = sus.dpad_left;
-        previousUp = sus.dpad_up;
-        previousDown = sus.dpad_down;
+        previousLeft  = sus.dpad_left;
+        previousUp    = sus.dpad_up;
+        previousDown  = sus.dpad_down;
 
         previousLb = sus.left_bumper;
         previousLt = sus.left_trigger;
