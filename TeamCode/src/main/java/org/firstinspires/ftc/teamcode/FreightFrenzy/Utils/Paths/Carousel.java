@@ -18,12 +18,12 @@ public class Carousel {
     ElapsedTime     timer;
 
     public Carousel(LinearOpMode opMode) {
-        this.opMode     = opMode;
-        drivingSystem   = new DrivingSystem(opMode);
-        armSystem       = new ArmSystem(opMode);
-        duckSystem      = new DuckSystem(opMode);
+        this.opMode   = opMode;
+        drivingSystem = new DrivingSystem(opMode);
+        armSystem     = new ArmSystem(opMode);
+        duckSystem    = new DuckSystem(opMode);
 //        detectionSystem = new DetectionSystem(opMode);
-        timer           = new ElapsedTime();
+        timer = new ElapsedTime();
     }
 
     /**

@@ -17,11 +17,11 @@ public class Crater {
 
 
     public Crater(LinearOpMode opMode) {
-        this.opMode     = opMode;
-        drivingSystem   = new DrivingSystem(opMode);
-        armSystem       = new ArmSystem(opMode);
+        this.opMode   = opMode;
+        drivingSystem = new DrivingSystem(opMode);
+        armSystem     = new ArmSystem(opMode);
 //        detectionSystem = new DetectionSystem(opMode);
-        duckSystem      = new DuckSystem(opMode);
+        duckSystem = new DuckSystem(opMode);
     }
 
     /**

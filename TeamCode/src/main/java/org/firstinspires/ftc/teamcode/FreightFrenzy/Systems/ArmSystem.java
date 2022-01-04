@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class ArmSystem {
-    public  DcMotor      flyWheels;
-    public  DcMotor      arm;
-    private boolean      loaded     = false;
+    public        DcMotor      flyWheels;
+    public        DcMotor      arm;
+    private       boolean      loaded     = false;
     private       boolean      firstFloor = false;
     private final LinearOpMode opMode;
 

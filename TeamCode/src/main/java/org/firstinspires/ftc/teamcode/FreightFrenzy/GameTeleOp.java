@@ -18,7 +18,7 @@ public class GameTeleOp extends LinearOpMode {
     DuckSystem      duckSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
-    TouchSensor touch;
+    TouchSensor     touch;
     int             counter = 0;
 
     @Override
@@ -75,16 +75,15 @@ public class GameTeleOp extends LinearOpMode {
             if (collecting && touch.isPressed()) {
                 armSystem.stop();
                 collecting = false;
-                telemetry.addLine("did");
             }
 
             // rumble controller if touchSensor was just pressed
-            if (touch.isPressed()){
-                if (!prevTouchSensorPressed){
+            if (touch.isPressed()) {
+                if (!prevTouchSensorPressed) {
                     gamepad1.rumble(1000);
                 }
                 prevTouchSensorPressed = true;
-            }else {
+            } else {
                 prevTouchSensorPressed = false;
                 gamepad1.stopRumble();
             }

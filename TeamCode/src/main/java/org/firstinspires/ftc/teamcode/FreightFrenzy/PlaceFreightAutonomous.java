@@ -11,21 +11,21 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Crater;
 
 @TeleOp(name = "Place Freight Left", group = "LinearOpMode")
 public class PlaceFreightAutonomous extends LinearOpMode {
-    Carousel car;
-    Crater crater;
+    Carousel        car;
+    Crater          crater;
     EverglowGamepad g;
-    DrivingSystem d;
+    DrivingSystem   d;
 
     @Override
     public void runOpMode() {
-        car = new Carousel(this);
+        car    = new Carousel(this);
         crater = new Crater(this);
-        g = new EverglowGamepad(gamepad1);
-        d = new DrivingSystem(this);
+        g      = new EverglowGamepad(gamepad1);
+        d      = new DrivingSystem(this);
 
         waitForStart();
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
             if (g.buttonPress("a")) {
                 car.placeFreight();
                 stop();
