@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Carousel {
     DrivingSystem   drivingSystem;
@@ -21,7 +22,7 @@ public class Carousel {
         drivingSystem   = new DrivingSystem(opMode);
         armSystem       = new ArmSystem(opMode);
         duckSystem      = new DuckSystem(opMode);
-        detectionSystem = new DetectionSystem(opMode);
+//        detectionSystem = new DetectionSystem(opMode);
         timer           = new ElapsedTime();
     }
 
@@ -29,14 +30,20 @@ public class Carousel {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+        //ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         // move to carousel
-        drivingSystem.driveStraight(121, 0.4);
+        drivingSystem.driveStraight(95, 0.4);
         drivingSystem.turn(-90, 200);
-        drivingSystem.driveStraight(10, 0.4);
         // place duck on carousel
-        armSystem.autonomousMoveArm(floor);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
+        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(20, 0.4);
+        TimeUtils.sleep(500);
         armSystem.spit();
+        TimeUtils.sleep(500);
+        armSystem.stop();
+        drivingSystem.driveStraight(20, -0.4);
+        TimeUtils.sleep(500);
         armSystem.reload();
     }
 

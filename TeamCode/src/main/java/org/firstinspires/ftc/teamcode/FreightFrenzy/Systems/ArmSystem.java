@@ -47,7 +47,7 @@ public class ArmSystem {
         firstFloor = false;
         arm.setTargetPosition(-100);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.4);
+        arm.setPower(0.3);
         loaded = true;
     }
 
@@ -83,7 +83,7 @@ public class ArmSystem {
     public void autonomousMoveArm(Floors level) {
         switch (level) {
             case THIRD:
-                moveArm(-550);
+                moveArm(-600);
                 break;
             case SECOND:
                 moveArm(-350);

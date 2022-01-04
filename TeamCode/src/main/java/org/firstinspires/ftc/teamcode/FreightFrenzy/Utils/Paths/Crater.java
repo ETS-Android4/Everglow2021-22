@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Crater {
     DrivingSystem   drivingSystem;
@@ -19,7 +20,7 @@ public class Crater {
         this.opMode     = opMode;
         drivingSystem   = new DrivingSystem(opMode);
         armSystem       = new ArmSystem(opMode);
-        detectionSystem = new DetectionSystem(opMode);
+//        detectionSystem = new DetectionSystem(opMode);
         duckSystem      = new DuckSystem(opMode);
     }
 
@@ -27,15 +28,26 @@ public class Crater {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+//        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         // drive to alliance shipping hub
-        drivingSystem.driveStraight(121, 0.4);
+        drivingSystem.driveSideways(15, 0.4);
+        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(95, 0.4);
+        TimeUtils.sleep(500);
         drivingSystem.turn(90, 200);
-        drivingSystem.driveStraight(10, 0.4);
+        TimeUtils.sleep(500);
         // place freight on alliance shipping hub
-        armSystem.autonomousMoveArm(floor);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
+        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(10, 0.4);
+        TimeUtils.sleep(500);
         armSystem.spit();
+        TimeUtils.sleep(500);
+        armSystem.stop();
+        drivingSystem.driveStraight(10, -0.4);
+        TimeUtils.sleep(500);
         armSystem.reload();
+        TimeUtils.sleep(500);
     }
 
     /**
