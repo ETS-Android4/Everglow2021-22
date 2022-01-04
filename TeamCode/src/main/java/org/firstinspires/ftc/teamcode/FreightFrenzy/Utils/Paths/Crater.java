@@ -33,7 +33,7 @@ public class Crater {
         drivingSystem.turn(90, 200);
         drivingSystem.driveStraight(10, 0.4);
         // place freight on alliance shipping hub
-        armSystem.moveArm(floor);
+        armSystem.autonomousMoveArm(floor);
         armSystem.spit();
         armSystem.reload();
     }

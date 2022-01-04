@@ -3,22 +3,22 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class EverglowGamepad {
-    Gamepad sus;
+    private final Gamepad sus;
 
-    boolean previousA;
-    boolean previousB;
-    boolean previousX;
-    boolean previousY;
+    private boolean previousA;
+    private boolean previousB;
+    private boolean previousX;
+    private boolean previousY;
 
-    boolean previousRight;
-    boolean previousLeft;
-    boolean previousUp;
-    boolean previousDown;
+    private boolean previousRight;
+    private boolean previousLeft;
+    private boolean previousUp;
+    private boolean previousDown;
 
-    boolean previousRb;
-    double previousRt;
-    boolean previousLb;
-    double previousLt;
+    private boolean previousRb;
+    private double previousRt;
+    private boolean previousLb;
+    private double previousLt;
 
     public EverglowGamepad(Gamepad gamepad) {
         this.sus = gamepad;
@@ -67,7 +67,7 @@ public class EverglowGamepad {
                 }
                 break;
             case "Rt":
-                if ((previousRt < 0.1) && (sus.right_trigger != 0)) {
+                if ((previousRt < 0.1) && (sus.right_trigger > 0.1)) {
                     return true;
                 }
                 break;
@@ -77,7 +77,7 @@ public class EverglowGamepad {
                 }
                 break;
             case "Lt":
-                if ((previousLt < 0.1) && (sus.left_trigger != 0)) {
+                if ((previousLt < 0.1) && (sus.left_trigger > 0.1)) {
                     return true;
                 }
                 break;

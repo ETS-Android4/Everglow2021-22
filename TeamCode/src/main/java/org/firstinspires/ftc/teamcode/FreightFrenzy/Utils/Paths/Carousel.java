@@ -35,7 +35,7 @@ public class Carousel {
         drivingSystem.turn(-90, 200);
         drivingSystem.driveStraight(10, 0.4);
         // place duck on carousel
-        armSystem.moveArm(floor);
+        armSystem.autonomousMoveArm(floor);
         armSystem.spit();
         armSystem.reload();
     }

@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 
 public class DrivingSystem {
     private final DcMotor      frontRight;
@@ -23,12 +22,12 @@ public class DrivingSystem {
 
     private double targetAngle = 0;
 
-    static final        double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
-    static final        double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
-    static final        double WHEEL_DIAMETER_MM    = 50;     // For figuring circumference
-    static final        double COUNTS_PER_mm        = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    private static final double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
+    private static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    private static final double WHEEL_DIAMETER_MM    = 50;     // For figuring circumference
+    private static final double COUNTS_PER_mm        = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_MM * 3.1415);
-    public static final double WHEEL_RADIUS_CM      = 4.8;
+    private static final double WHEEL_RADIUS_CM      = 4.8;
 
     public DrivingSystem(LinearOpMode opMode) {
         this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");

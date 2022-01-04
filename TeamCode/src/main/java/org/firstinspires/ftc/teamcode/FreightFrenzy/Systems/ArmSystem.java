@@ -4,12 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class ArmSystem {
-    public DcMotor flyWheels;
-    public DcMotor arm;
-    double       armPosition;
-    boolean loaded = false;
-    boolean firstFloor = false;
-    LinearOpMode opMode;
+    public  DcMotor      flyWheels;
+    public  DcMotor      arm;
+    private boolean      loaded     = false;
+    private boolean      firstFloor = false;
+    private LinearOpMode opMode;
 
     public enum Floors {
         FIRST, SECOND, THIRD
@@ -20,7 +19,6 @@ public class ArmSystem {
         this.arm       = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        armPosition = 0;
         this.opMode = opMode;
     }
 
@@ -37,17 +35,19 @@ public class ArmSystem {
     }
 
     public void moveArm(int place) {
-        loaded = false;
+        loaded     = false;
         firstFloor = false;
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(0.5);
     }
 
     public void reload() {
+        firstFloor = false;
         arm.setTargetPosition(-100);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.25);
+        arm.setPower(0.4);
         loaded = true;
     }
 
@@ -58,15 +58,28 @@ public class ArmSystem {
     }
 
     public void restOnFirstFloor() {
-        if (-2500 >= arm.getCurrentPosition() && firstFloor) {
-            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (-2400 >= arm.getCurrentPosition() && firstFloor) {
+            arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
     }
 
     public void moveArm(Floors level) {
-        armPosition = arm.getCurrentPosition();
-        this.opMode.telemetry.addData("armPosition", armPosition);
-        this.opMode.telemetry.update();
+        this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
+        switch (level) {
+            case THIRD:
+                moveArm(-2000);
+                break;
+            case SECOND:
+                moveArm(-2200);
+                break;
+            case FIRST:
+                moveArm(-2400);
+                firstFloor = true;
+        }
+    }
+
+    public void autonomousMoveArm(Floors level) {
         switch (level) {
             case THIRD:
                 moveArm(-550);
