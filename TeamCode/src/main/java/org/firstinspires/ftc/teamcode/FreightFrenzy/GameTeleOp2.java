@@ -20,7 +20,6 @@ public class GameTeleOp2 extends LinearOpMode {
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
     TouchSensor    touch;
-    DigitalChannel  digitalTouch;
     int             counter = 0;
 
     @Override
@@ -30,12 +29,8 @@ public class GameTeleOp2 extends LinearOpMode {
         duckSystem    = new DuckSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
-//        touch         = hardwareMap.get(TouchSensor.class, "touch");
-        touch = hardwareMap.touchSensor.get("touch");
-        digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");
-        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+        touch         = hardwareMap.get(TouchSensor.class, "touch");
 
-        boolean toggle = false;
         boolean collecting = false;
 
         waitForStart();
@@ -79,12 +74,6 @@ public class GameTeleOp2 extends LinearOpMode {
                 armSystem.stop();
                 collecting = false;
                 telemetry.addLine("did");
-            }
-
-            if (digitalTouch.getState()) {
-                telemetry.addData("Digital Touch", "Is Not Pressed");
-            } else {
-                telemetry.addData("Digital Touch", "Is Pressed");
             }
 
             armSystem.restOnLoad();
