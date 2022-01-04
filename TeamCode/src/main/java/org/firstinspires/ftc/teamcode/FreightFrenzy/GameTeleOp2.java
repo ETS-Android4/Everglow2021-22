@@ -83,8 +83,6 @@ public class GameTeleOp2 extends LinearOpMode {
             armSystem.restOnLoad();
             armSystem.restOnFirstFloor();
 
-            ourGamepad1.update();
-            ourGamepad2.update();
             telemetry.addData("counter: ", counter++);
             telemetry.addData("arm position: ", armSystem.arm.getCurrentPosition());
             telemetry.update();

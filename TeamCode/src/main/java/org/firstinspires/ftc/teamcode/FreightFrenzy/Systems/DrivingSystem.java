@@ -97,45 +97,6 @@ public class DrivingSystem {
         backLeft.setPower(backLeftPower);
     }
 
-    public void rotateInPlace(double rotationDegrees, double maxSpeed, double minSpeed, boolean mock) {
-        final int TIMES_TO_PASS_TARGET = 4;
-
-        targetAngle = normalizeAngle(getCurrentAngle() + rotationDegrees);
-        this.opMode.telemetry.addData("targetAngle", targetAngle);
-        this.opMode.telemetry.addData("isRotatingInPlace", true);
-        this.opMode.telemetry.update();
-
-        boolean rotatingClockwise = getAngleDeviation() < 0;
-        int numTimesPastTarget = 0;
-        while (numTimesPastTarget < TIMES_TO_PASS_TARGET) {
-            double currentAngle = getCurrentAngle();
-            double angleDeviation = getAngleDeviation();
-            double motorPower = -angleDeviation / 180 * (maxSpeed - minSpeed) + minSpeed;
-            if (mock) {
-                driveByJoystick(0, 0, 0);
-            } else {
-                driveByJoystick(0, 0, motorPower);
-            }
-            if (angleDeviation > 0 && rotatingClockwise) {
-                numTimesPastTarget++;
-                rotatingClockwise = false;
-            } else if (angleDeviation < 0 && !rotatingClockwise) {
-                numTimesPastTarget++;
-                rotatingClockwise = true;
-            }
-            this.opMode.telemetry.addData("currentAngle", currentAngle);
-            this.opMode.telemetry.addData("motorPower", motorPower);
-            this.opMode.telemetry.addData("angleDeviation", angleDeviation);
-            this.opMode.telemetry.addData("numTimesPastTarget", numTimesPastTarget);
-            this.opMode.telemetry.update();
-
-        }
-        stöp();
-        this.opMode.telemetry.addData("isRotatingInPlace", false);
-        this.opMode.telemetry.update();
-
-    }
-
     public void turn(float deg, int speedDecrease) {
         targetAngle = normalizeAngle(targetAngle + deg);
         double d = getAngleDeviation();

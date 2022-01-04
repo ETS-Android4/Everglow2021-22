@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class DuckSystem {
-    private DcMotor duck1;
-    private DcMotor duck2;
+    private final DcMotor duck1;
+    private final DcMotor duck2;
 
     public DuckSystem(LinearOpMode opMode) {
         this.duck1 = opMode.hardwareMap.get(DcMotor.class, "duck1");
@@ -15,8 +15,8 @@ public class DuckSystem {
     }
 
     public void run() {
-        duck1.setPower(-0.4);
-        duck2.setPower(0.4);
+        duck1.setPower(0.4);
+        duck2.setPower(-0.4);
     }
 
     public void runFor(long durationMillis) {

@@ -7,8 +7,8 @@ public class ArmSystem {
     public  DcMotor      flyWheels;
     public  DcMotor      arm;
     private boolean      loaded     = false;
-    private boolean      firstFloor = false;
-    private LinearOpMode opMode;
+    private       boolean      firstFloor = false;
+    private final LinearOpMode opMode;
 
     public enum Floors {
         FIRST, SECOND, THIRD
@@ -54,6 +54,7 @@ public class ArmSystem {
     public void restOnLoad() {
         if (-105 <= arm.getCurrentPosition() && loaded) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
     }
 
