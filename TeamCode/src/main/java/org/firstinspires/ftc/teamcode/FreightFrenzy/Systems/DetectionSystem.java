@@ -7,10 +7,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class DetectionSystem {
 
-    public static final double LEFT_TARGET_DISTANCE_CM = 65;
-    public static final double MID_TARGET_DISTANCE_CM = 60;
+    public static final double LEFT_TARGET_DISTANCE_CM  = 65;
+    public static final double MID_TARGET_DISTANCE_CM   = 60;
     public static final double RIGHT_TARGET_DISTANCE_CM = 65;
-    public static final double ERROR_THRESHOLD_CM = 30;
+    public static final double ERROR_THRESHOLD_CM       = 30;
 
     private final LinearOpMode opMode;
     private final DistanceSensor leftSensor;
@@ -18,9 +18,9 @@ public class DetectionSystem {
     private final DistanceSensor rightSensor;
 
     public DetectionSystem(LinearOpMode opMode) {
-        this.opMode = opMode;
-        this.leftSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
-        this.midSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_middle");
+        this.opMode      = opMode;
+        this.leftSensor  = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
+        this.midSensor   = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_middle");
         this.rightSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
     }
 
