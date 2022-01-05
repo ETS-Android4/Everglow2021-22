@@ -27,7 +27,7 @@ public class ArmSystem {
     }
 
     public void spit() {
-        flyWheels.setPower(-0.5);
+        flyWheels.setPower(-0.3);
     }
 
     public void stop() {
@@ -83,7 +83,7 @@ public class ArmSystem {
     public void autonomousMoveArm(Floors level) {
         switch (level) {
             case THIRD:
-                moveArm(-600);
+                moveArm(-650);
                 break;
             case SECOND:
                 moveArm(-350);

@@ -85,9 +85,13 @@ public class Carousel {
         placeFreight();
         // go to right of the shipping hub
         drivingSystem.driveSideways(50, -0.4);
-        drivingSystem.driveStraight(130, 0.4);
-        drivingSystem.driveSideways(70, 0.4);
+        drivingSystem.driveStraight(120, 0.4);
+        drivingSystem.driveSideways(80, 0.4);
         // drives through barrier, using max power
-        drivingSystem.driveStraight(75, 1);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(100, 1);
+        armSystem.reload();
+        // todo: use distance sensor to see distance towards wall to avoid bumping into wall
     }
 }
