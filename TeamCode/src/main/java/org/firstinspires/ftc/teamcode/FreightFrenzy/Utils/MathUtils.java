@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils;
 
+import androidx.annotation.Nullable;
+
+import org.firstinspires.ftc.robotcore.internal.android.dx.util.IntIterator;
+
+import java.util.List;
+
 public class MathUtils {
     /**
      * Given Two Angles, return the distance between the two angles, ensuring that the difference is less than 180 degrees.
@@ -23,5 +29,19 @@ public class MathUtils {
 
     public static double cosDegrees(double angle) {
         return Math.cos(Math.toRadians(angle));
+    }
+
+    @Nullable
+    public static Double min(List<Double> values){
+        if (values.isEmpty()){
+            return null;
+        }
+        Double minValue = Double.MAX_VALUE;
+        for(Double value: values){
+            if (value < minValue){
+                minValue = value;
+            }
+        }
+        return minValue;
     }
 }

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
@@ -10,8 +9,11 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "GameTeleOp", group = "Linear Opmode")
+@TeleOp(name = "GameTeleOp [modified 2]", group = "Linear Opmode")
 public class GameTeleOp extends LinearOpMode {
+
+    // when the right stick is pressed on the controller, make the rotation slower by this factor.
+    private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 5;
 
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
@@ -38,8 +40,13 @@ public class GameTeleOp extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            drivingSystem.driveByJoystick(gamepad2.left_stick_x, gamepad2.left_stick_y,
-                    gamepad2.right_stick_x);
+            if (gamepad2.right_stick_button){
+                drivingSystem.driveByJoystick(gamepad2.left_stick_x, gamepad2.left_stick_y,
+                        gamepad2.right_stick_x / RIGHT_STICK_DOWN_MOVE_REDUCTION);
+            }else {
+                drivingSystem.driveByJoystick(gamepad2.left_stick_x, gamepad2.left_stick_y,
+                        gamepad2.right_stick_x);
+            }
 
             if (gamepad2.x) {
                 armSystem.reload();
@@ -80,7 +87,7 @@ public class GameTeleOp extends LinearOpMode {
             // rumble controller if touchSensor was just pressed
             if (touch.isPressed()) {
                 if (!prevTouchSensorPressed) {
-                    gamepad2.rumble(1000);
+                    gamepad1.rumble(1000);
                 }
                 prevTouchSensorPressed = true;
             } else {

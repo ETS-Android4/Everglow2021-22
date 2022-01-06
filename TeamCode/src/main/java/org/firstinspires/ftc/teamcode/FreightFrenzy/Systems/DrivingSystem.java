@@ -130,6 +130,7 @@ public class DrivingSystem {
         stöp();
     }
 
+
     public void driveSideways(double distance, double power) {
         resetDistance();
         double AverageMotors = 0;
@@ -138,6 +139,24 @@ public class DrivingSystem {
             driveByJoystick(power, 0, getAngleDeviation() / 40);
             AverageMotors = (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
             AverageMotors = Math.abs(AverageMotors);
+            this.opMode.telemetry.addData("distance", AverageMotors);
+            this.opMode.telemetry.update();
+        }
+        stöp();
+    }
+
+    /**
+     * Drives sideways, and repeatedly calls the DetectionSystem.scan() method.
+     */
+    public void driveSidewaysAndScan(double distance, double power, DetectionSystem detectionSystem) {
+        resetDistance();
+        double AverageMotors = 0;
+        this.opMode.telemetry.addData("distance", AverageMotors);
+        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
+            driveByJoystick(power, 0, getAngleDeviation() / 40);
+            AverageMotors = (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
+            AverageMotors = Math.abs(AverageMotors);
+            detectionSystem.scan();
             this.opMode.telemetry.addData("distance", AverageMotors);
             this.opMode.telemetry.update();
         }
