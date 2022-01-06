@@ -31,11 +31,8 @@ public class Crater {
 //        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         // drive to alliance shipping hub
         drivingSystem.driveSideways(10, 0.4);
-        TimeUtils.sleep(500);
         drivingSystem.driveStraight(95, 0.4);
-        TimeUtils.sleep(500);
         drivingSystem.turn(90, 200);
-        TimeUtils.sleep(500);
         // place freight on alliance shipping hub
         armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
         TimeUtils.sleep(500);

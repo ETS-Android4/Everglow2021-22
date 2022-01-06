@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -52,14 +53,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @TeleOp(name = "Distance Sensor Test 2", group = "Test")
 public class DistanceSensorTest extends LinearOpMode {
 
-    private DistanceSensor leftSensor;
-    private DistanceSensor rightSensor;
-
     @Override
     public void runOpMode() {
         // you can use this as a regular DistanceSensor.
-        leftSensor = hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
-        rightSensor = hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
+        Rev2mDistanceSensor leftSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
+        Rev2mDistanceSensor rightSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
 
         // you can also cast this to a Rev2mDistanceSensor if you want to use added
         // methods associated with the Rev2mDistanceSensor class.

@@ -6,16 +6,19 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class DrivingSystem {
     private final DcMotor      frontRight;
     private final DcMotor      frontLeft;
     private final DcMotor      backRight;
     private final DcMotor      backLeft;
+    private final DistanceSensor distanceSensor;
     private final LinearOpMode opMode;
 
     private final BNO055IMU imu;
@@ -34,6 +37,7 @@ public class DrivingSystem {
         this.frontLeft  = opMode.hardwareMap.get(DcMotor.class, "front_left");
         this.backRight  = opMode.hardwareMap.get(DcMotor.class, "back_right");
         this.backLeft   = opMode.hardwareMap.get(DcMotor.class, "back_left");
+        this.distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
         this.opMode     = opMode;
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -133,6 +137,22 @@ public class DrivingSystem {
         while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
             driveByJoystick(power, 0, getAngleDeviation() / 40);
             AverageMotors = (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
+            AverageMotors = Math.abs(AverageMotors);
+            this.opMode.telemetry.addData("distance", AverageMotors);
+            this.opMode.telemetry.update();
+        }
+        stöp();
+    }
+
+
+    public void driveUntilObstacle(double distance, double power) {
+        power *= -1;
+        resetDistance();
+        double AverageMotors = 0;
+        this.opMode.telemetry.addData("distance", AverageMotors);
+        while (distanceSensor.getDistance(DistanceUnit.CM) > distance) {
+            driveByJoystick(0, power, getAngleDeviation() / 40);
+            AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
             AverageMotors = Math.abs(AverageMotors);
             this.opMode.telemetry.addData("distance", AverageMotors);
             this.opMode.telemetry.update();

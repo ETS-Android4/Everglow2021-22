@@ -90,8 +90,7 @@ public class Carousel {
         // drives through barrier, using max power
         armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
         TimeUtils.sleep(500);
-        drivingSystem.driveStraight(100, 1);
+        drivingSystem.driveUntilObstacle(50, 1);
         armSystem.reload();
-        // todo: use distance sensor to see distance towards wall to avoid bumping into wall
     }
 }
