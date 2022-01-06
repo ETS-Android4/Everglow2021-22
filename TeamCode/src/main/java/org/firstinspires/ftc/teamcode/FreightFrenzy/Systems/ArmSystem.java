@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
+
 public class ArmSystem {
     public        DcMotor      flyWheels;
     public        DcMotor      arm;
@@ -65,6 +67,13 @@ public class ArmSystem {
         }
     }
 
+    public void autonomousReload() {
+        reload();
+        restOnLoad();
+        TimeUtils.sleep(500);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
     public void moveArm(Floors level) {
         this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
         switch (level) {
@@ -86,10 +95,10 @@ public class ArmSystem {
                 moveArm(-650);
                 break;
             case SECOND:
-                moveArm(-350);
+                moveArm(-450);
                 break;
             case FIRST:
-                moveArm(-165);
+                moveArm(-180);
         }
     }
 }

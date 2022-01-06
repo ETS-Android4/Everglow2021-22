@@ -12,7 +12,7 @@ public class Crater {
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
     LinearOpMode    opMode;
-    DetectionSystem detectionSystem;
+    public DetectionSystem detectionSystem;
     private final DuckSystem duckSystem;
 
 
@@ -20,7 +20,7 @@ public class Crater {
         this.opMode   = opMode;
         drivingSystem = new DrivingSystem(opMode);
         armSystem     = new ArmSystem(opMode);
-//        detectionSystem = new DetectionSystem(opMode);
+        detectionSystem = new DetectionSystem(opMode);
         duckSystem = new DuckSystem(opMode);
     }
 
@@ -28,23 +28,22 @@ public class Crater {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight() {
-//        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         // drive to alliance shipping hub
-        drivingSystem.driveSideways(10, 0.4);
-        drivingSystem.driveStraight(95, 0.4);
+        drivingSystem.driveSideways(10, 0.5);
+        drivingSystem.driveStraight(95, 0.5);
         drivingSystem.turn(90, 200);
         // place freight on alliance shipping hub
-        armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
+        armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
-        drivingSystem.driveStraight(5, 0.4);
+        drivingSystem.driveStraight(7, 0.5);
         TimeUtils.sleep(500);
         armSystem.spit();
         TimeUtils.sleep(500);
         armSystem.stop();
-        drivingSystem.driveStraight(10, -0.4);
+        drivingSystem.driveStraight(7, -0.5);
         TimeUtils.sleep(500);
-        armSystem.reload();
-        TimeUtils.sleep(500);
+        armSystem.autonomousReload();
     }
 
     /**
@@ -65,17 +64,20 @@ public class Crater {
     public void R2() {
         placeFreight();
         // move to carousel
-        drivingSystem.driveSideways(50, -0.4);
-        drivingSystem.turn(90, 200);
-        drivingSystem.driveSideways(150, -0.4);
-        drivingSystem.turn(90, 200);
-        drivingSystem.driveSideways(71, 0.4);
+        drivingSystem.driveSideways(50, 0.6);
+        drivingSystem.driveStraight(180, 0.6);
+        TimeUtils.sleep(100);
+        drivingSystem.driveSideways(120, -0.7);
+        drivingSystem.driveSideways(45, -0.4);
         // drop duck
-        duckSystem.runFor(1000);
+        duckSystem.runFor(4000);
         // move to crater
-        drivingSystem.driveSideways(80, -0.4);
-        drivingSystem.driveStraight(240, 0.4);
-        armSystem.collect();
+        drivingSystem.driveSideways(50, 0.6);
+        drivingSystem.turn(180, 200);
+        armSystem.moveArm(-300);
+        TimeUtils.sleep(700);
+        drivingSystem.driveUntilObstacle(60, 1);
+        armSystem.autonomousReload();
     }
 
     /**
@@ -86,7 +88,7 @@ public class Crater {
         // move to carousel
         drivingSystem.driveSideways(50, 0.4);
         drivingSystem.driveStraight(185, 0.4);
-        drivingSystem.driveSideways(162, -0.4);
+        drivingSystem.driveSideways(170, -0.4);
         // drop duck
         duckSystem.runFor(5000);
         // move to alliance storage unit

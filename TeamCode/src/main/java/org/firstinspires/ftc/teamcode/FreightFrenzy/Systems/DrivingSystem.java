@@ -148,13 +148,9 @@ public class DrivingSystem {
     public void driveUntilObstacle(double distance, double power) {
         power *= -1;
         resetDistance();
-        double AverageMotors = 0;
-        this.opMode.telemetry.addData("distance", AverageMotors);
         while (distanceSensor.getDistance(DistanceUnit.CM) > distance) {
             driveByJoystick(0, power, getAngleDeviation() / 40);
-            AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
-            AverageMotors = Math.abs(AverageMotors);
-            this.opMode.telemetry.addData("distance", AverageMotors);
+            this.opMode.telemetry.addData("distance", distanceSensor.getDistance(DistanceUnit.CM));
             this.opMode.telemetry.update();
         }
         stöp();

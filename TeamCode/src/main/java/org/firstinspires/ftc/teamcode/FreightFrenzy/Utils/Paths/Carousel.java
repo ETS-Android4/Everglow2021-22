@@ -13,7 +13,7 @@ public class Carousel {
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
     DuckSystem      duckSystem;
-    DetectionSystem detectionSystem;
+    public DetectionSystem detectionSystem;
     LinearOpMode    opMode;
     ElapsedTime     timer;
 
@@ -22,7 +22,7 @@ public class Carousel {
         drivingSystem = new DrivingSystem(opMode);
         armSystem     = new ArmSystem(opMode);
         duckSystem    = new DuckSystem(opMode);
-//        detectionSystem = new DetectionSystem(opMode);
+        detectionSystem = new DetectionSystem(opMode);
         timer = new ElapsedTime();
     }
 
@@ -30,12 +30,12 @@ public class Carousel {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight() {
-        //ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
         // move to carousel
         drivingSystem.driveStraight(95, 0.4);
         drivingSystem.turn(-90, 200);
         // place duck on carousel
-        armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
+        armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(20, 0.4);
         TimeUtils.sleep(500);
@@ -44,7 +44,7 @@ public class Carousel {
         armSystem.stop();
         drivingSystem.driveStraight(20, -0.4);
         TimeUtils.sleep(500);
-        armSystem.reload();
+        armSystem.autonomousReload();
     }
 
     /**
@@ -69,13 +69,13 @@ public class Carousel {
     public void L2() {
         placeFreight();
         // go to duck
-        drivingSystem.driveSideways(121, 0.4);
-        drivingSystem.driveStraight(80, -0.4);
+        drivingSystem.driveSideways(100, 0.4);
+        drivingSystem.turn(180, 200);
+        drivingSystem.driveStraight(50, 0.4);
         // spin duck
-        duckSystem.runFor(1000);
+        duckSystem.runFor(5000);
         // go to alliance storage unit
-        drivingSystem.driveSideways(50, -0.4);
-        drivingSystem.driveStraight(20, -0.4);
+        drivingSystem.driveSideways(70, 0.4);
     }
 
     /**
@@ -86,11 +86,11 @@ public class Carousel {
         // go to right of the shipping hub
         drivingSystem.driveSideways(50, -0.4);
         drivingSystem.driveStraight(120, 0.4);
-        drivingSystem.driveSideways(80, 0.4);
+        drivingSystem.driveSideways(100, 0.4);
         // drives through barrier, using max power
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-        TimeUtils.sleep(500);
-        drivingSystem.driveUntilObstacle(50, 1);
-        armSystem.reload();
+        armSystem.moveArm(-300);
+        TimeUtils.sleep(700);
+        drivingSystem.driveUntilObstacle(60, 1);
+        armSystem.autonomousReload();
     }
 }
