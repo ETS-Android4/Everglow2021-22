@@ -52,10 +52,12 @@ public class Crater {
     public void R1() {
         placeFreight();
         // go to crater and collect
-        drivingSystem.driveSideways(121, 0.4);
+        drivingSystem.driveStraight(180, 0.6);
         drivingSystem.turn(180, 200);
-        drivingSystem.driveStraight(80, 0.4);
-        armSystem.collect();
+        drivingSystem.driveSideways(121.5, 0.4);
+        armSystem.moveArm(-300);
+        TimeUtils.sleep(700);
+        drivingSystem.driveUntilObstacle(60, 0.4);
     }
 
     /**

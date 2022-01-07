@@ -25,7 +25,8 @@ public class ArmSystem {
     }
 
     public void collect() {
-        flyWheels.setPower(0.5);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        flyWheels.setPower(1);
     }
 
     public void spit() {

@@ -52,15 +52,19 @@ public class Carousel {
      */
     public void L1() {
         placeFreight();
-        // drive to carousel
-        drivingSystem.driveSideways(121, 0.4);
-        drivingSystem.driveStraight(80, -0.4);
-        // drop duck
-        duckSystem.runFor(1000);
-        // Go to crater
-        drivingSystem.driveStraight(100, 0.4);
-        drivingSystem.driveSideways(10, 0.1);
-        drivingSystem.driveStraight(250, 0.4);
+        drivingSystem.driveSideways(100, 0.6);
+        drivingSystem.turn(180, 150);
+        drivingSystem.driveStraight(50, 0.4);
+        // spin duck
+        duckSystem.runFor(5000);
+        // go to crater
+        drivingSystem.driveSideways(50, 0.6);
+        drivingSystem.turn(180,150);
+        armSystem.moveArm(-300);
+        TimeUtils.sleep(700);
+        // go to alliance storage unit
+        drivingSystem.driveUntilObstacle(60, 0.9);
+        armSystem.autonomousReload();
     }
 
     /**
