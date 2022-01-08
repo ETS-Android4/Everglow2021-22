@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
- * {@link DistanceSensorTest} illustrates how to use the REV Robotics
+ * {@link TestDistanceSensor} illustrates how to use the REV Robotics
  * Time-of-Flight Range Sensor.
  *
  * The op mode assumes that the range sensor is configured with a name of "sensor_range".
@@ -50,8 +50,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  *
  * @see <a href="http://revrobotics.com">REV Robotics Web Page</a>
  */
-@TeleOp(name = "Distance Sensor Test 2", group = "Test")
-public class DistanceSensorTest extends LinearOpMode {
+@TeleOp(name = "Distance Sensor Test", group = "Test")
+public class TestDistanceSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() {

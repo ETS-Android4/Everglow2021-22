@@ -9,11 +9,12 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "GameTeleOp [modified 2]", group = "Linear Opmode")
+@TeleOp(name = "GameTeleOp", group = "Linear Opmode")
 public class GameTeleOp extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
-    private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 5;
+    private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
+    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION = 5;
 
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
@@ -40,12 +41,18 @@ public class GameTeleOp extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad2.right_stick_button){
-                drivingSystem.driveByJoystick(gamepad2.left_stick_x, gamepad2.left_stick_y,
-                        gamepad2.right_stick_x / RIGHT_STICK_DOWN_MOVE_REDUCTION);
-            }else {
-                drivingSystem.driveByJoystick(gamepad2.left_stick_x, gamepad2.left_stick_y,
-                        gamepad2.right_stick_x);
+            {
+                double left_stick_x = gamepad2.left_stick_x;
+                double left_stick_y = gamepad2.left_stick_y;
+                double right_stick_x = gamepad2.right_stick_x;
+                if (gamepad2.right_stick_button){
+                    right_stick_x/=RIGHT_STICK_DOWN_MOVE_REDUCTION;
+                }
+                if (gamepad2.left_stick_button){
+                    left_stick_x/= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                    left_stick_y/= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                }
+                drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             }
 
             if (gamepad2.x) {
@@ -79,6 +86,15 @@ public class GameTeleOp extends LinearOpMode {
                 duckSystem.stöp();
             }
 
+            if (gamepad2.dpad_left){
+                armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+            }
+
+            if (gamepad2.dpad_right){
+                armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+            }
+
+
             if (collecting && touch.isPressed()) {
                 armSystem.stop();
                 collecting = false;
@@ -87,12 +103,11 @@ public class GameTeleOp extends LinearOpMode {
             // rumble controller if touchSensor was just pressed
             if (touch.isPressed()) {
                 if (!prevTouchSensorPressed) {
-                    gamepad1.rumble(1000);
+                    gamepad2.rumble(1000);
                 }
                 prevTouchSensorPressed = true;
             } else {
                 prevTouchSensorPressed = false;
-//                gamepad2.stopRumble();
             }
 
             armSystem.restOnLoad();

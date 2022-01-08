@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "FirstOpMode", group = "Linear Opmode")
+@Disabled
 public class OpMode1 extends LinearOpMode {
     DrivingSystem   drivingSystem;
     EverglowGamepad gamepad;

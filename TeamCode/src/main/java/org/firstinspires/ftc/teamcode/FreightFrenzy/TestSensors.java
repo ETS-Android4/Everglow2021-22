@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -12,8 +11,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@Autonomous(name = "Simple Detection System Test", group = "Test")
-public class TestDetectionSystemSimple extends LinearOpMode {
+@TeleOp(name = "Test Sensors", group = "Test")
+public class TestSensors extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     DrivingSystem   drivingSystem;
@@ -23,7 +22,6 @@ public class TestDetectionSystemSimple extends LinearOpMode {
     EverglowGamepad ourGamepad2;
     TouchSensor     touch;
     DetectionSystem detectionSystem;
-    int             counter = 0;
 
     @Override
     public void runOpMode() {
@@ -36,14 +34,42 @@ public class TestDetectionSystemSimple extends LinearOpMode {
         touch         = hardwareMap.get(TouchSensor.class, "touch");
 
         waitForStart();
-
+        telemetry.addLine("Press X to test Advanced Detection System.");
+        telemetry.addLine("Press Y to test Simple Detection System.");
+        telemetry.addLine("Press B to test drive until obstacle.");
+        telemetry.update();
         while (opModeIsActive()) {
-            detectionSystem.reset();
-            armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-            TimeUtils.sleep(1000);
-            ArmSystem.Floors targetFloor = detectionSystem.findTargetFloor2();
-            telemetry.addData("targetFloor", targetFloor);
-            stop();
+            if (gamepad2.x){
+                testAdvancedDetection();
+            }else if (gamepad2.y){
+                testSimpleDetection();
+            }else if(gamepad2.b){
+                testDriveUntilObstacle();
+            }
         }
+    }
+
+    private void testDriveUntilObstacle() {
+        drivingSystem.driveUntilObstacle(60, 0.4);
+    }
+
+    private void testSimpleDetection(){
+        detectionSystem.reset();
+        ArmSystem.Floors targetFloor = detectionSystem.findTargetFloor2();
+        telemetry.addData("targetFloor", targetFloor);
+        telemetry.update();
+
+        armSystem.autonomousReload();
+        TimeUtils.sleep(1000);
+    }
+
+    private void testAdvancedDetection(){
+        detectionSystem.reset();
+        ArmSystem.Floors targetFloor = detectionSystem.findTargetFloorAdvanced(0.2, 3, drivingSystem);
+        telemetry.addData("targetFloor", targetFloor);
+        telemetry.update();
+
+        armSystem.autonomousReload();
+        TimeUtils.sleep(1000);
     }
 }

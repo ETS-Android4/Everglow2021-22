@@ -13,7 +13,7 @@ public class ArmSystem {
     private final LinearOpMode opMode;
 
     public enum Floors {
-        FIRST, SECOND, THIRD
+        FIRST, SECOND, THIRD, TOTEM
     }
 
     public ArmSystem(LinearOpMode opMode) {
@@ -77,6 +77,9 @@ public class ArmSystem {
     public void moveArm(Floors level) {
         this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
         switch (level) {
+            case TOTEM:
+                moveArm(-1850); // todo: figure out exact number
+                break;
             case THIRD:
                 moveArm(-2150);
                 break;
@@ -86,11 +89,16 @@ public class ArmSystem {
             case FIRST:
                 moveArm(-2400);
                 firstFloor = true;
+                break;
+
         }
     }
 
     public void autonomousMoveArm(Floors level) {
         switch (level) {
+            case TOTEM:
+                moveArm(-850); // todo: figure out exact number
+                break;
             case THIRD:
                 moveArm(-650);
                 break;
@@ -99,6 +107,7 @@ public class ArmSystem {
                 break;
             case FIRST:
                 moveArm(-180);
+                break;
         }
     }
 }

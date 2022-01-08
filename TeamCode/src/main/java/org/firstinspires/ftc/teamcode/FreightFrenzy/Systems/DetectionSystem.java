@@ -31,7 +31,7 @@ public class DetectionSystem {
         this.opMode      = opMode;
         this.leftSensor  = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
         this.rightSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
-        this.arm = new ArmSystem(opMode); // todo: this creates a new arm system, which can cause bugs since it's a seprate arm system and ArmSystem has local variables
+        this.arm = new ArmSystem(opMode); // todo: this creates a new arm system, which can cause bugs since it's a seprate arm system and ArmSystem has local variables`
         reset();
     }
 
@@ -72,6 +72,22 @@ public class DetectionSystem {
         return targetFloor;
     }
 
+    /**
+     * Finds the floor where we need to place the cube, moving sideways to the left and right in order to ensure the scan is correct
+     * @param power How fast to drive. Should be 0.2
+     * @param distance How far to drive each way in cm. Should be 3.
+     * @param drivingSystem the driving system being used.
+     */
+    public ArmSystem.Floors findTargetFloorAdvanced(double power, double distance, DrivingSystem drivingSystem){
+        reset();
+        arm.moveArm(-300);
+        TimeUtils.sleep(700);
+        drivingSystem.driveSidewaysAndScan(distance, power, this);
+        drivingSystem.driveSidewaysAndScan(distance*2, -power, this);
+        drivingSystem.driveSidewaysAndScan(distance, power, this);
+        return findTargetFloorAfterScan();
+    }
+
     public ArmSystem.Floors findTargetFloor2() {
         arm.moveArm(-300);
         TimeUtils.sleep(700);
@@ -94,6 +110,5 @@ public class DetectionSystem {
         opMode.telemetry.addData("targetFloor", targetFloor);
         opMode.telemetry.update();
         return targetFloor;
-
     }
 }

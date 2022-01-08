@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,6 +31,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 
 @TeleOp(name = "Basic: Linear OpMode", group = "Linear Opmode")
+@Disabled
 public class firstOpMode extends LinearOpMode {
     BNO055IMU imu;
     DcMotor   motor;
