@@ -13,7 +13,7 @@ public class ArmSystem {
     private final LinearOpMode opMode;
 
     public enum Floors {
-        FIRST, SECOND, THIRD
+        FIRST, SECOND, THIRD, TOTEM
     }
 
     public ArmSystem(LinearOpMode opMode) {
@@ -87,6 +87,9 @@ public class ArmSystem {
             case FIRST:
                 moveArm(-2400);
                 firstFloor = true;
+                break;
+            case TOTEM:
+                moveArm(-1950);
         }
     }
 
