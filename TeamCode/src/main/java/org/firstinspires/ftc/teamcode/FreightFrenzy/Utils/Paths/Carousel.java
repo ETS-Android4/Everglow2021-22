@@ -16,6 +16,7 @@ public class Carousel {
     public DetectionSystem detectionSystem;
     LinearOpMode    opMode;
     ElapsedTime     timer;
+    ArmSystem.Floors floor;
 
     public Carousel(LinearOpMode opMode) {
         this.opMode   = opMode;
@@ -30,37 +31,62 @@ public class Carousel {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+        floor = detectionSystem.findTargetFloor2();
+
+        this.opMode.telemetry.addData("floor: ", floor);
+        this.opMode.telemetry.update();
+
+        //avoid totem
+        switch (floor){
+            case FIRST:
+                drivingSystem.driveSideways(15,0.4);
+                break;
+            case SECOND:
+                drivingSystem.driveSideways(25,-0.4);
+                break;
+        }
         // move to carousel
-        drivingSystem.driveStraight(95, 0.4);
+        drivingSystem.driveStraight(95, 0.5);
+
+        //get back to the same position for all
+        switch (floor){
+            case FIRST:
+                drivingSystem.driveSideways(15,-0.4);
+                break;
+            case SECOND:
+                drivingSystem.driveSideways(25,0.4);
+                break;
+        }
         drivingSystem.turn(-90, 200);
         // place duck on carousel
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
-        drivingSystem.driveStraight(20, 0.4);
+        drivingSystem.driveStraight(25, 0.4);
         TimeUtils.sleep(500);
         armSystem.spit();
         TimeUtils.sleep(500);
         armSystem.stop();
         drivingSystem.driveStraight(20, -0.4);
-        TimeUtils.sleep(500);
         armSystem.autonomousReload();
     }
-
     /**
      * Goes to carousel, and then to duck, and then to crater.
      */
     public void L1() {
         placeFreight();
-        // drive to carousel
-        drivingSystem.driveSideways(121, 0.4);
-        drivingSystem.driveStraight(80, -0.4);
-        // drop duck
-        duckSystem.runFor(1000);
-        // Go to crater
-        drivingSystem.driveStraight(100, 0.4);
-        drivingSystem.driveSideways(10, 0.1);
-        drivingSystem.driveStraight(250, 0.4);
+        drivingSystem.driveSideways(100, 0.6);
+        drivingSystem.turn(180, 150);
+        drivingSystem.driveStraight(50, 0.4);
+        // spin duck
+        duckSystem.runFor(5000);
+        // go to crater
+        drivingSystem.driveSideways(50, 0.6);
+        drivingSystem.turn(180,150);
+        armSystem.moveArm(-300);
+        TimeUtils.sleep(700);
+        // go to alliance storage unit
+        drivingSystem.driveUntilObstacle(60, 0.9);
+        armSystem.autonomousReload();
     }
 
     /**
@@ -92,5 +118,13 @@ public class Carousel {
         TimeUtils.sleep(700);
         drivingSystem.driveUntilObstacle(60, 1);
         armSystem.autonomousReload();
+    }
+
+    public void L4(){
+        placeFreight();
+
+        //drive to storage unit
+        drivingSystem.driveStraight(55,-0.4);
+        drivingSystem.driveSideways(30,0.4);
     }
 }

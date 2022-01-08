@@ -25,7 +25,8 @@ public class ArmSystem {
     }
 
     public void collect() {
-        flyWheels.setPower(0.5);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        flyWheels.setPower(1);
     }
 
     public void spit() {
@@ -49,7 +50,7 @@ public class ArmSystem {
         firstFloor = false;
         arm.setTargetPosition(-100);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.3);
+        arm.setPower(0.35);
         loaded = true;
     }
 
@@ -77,11 +78,8 @@ public class ArmSystem {
     public void moveArm(Floors level) {
         this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
         switch (level) {
-            case TOTEM:
-                moveArm(-1850); // todo: figure out exact number
-                break;
             case THIRD:
-                moveArm(-2150);
+                moveArm(-2050);
                 break;
             case SECOND:
                 moveArm(-2300);
@@ -90,24 +88,21 @@ public class ArmSystem {
                 moveArm(-2400);
                 firstFloor = true;
                 break;
-
+            case TOTEM:
+                moveArm(-1950);
         }
     }
 
     public void autonomousMoveArm(Floors level) {
         switch (level) {
-            case TOTEM:
-                moveArm(-850); // todo: figure out exact number
-                break;
             case THIRD:
                 moveArm(-650);
                 break;
             case SECOND:
-                moveArm(-450);
+                moveArm(-400);
                 break;
             case FIRST:
                 moveArm(-180);
-                break;
         }
     }
 }

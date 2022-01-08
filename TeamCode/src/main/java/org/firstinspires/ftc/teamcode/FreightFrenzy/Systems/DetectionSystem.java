@@ -65,9 +65,7 @@ public class DetectionSystem {
         } else {
             targetFloor = ArmSystem.Floors.SECOND;
         }
-        opMode.telemetry.addData("errorLeft", minErrorLeft);
-        opMode.telemetry.addData("errorRight", minErrorRight);
-        opMode.telemetry.addData("targetFloor", targetFloor);
+        opMode.telemetry.addData("target Floor:", targetFloor);
         opMode.telemetry.update();
         return targetFloor;
     }
