@@ -50,7 +50,7 @@ public class ArmSystem {
         firstFloor = false;
         arm.setTargetPosition(-100);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.3);
+        arm.setPower(0.35);
         loaded = true;
     }
 
@@ -79,7 +79,7 @@ public class ArmSystem {
         this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
         switch (level) {
             case THIRD:
-                moveArm(-2150);
+                moveArm(-2050);
                 break;
             case SECOND:
                 moveArm(-2300);
@@ -96,7 +96,7 @@ public class ArmSystem {
                 moveArm(-650);
                 break;
             case SECOND:
-                moveArm(-450);
+                moveArm(-400);
                 break;
             case FIRST:
                 moveArm(-180);

@@ -29,9 +29,29 @@ public class Crater {
      */
     public void placeFreight() {
         ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+
+        //avoid totem
+        switch (floor) {
+            case FIRST:
+                drivingSystem.driveSideways(15, 0.4);
+                break;
+            case THIRD:
+                drivingSystem.driveSideways(5, -0.4);
+                break;
+        }
+
         // drive to alliance shipping hub
-        drivingSystem.driveSideways(10, 0.5);
         drivingSystem.driveStraight(95, 0.5);
+        TimeUtils.sleep(200);
+        switch (floor) {
+            case FIRST:
+                drivingSystem.driveSideways(15, -0.4);
+                break;
+            case THIRD:
+                drivingSystem.driveSideways(5, 0.4);
+                break;
+        }
+        drivingSystem.driveSideways(10,0.4);
         drivingSystem.turn(90, 200);
         // place freight on alliance shipping hub
         armSystem.autonomousMoveArm(floor);
@@ -95,5 +115,16 @@ public class Crater {
         duckSystem.runFor(5000);
         // move to alliance storage unit
         drivingSystem.driveSideways(66, 0.4);
+    }
+
+    /**
+     * Goes to alliance storage unit.
+     */
+    public void R4() {
+        placeFreight();
+        // move to storage unit
+        drivingSystem.driveSideways(50, 0.4);
+        drivingSystem.driveStraight(185, 0.4);
+        drivingSystem.driveSideways(90, -0.4);
     }
 }
