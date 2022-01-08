@@ -23,7 +23,7 @@ public class Carousel {
         drivingSystem = new DrivingSystem(opMode);
         armSystem     = new ArmSystem(opMode);
         duckSystem    = new DuckSystem(opMode);
-        detectionSystem = new DetectionSystem(opMode);
+        detectionSystem = new DetectionSystem(opMode, armSystem);
         timer = new ElapsedTime();
     }
 

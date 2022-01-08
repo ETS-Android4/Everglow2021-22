@@ -91,7 +91,7 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.dpad_right){
-                armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+                armSystem.moveArm(ArmSystem.Floors.TOTEM);
             }
 
 

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "Test Sensors", group = "Test")
-public class TestSensors extends LinearOpMode {
+public class TestDetectionSystem extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     DrivingSystem   drivingSystem;
@@ -28,7 +28,7 @@ public class TestSensors extends LinearOpMode {
         drivingSystem = new DrivingSystem(this);
         armSystem     = new ArmSystem(this);
         duckSystem    = new DuckSystem(this);
-        detectionSystem = new DetectionSystem(this);
+        detectionSystem = new DetectionSystem(this, armSystem);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
         touch         = hardwareMap.get(TouchSensor.class, "touch");
@@ -59,17 +59,15 @@ public class TestSensors extends LinearOpMode {
         telemetry.addData("targetFloor", targetFloor);
         telemetry.update();
 
-        armSystem.autonomousReload();
         TimeUtils.sleep(1000);
     }
 
     private void testAdvancedDetection(){
         detectionSystem.reset();
-        ArmSystem.Floors targetFloor = detectionSystem.findTargetFloorAdvanced(0.2, 3, drivingSystem);
+        ArmSystem.Floors targetFloor = detectionSystem.smartFindTargetFloor(0.2, 2, drivingSystem);
         telemetry.addData("targetFloor", targetFloor);
         telemetry.update();
 
-        armSystem.autonomousReload();
         TimeUtils.sleep(1000);
     }
 }

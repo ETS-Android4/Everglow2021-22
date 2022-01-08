@@ -89,7 +89,8 @@ public class ArmSystem {
                 firstFloor = true;
                 break;
             case TOTEM:
-                moveArm(-1950);
+                moveArm(-1850);
+                break;
         }
     }
 
@@ -103,6 +104,7 @@ public class ArmSystem {
                 break;
             case FIRST:
                 moveArm(-180);
+                break;
         }
     }
 }

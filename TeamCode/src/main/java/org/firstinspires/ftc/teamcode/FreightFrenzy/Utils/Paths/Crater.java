@@ -20,7 +20,7 @@ public class Crater {
         this.opMode   = opMode;
         drivingSystem = new DrivingSystem(opMode);
         armSystem     = new ArmSystem(opMode);
-        detectionSystem = new DetectionSystem(opMode);
+        detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem = new DuckSystem(opMode);
     }
 
