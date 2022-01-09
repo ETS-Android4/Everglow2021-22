@@ -83,6 +83,25 @@ public class Crater {
         TimeUtils.sleep(700);
         drivingSystem.driveUntilObstacle(60, 0.4);
     }
+    public void RZNCO() {
+        placeFreight();
+        // go to crater and collect
+        drivingSystem.turn(180, 200);
+        drivingSystem.driveSideways(20, 0.4);
+        armSystem.moveArm(-300);
+        TimeUtils.sleep(700);
+        drivingSystem.driveUntilObstacle(60, 0.4);
+    }
+
+    public void RZNCP() {
+        placeFreight();
+        // go to crater and collect
+        drivingSystem.turn(180, 200);
+        drivingSystem.driveSideways(100, 0.4);
+        armSystem.moveArm(-300);
+        TimeUtils.sleep(700);
+        drivingSystem.driveUntilObstacle(60, 0.4);
+    }
 
     /**
      * Goes to carousel, then to crater.
