@@ -122,10 +122,10 @@ public class DetectionSystem {
         } else {
             targetFloor = ArmSystem.Floors.SECOND;
         }
-        opMode.telemetry.addData("distanceLeft", distanceLeft);
-        opMode.telemetry.addData("distanceRight", distanceRight);
-        opMode.telemetry.addData("targetFloor", targetFloor);
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("distanceLeft", distanceLeft);
+//        opMode.telemetry.addData("distanceRight", distanceRight);
+//        opMode.telemetry.addData("targetFloor", targetFloor);
+//        opMode.telemetry.update();
         return targetFloor;
     }
 }

@@ -74,13 +74,13 @@ public class Carousel {
      */
     public void L1() {
         placeFreight();
-        drivingSystem.driveSideways(100, 0.6);
+        drivingSystem.driveStraight(50, -0.4);
         drivingSystem.turn(180, 150);
-        drivingSystem.driveStraight(50, 0.4);
+        drivingSystem.driveSideways(100, -0.6);
         // spin duck
         duckSystem.runFor(5000);
         // go to crater
-        drivingSystem.driveSideways(50, 0.6);
+        drivingSystem.driveSideways(38, 0.6);
         drivingSystem.turn(180,150);
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
@@ -95,9 +95,9 @@ public class Carousel {
     public void L2() {
         placeFreight();
         // go to duck
-        drivingSystem.driveSideways(100, 0.4);
+        drivingSystem.driveStraight(50, -0.4);
         drivingSystem.turn(180, 200);
-        drivingSystem.driveStraight(50, 0.4);
+        drivingSystem.driveSideways(100, -0.4);
         // spin duck
         duckSystem.runFor(5000);
         // go to alliance storage unit

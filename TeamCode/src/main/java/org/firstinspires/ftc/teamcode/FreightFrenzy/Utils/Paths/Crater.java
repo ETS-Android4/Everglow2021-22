@@ -14,6 +14,7 @@ public class Crater {
     LinearOpMode    opMode;
     public DetectionSystem detectionSystem;
     private final DuckSystem duckSystem;
+    ArmSystem.Floors floor;
 
 
     public Crater(LinearOpMode opMode) {
@@ -28,31 +29,32 @@ public class Crater {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight() {
-        ArmSystem.Floors floor = detectionSystem.findTargetFloor2();
+        floor = detectionSystem.findTargetFloor2();
 
         //avoid totem
         switch (floor) {
             case FIRST:
                 drivingSystem.driveSideways(15, 0.4);
+                drivingSystem.driveStraight(95, 0.5);
+                drivingSystem.driveSideways(15, -0.4);
+                drivingSystem.turn(90, 200);
+                break;
+            case SECOND:
+                drivingSystem.driveSideways(7,0.4);
+                drivingSystem.driveStraight(5,0.4);
+                drivingSystem.turn(180,200);
+                drivingSystem.driveStraight(125,-0.4);
+                drivingSystem.driveStraight(30,0.4);
+                drivingSystem.driveSideways(7,-0.4);
+                drivingSystem.turn(-90,200);
                 break;
             case THIRD:
-                drivingSystem.driveSideways(5, -0.4);
+                drivingSystem.driveStraight(95, 0.5);
+                drivingSystem.turn(90, 200);
                 break;
         }
 
-        // drive to alliance shipping hub
-        drivingSystem.driveStraight(95, 0.5);
-        TimeUtils.sleep(200);
-        switch (floor) {
-            case FIRST:
-                drivingSystem.driveSideways(15, -0.4);
-                break;
-            case THIRD:
-                drivingSystem.driveSideways(5, 0.4);
-                break;
-        }
-        drivingSystem.driveSideways(10,0.4);
-        drivingSystem.turn(90, 200);
+        drivingSystem.driveStraight(10,-0.4);
         // place freight on alliance shipping hub
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
@@ -72,8 +74,10 @@ public class Crater {
     public void R1() {
         placeFreight();
         // go to crater and collect
-        drivingSystem.driveStraight(180, 0.6);
         drivingSystem.turn(180, 200);
+        if(floor == ArmSystem.Floors.THIRD){
+            drivingSystem.driveStraight(10, 0.4);
+        }
         drivingSystem.driveSideways(121.5, 0.4);
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
