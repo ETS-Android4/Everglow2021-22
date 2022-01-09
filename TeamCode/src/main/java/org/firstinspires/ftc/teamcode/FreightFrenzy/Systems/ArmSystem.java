@@ -6,11 +6,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class ArmSystem {
+
+    public enum CollectState{
+        STOPPED, COLLECTING, SPITTING
+    }
+
     public        DcMotor      flyWheels;
     public        DcMotor      arm;
     private       boolean      loaded     = false;
     private       boolean      firstFloor = false;
     private final LinearOpMode opMode;
+
+    private CollectState collectState = CollectState.STOPPED;
 
     public enum Floors {
         FIRST, SECOND, THIRD, TOTEM
@@ -24,16 +31,40 @@ public class ArmSystem {
         this.opMode = opMode;
     }
 
+    public CollectState getCollectState() {
+        return collectState;
+    }
+
     public void collect() {
+        collectState = CollectState.COLLECTING;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flyWheels.setPower(1);
     }
 
+    public void toggleCollecting(){
+        if (collectState == CollectState.COLLECTING){
+            stop();
+        }else {
+            collect();
+        }
+    }
+
+    public void toggleSpitting(){
+        if (collectState == CollectState.SPITTING){
+            stop();
+        }else {
+            spit();
+        }
+    }
+
+
     public void spit() {
+        collectState = CollectState.SPITTING;
         flyWheels.setPower(-0.3);
     }
 
     public void stop() {
+        collectState = CollectState.STOPPED;
         flyWheels.setPower(0);
     }
 

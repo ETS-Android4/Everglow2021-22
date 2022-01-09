@@ -16,6 +16,10 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 @TeleOp(name = "GameTeleOp2", group = "Linear Opmode")
 @Disabled
 public class GameTeleOp2 extends LinearOpMode {
+    // when the right stick is pressed on the controller, make the rotation slower by this factor.
+    private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
+    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION = 5;
+
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
     DuckSystem      duckSystem;
@@ -35,59 +39,69 @@ public class GameTeleOp2 extends LinearOpMode {
 
         boolean prevTouchSensorPressed = false;
 
-        boolean collecting = false;
 
         waitForStart();
 
         while (opModeIsActive()) {
-            drivingSystem.driveByJoystick(gamepad2.left_stick_x, gamepad2.left_stick_y,
-                    gamepad2.right_stick_x);
+            ourGamepad1.update();
+            ourGamepad2.update();
+            {
+                double left_stick_x = gamepad2.left_stick_x;
+                double left_stick_y = gamepad2.left_stick_y;
+                double right_stick_x = gamepad2.right_stick_x;
+                if (gamepad2.right_stick_button){
+                    right_stick_x/=RIGHT_STICK_DOWN_MOVE_REDUCTION;
+                }
+                if (gamepad2.left_stick_button){
+                    left_stick_x/= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                    left_stick_y/= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                }
+                drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
+            }
 
-            if (gamepad2.x) {
+            if (ourGamepad2.x()) {
                 armSystem.reload();
             }
-            if (gamepad2.a) {
+            if (ourGamepad2.a()) {
+                armSystem.moveArm(ArmSystem.Floors.FIRST);
+            }
+            if (ourGamepad2.b()) {
+                armSystem.moveArm(ArmSystem.Floors.SECOND);
+            }
+            if (ourGamepad2.y()) {
+                armSystem.moveArm(ArmSystem.Floors.THIRD);
+            }
+            if (ourGamepad2.dpad_right()){
+                armSystem.moveArm(ArmSystem.Floors.TOTEM);
+            }
+            if (ourGamepad2.dpad_left()){
                 armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
             }
-            if (gamepad2.b) {
-                armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
-            }
-            if (gamepad2.y) {
-                armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
+
+            if (ourGamepad2.rt()) {
+                armSystem.toggleCollecting();
             }
 
-            if (gamepad2.right_trigger > 0.1) {
-                armSystem.collect();
-                collecting = true;
+            if (ourGamepad2.lt()) {
+                armSystem.toggleSpitting();
             }
-            if (gamepad2.left_trigger > 0.1) {
-                armSystem.spit();
-            }
-            if (gamepad2.right_bumper || gamepad2.left_bumper) {
+
+            if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && touch.isPressed()) {
                 armSystem.stop();
             }
 
-            if (gamepad2.dpad_up) {
-                duckSystem.run();
-            }
-            if (gamepad2.dpad_down) {
-                duckSystem.stöp();
-            }
-
-            if (collecting && touch.isPressed()) {
-                armSystem.stop();
-                collecting = false;
+            if (ourGamepad2.dpad_up()) {
+                duckSystem.toggle();
             }
 
             // rumble controller if touchSensor was just pressed
             if (touch.isPressed()) {
                 if (!prevTouchSensorPressed) {
-                    gamepad1.rumble(1000);
+                    gamepad2.rumble(1000);
                 }
                 prevTouchSensorPressed = true;
             } else {
                 prevTouchSensorPressed = false;
-                gamepad1.stopRumble();
             }
 
             armSystem.restOnLoad();

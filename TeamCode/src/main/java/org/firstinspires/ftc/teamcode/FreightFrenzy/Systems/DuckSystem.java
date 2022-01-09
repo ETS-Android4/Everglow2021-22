@@ -9,12 +9,23 @@ public class DuckSystem {
     private final DcMotor duck1;
     private final DcMotor duck2;
 
+    private boolean isRunning = false;
+
     public DuckSystem(LinearOpMode opMode) {
         this.duck1 = opMode.hardwareMap.get(DcMotor.class, "duck1");
         this.duck2 = opMode.hardwareMap.get(DcMotor.class, "duck2");
     }
 
+    public void toggle(){
+        if (isRunning){
+            stöp();
+        }else {
+            run();
+        }
+    }
+
     public void run() {
+        isRunning = true;
         duck1.setPower(0.4);
         duck2.setPower(-0.4);
     }
@@ -26,6 +37,7 @@ public class DuckSystem {
     }
 
     public void stöp() {
+        isRunning = false;
         duck1.setPower(0);
         duck2.setPower(0);
     }

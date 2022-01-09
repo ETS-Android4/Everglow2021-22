@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.GameAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
 
-@Autonomous(name = "L2RED", group = "Linear Opmode")
-public class L2RED extends LinearOpMode {
+@Autonomous(name = "L3BLUE", group = "Linear Opmode")
+public class L3BLUE extends LinearOpMode {
     Carousel carousel;
 
     @Override
@@ -16,7 +16,7 @@ public class L2RED extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.L2();
+            carousel.L3();
             stop();
         }
     }

@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.GameAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Crater;
 
-@Autonomous(name = "R2BLUE", group = "Autonomous")
-public class R2BLUE extends LinearOpMode {
+@Autonomous(name = "R4BLUE", group = "Linear Opmode")
+public class R4BLUE extends LinearOpMode {
     Crater crater;
 
     @Override
@@ -16,8 +16,9 @@ public class R2BLUE extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            crater.R2();
+            crater.R4();
             stop();
         }
     }
 }
+

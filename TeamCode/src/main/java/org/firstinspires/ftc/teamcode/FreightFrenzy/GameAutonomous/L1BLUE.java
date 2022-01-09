@@ -1,25 +1,26 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.GameAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
 
-@Autonomous(name = "L4BLUE", group = "Linear Opmode")
-public class L4BLUE extends LinearOpMode {
+@Autonomous(name = "L1BLUE", group = "Linear Opmode")
+public class L1BLUE extends LinearOpMode {
     Carousel carousel;
 
     @Override
     public void runOpMode() {
         carousel = new Carousel(this);
+        DistanceSensor leftSensor = carousel.detectionSystem.leftSensor;
+        DistanceSensor rightSensor = carousel.detectionSystem.rightSensor;
 
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.L4();
+            carousel.L1();
             stop();
         }
     }
 }
-
-

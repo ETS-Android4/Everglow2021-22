@@ -3,108 +3,115 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class EverglowGamepad {
-    private final Gamepad sus;
+    private final Gamepad gamepad;
 
     private boolean previousA;
     private boolean previousB;
     private boolean previousX;
     private boolean previousY;
-
     private boolean previousRight;
     private boolean previousLeft;
     private boolean previousUp;
     private boolean previousDown;
-
     private boolean previousRb;
-    private double  previousRt;
+    private boolean  previousRt;
     private boolean previousLb;
-    private double  previousLt;
+    private boolean  previousLt;
+
+    private boolean currentA;
+    private boolean currentB;
+    private boolean currentX;
+    private boolean currentY;
+    private boolean currentRight;
+    private boolean currentLeft;
+    private boolean currentUp;
+    private boolean currentDown;
+    private boolean currentRb;
+    private boolean  currentRt;
+    private boolean currentLb;
+    private boolean  currentLt;
+
 
     public EverglowGamepad(Gamepad gamepad) {
-        this.sus = gamepad;
+        this.gamepad = gamepad;
     }
 
-    public boolean buttonPress(String buttonName) {
-        switch (buttonName) {
-            case "a":
-                if (!previousA && sus.a) {
-                    return true;
-                }
-                break;
-            case "b":
-                if (!previousB && sus.b) {
-                    return true;
-                }
-                break;
-            case "x":
-                if (!previousX && sus.x) {
-                    return true;
-                }
-                break;
-            case "y":
-                if (!previousY && sus.y) {
-                    return true;
-                }
-                break;
-            case "dpad_left":
-                if (!previousLeft && sus.dpad_left) {
-                    return true;
-                }
-                break;
-            case "dpad_right":
-                if (!previousRight && sus.dpad_right) {
-                    return true;
-                }
-                break;
-            case "dpad_up":
-                if (!previousUp && sus.dpad_up) {
-                    return true;
-                }
-                break;
-            case "dpad_down":
-                if (!previousDown && sus.dpad_down) {
-                    return true;
-                }
-                break;
-            case "Rt":
-                if ((previousRt < 0.1) && (sus.right_trigger > 0.1)) {
-                    return true;
-                }
-                break;
-            case "Rb":
-                if (!previousRb && sus.right_bumper) {
-                    return true;
-                }
-                break;
-            case "Lt":
-                if ((previousLt < 0.1) && (sus.left_trigger > 0.1)) {
-                    return true;
-                }
-                break;
-            case "Lb":
-                if (!previousLb && sus.left_bumper) {
-                    return true;
-                }
-                break;
-        }
-        return false;
+    public boolean a(){
+        return currentA && !previousA;
+    }
+
+    public boolean b(){
+        return currentB && !previousB;
+    }
+
+    public boolean x(){
+        return currentX && !previousX;
+    }
+
+    public boolean y(){
+        return currentY && !previousY;
+    }
+
+    public boolean dpad_left(){
+        return currentLeft && !previousLeft;
+    }
+
+    public boolean dpad_right(){
+        return currentRight && !previousRight;
+    }
+
+    public boolean dpad_up(){
+        return currentUp && !previousUp;
+    }
+
+    public boolean dpad_down(){
+        return currentDown && !previousDown;
+    }
+
+    public boolean rt(){
+        return currentRt && !previousRt;
+    }
+
+    public boolean lt(){
+        return currentLt && !previousLt;
+    }
+
+    public boolean rb(){
+        return currentRb && !previousRb;
+    }
+
+    public boolean lb(){
+        return currentLb && !previousLb;
     }
 
     public void update() {
-        previousA = sus.a;
-        previousB = sus.b;
-        previousX = sus.x;
-        previousY = sus.y;
+        previousA = currentA;
+        previousB = currentB;
+        previousX = currentX;
+        previousY = currentY;
+        previousRight = currentRight;
+        previousLeft  = currentLeft;
+        previousUp    = currentUp;
+        previousDown  = currentDown;
 
-        previousRight = sus.dpad_right;
-        previousLeft  = sus.dpad_left;
-        previousUp    = sus.dpad_up;
-        previousDown  = sus.dpad_down;
+        previousLb = currentLb;
+        previousLt = currentLt;
+        previousRb = currentRb;
+        previousRt = currentRt;
 
-        previousLb = sus.left_bumper;
-        previousLt = sus.left_trigger;
-        previousRb = sus.right_bumper;
-        previousRt = sus.right_trigger;
+        currentA = gamepad.a;
+        currentB = gamepad.b;
+        currentX = gamepad.x;
+        currentY = gamepad.y;
+        currentRight = gamepad.dpad_right;
+        currentLeft = gamepad.dpad_left;
+        currentUp = gamepad.dpad_up;
+        currentDown = gamepad.dpad_down;
+        currentLb = gamepad.left_bumper;
+        currentLt = gamepad.left_trigger > 0.1;
+        currentRb = gamepad.right_bumper;
+        currentRt = gamepad.right_trigger > 0.1;
+
     }
 
 }
