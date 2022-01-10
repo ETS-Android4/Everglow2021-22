@@ -9,6 +9,7 @@ import java.util.List;
 public class AutonomousRoute {
     interface RouteInstruction {
         void execute(AllSystems systems);
+
         String toJavaCode();
     }
 
@@ -52,7 +53,7 @@ public class AutonomousRoute {
         }
     }
 
-    static class TurnInstruction implements RouteInstruction{
+    static class TurnInstruction implements RouteInstruction {
         private final float degrees;
         private final int speedDecrease;
 
@@ -114,7 +115,7 @@ public class AutonomousRoute {
 
         @Override
         public void execute(AllSystems systems) {
-            Crater crater = new Crater(systems.opMode);
+            Crater crater = new Crater(systems);
             crater.placeFreight();
         }
 
@@ -131,7 +132,7 @@ public class AutonomousRoute {
 
         @Override
         public void execute(AllSystems systems) {
-            Carousel carousel = new Carousel(systems.opMode);
+            Carousel carousel = new Carousel(systems);
             carousel.placeFreight();
         }
 
@@ -142,30 +143,24 @@ public class AutonomousRoute {
     }
 
 
+    private final List<RouteInstruction> routeInstructions = new ArrayList<>();
 
-
-
-
-
-
-        private final List<RouteInstruction> routeInstructions = new ArrayList<>();
-
-    public void execute(AllSystems systems){
-        for (RouteInstruction routeInstruction : this.routeInstructions){
+    public void execute(AllSystems systems) {
+        for (RouteInstruction routeInstruction : this.routeInstructions) {
             routeInstruction.execute(systems);
         }
     }
 
-    public String toJavaCode(){
+    public String toJavaCode() {
         String methodName = "autonomous_generated";
         StringBuilder sb = new StringBuilder();
-        for (RouteInstruction routeInstruction : this.routeInstructions){
+        for (RouteInstruction routeInstruction : this.routeInstructions) {
             sb.append(routeInstruction.toJavaCode());
         }
         return sb.toString();
     }
 
-    public void addRouteInstruction(RouteInstruction routeInstruction){
+    public void addRouteInstruction(RouteInstruction routeInstruction) {
         routeInstructions.add(routeInstruction);
     }
 }

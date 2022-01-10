@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
@@ -26,6 +27,17 @@ public class Carousel {
         detectionSystem = new DetectionSystem(opMode, armSystem);
         timer = new ElapsedTime();
     }
+
+    public Carousel(AllSystems systems){
+        this.opMode = systems.opMode;
+        this.drivingSystem = systems.drivingSystem;
+        this.armSystem = systems.armSystem;
+        this.duckSystem = systems.duckSystem;
+        this.detectionSystem = systems.detectionSystem;
+        timer = new ElapsedTime();
+    }
+
+
 
     /**
      * Goes to alliance shipping hub and places the loaded freight there.
