@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.Function;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
 
 public class DrivingSystem {
     private final DcMotor      frontRight;
@@ -144,6 +146,42 @@ public class DrivingSystem {
         }
         stöp();
     }
+
+    /**
+     * Drives Sideways until the predicate of stopCondition returns true.
+     *  @return the total distance traveled.
+     */
+    public double driveSidewaysUntil(double power, StopCondition stopCondition){
+        resetDistance();
+        double AverageMotors = 0;
+        this.opMode.telemetry.addData("distance", AverageMotors);
+        while (!stopCondition.shouldStop()) {
+            driveByJoystick(power, 0, getAngleDeviation() / 40);
+            AverageMotors = (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
+            AverageMotors = Math.abs(AverageMotors);
+            this.opMode.telemetry.addData("distance", AverageMotors);
+            this.opMode.telemetry.update();
+        }
+        stöp();
+        return Math.abs(AverageMotors);
+    }
+
+    public double driveStraightUntil(double power, StopCondition stopCondition) {
+        power *= -1;
+        resetDistance();
+        double AverageMotors = 0;
+        this.opMode.telemetry.addData("distance", AverageMotors);
+        while (!stopCondition.shouldStop()) {
+            driveByJoystick(0, power, getAngleDeviation() / 40);
+            AverageMotors = (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition() - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()) / 4.0;
+            AverageMotors = Math.abs(AverageMotors);
+            this.opMode.telemetry.addData("distance", AverageMotors);
+            this.opMode.telemetry.update();
+        }
+        stöp();
+        return Math.abs(AverageMotors);
+    }
+
 
     /**
      * Drives sideways, and repeatedly calls the DetectionSystem.scan() method.
