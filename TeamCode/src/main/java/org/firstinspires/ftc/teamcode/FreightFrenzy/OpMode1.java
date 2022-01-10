@@ -31,23 +31,23 @@ public class OpMode1 extends LinearOpMode {
 //            armSystem.moveArm(-100 * (int) gamepad1.left_stick_y);
 //            armSystem.arm.setPower(-100 * (int) gamepad1.left_stick_y);
 
-            if (gamepad.buttonPress("a")) {
-                armSystem.moveArm(-100);
-            }
-            if (gamepad.buttonPress("b")) {
-                armSystem.moveArm(-1600);
-            }
-
-            if(gamepad.buttonPress("right_trigger")){
-                armSystem.collect();
-                toggle = true;
-            }
-            if(gamepad.buttonPress("left_trigger")){
-                if(toggle){
-                    armSystem.spit();
-                    armSystem.spit();
-                }
-            }
+//            if (gamepad.buttonPress("a")) {
+//                armSystem.moveArm(-100);
+//            }
+//            if (gamepad.buttonPress("b")) {
+//                armSystem.moveArm(-1600);
+//            }
+//
+//            if(gamepad.buttonPress("right_trigger")){
+//                armSystem.collect();
+//                toggle = true;
+//            }
+//            if(gamepad.buttonPress("left_trigger")){
+//                if(toggle){
+//                    armSystem.spit();
+//                    armSystem.spit();
+//                }
+//            }
 
             gamepad.update();
             telemetry.update();
