@@ -174,7 +174,6 @@ public class CreateRouteOpMode extends LinearOpMode {
 
     private RouteInstruction recordTurn() {
         float rotateAngle = gamepad2.right_stick_x > 0 ? ROTATE_ANGLE : -ROTATE_ANGLE;
-        // turn counter-clockwise
         TurnInstruction turnInstruction = new TurnInstruction(rotateAngle, ROTATE_SPEED_DECREASE);
         turnInstruction.execute(systems);
         return turnInstruction;
