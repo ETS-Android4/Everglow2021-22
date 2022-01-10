@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
 
-@Autonomous(name = "L2BLUE", group = "Linear Opmode")
+@Autonomous(name = "BlueLZYW", group = "Linear Opmode")
 public class L2BLUE extends LinearOpMode {
     Carousel carousel;
 
@@ -16,7 +16,7 @@ public class L2BLUE extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.L2();
+            carousel.LZYW();
             stop();
         }
     }

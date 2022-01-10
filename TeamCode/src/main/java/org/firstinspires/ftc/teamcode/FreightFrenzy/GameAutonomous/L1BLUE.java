@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
 
-@Autonomous(name = "L1BLUE", group = "Linear Opmode")
+@Autonomous(name = "BlueLZYCO", group = "Linear Opmode")
 public class L1BLUE extends LinearOpMode {
     Carousel carousel;
 
@@ -19,7 +19,7 @@ public class L1BLUE extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.L1();
+            carousel.LBYCO();
             stop();
         }
     }

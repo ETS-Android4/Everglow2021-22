@@ -72,7 +72,7 @@ public class Carousel {
     /**
      * Goes to carousel, and then to duck, and then to crater.
      */
-    public void L1() {
+    public void LBYCO() {
         placeFreight();
         drivingSystem.driveStraight(50, -0.4);
         drivingSystem.turn(180, 150);
@@ -84,7 +84,6 @@ public class Carousel {
         drivingSystem.turn(180,150);
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
-        // go to alliance storage unit
         drivingSystem.driveUntilObstacle(60, 0.9);
         armSystem.autonomousReload();
     }
@@ -92,7 +91,7 @@ public class Carousel {
     /**
      * Goes to carousel, and then to duck, and then to alliance storage unit.
      */
-    public void L2() {
+    public void LZYW() {
         placeFreight();
         // go to duck
         drivingSystem.driveStraight(50, -0.4);
@@ -107,7 +106,7 @@ public class Carousel {
     /**
      * Goes to carousel, then to crater.
      */
-    public void L3() {
+    public void LBNCO() {
         placeFreight();
         // go to right of the shipping hub
         drivingSystem.driveSideways(50, -0.4);
@@ -120,7 +119,7 @@ public class Carousel {
         armSystem.autonomousReload();
     }
 
-    public void L4(){
+    public void LZNW(){
         placeFreight();
 
         //drive to storage unit

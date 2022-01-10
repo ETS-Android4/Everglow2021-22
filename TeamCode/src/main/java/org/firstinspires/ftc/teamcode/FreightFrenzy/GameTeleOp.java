@@ -14,7 +14,7 @@ public class GameTeleOp extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
-    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION = 5;
+    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION  = 5;
 
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
@@ -45,12 +45,12 @@ public class GameTeleOp extends LinearOpMode {
                 double left_stick_x = gamepad2.left_stick_x;
                 double left_stick_y = gamepad2.left_stick_y;
                 double right_stick_x = gamepad2.right_stick_x;
-                if (gamepad2.right_stick_button){
-                    right_stick_x/=RIGHT_STICK_DOWN_MOVE_REDUCTION;
+                if (gamepad2.right_stick_button) {
+                    right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
-                if (gamepad2.left_stick_button){
-                    left_stick_x/= LEFT_STICK_DOWN_MOVE_REDUCTION;
-                    left_stick_y/= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                if (gamepad2.left_stick_button) {
+                    left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                    left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                 }
                 drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             }
@@ -86,11 +86,11 @@ public class GameTeleOp extends LinearOpMode {
                 duckSystem.stöp();
             }
 
-            if (gamepad2.dpad_left){
+            if (gamepad2.dpad_left) {
                 armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
             }
 
-            if (gamepad2.dpad_right){
+            if (gamepad2.dpad_right) {
                 armSystem.moveArm(ArmSystem.Floors.TOTEM);
             }
 
