@@ -1,0 +1,150 @@
+package org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator;
+
+import androidx.annotation.Nullable;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveSidewaysInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveStraightInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.RouteInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.TurnInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
+
+@Autonomous(name = "Create Route", group = "Linear Opmode")
+public class CreateRouteOpMode extends LinearOpMode {
+
+    private static final double DRIVE_SIDEWAYS_POWER = 0.4;
+    private static final double DRIVE_STRAIGHT_POWER = 0.4;
+    private static final float ROTATE_ANGLE = 90;
+    private static final int ROTATE_SPEED_DECREASE = 150;
+    private AllSystems systems;
+    @Nullable
+    private AutonomousRoute prevAutonomousRoute;
+    private EverglowGamepad ourGamepad1;
+    private EverglowGamepad ourGamepad2;
+    @Override
+    public void runOpMode() {
+        systems = AllSystems.init(this);
+        ourGamepad1 = new EverglowGamepad(gamepad1);
+        ourGamepad2 = new EverglowGamepad(gamepad2);
+        waitForStart();
+
+        while (opModeIsActive()) {
+            ourGamepad1.update();
+            ourGamepad2.update();
+
+            telemetry.addLine("Press A to start recording route.");
+            if (prevAutonomousRoute != null) {
+                telemetry.addLine("Press Y to replay previous route.");
+                telemetry.addLine("Press X to save previous route");
+                telemetry.addLine("Previous route code: ");
+                telemetry.addLine(prevAutonomousRoute.toJavaCode());
+
+                if (ourGamepad2.y()){
+                    prevAutonomousRoute.execute(systems);
+                }
+                if (ourGamepad2.x()){
+                    Utils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
+                }
+            }
+
+            if (ourGamepad2.a()){
+                prevAutonomousRoute = recordAutonomousRoute();
+            }
+
+            telemetry.update();
+        }
+    }
+
+    private AutonomousRoute recordAutonomousRoute() {
+        AutonomousRoute autonomousRoute = new AutonomousRoute();
+        while (opModeIsActive()){
+            ourGamepad1.update();
+            ourGamepad2.update();
+
+            telemetry.addLine("Press x to stop recording. ");
+            telemetry.addLine("Current route instructions: ");
+            telemetry.addLine(autonomousRoute.toJavaCode());
+            telemetry.update();
+
+            if (ourGamepad2.x()){
+                return autonomousRoute;
+            }
+
+            if (gamepad2.left_stick_x != 0 || gamepad2.left_stick_y != 0 || gamepad2.right_stick_x != 0){
+                TimeUtils.sleep(100); // delay for a few milliseconds, to ensure the use action is correct
+                ourGamepad1.update();
+                ourGamepad2.update();
+                // determine which direction is pressed the hardest, and record for that direction.
+                double left_stick_x_power = Math.abs(gamepad2.left_stick_x);
+                double left_stick_y_power = Math.abs(gamepad2.left_stick_y);
+                double right_stick_x_power = Math.abs(gamepad2.right_stick_x);
+                if (left_stick_x_power == 0 && left_stick_y_power == 0 && right_stick_x_power ==0){
+                    // the user has let go of the joystick
+                }else if (left_stick_x_power > left_stick_y_power && left_stick_x_power > right_stick_x_power){
+                    RouteInstruction routeInstruction = recordDriveSideways();
+                    autonomousRoute.addRouteInstruction(routeInstruction);
+                }else if (left_stick_y_power > left_stick_x_power && left_stick_y_power > right_stick_x_power){
+                    RouteInstruction routeInstruction = recordDriveStraight();
+                    autonomousRoute.addRouteInstruction(routeInstruction);
+                }else {
+                    RouteInstruction routeInstruction = recordTurn();
+                    autonomousRoute.addRouteInstruction(routeInstruction);
+                }
+            }
+
+
+        }
+        // the code should only reach this point if the opMode ends abrupty, in which case this value won't be used.
+        return autonomousRoute;
+    }
+
+    private RouteInstruction recordDriveSideways() {
+        if(gamepad2.left_stick_x > 0){
+            // drive to the right
+            double distanceDriven = systems.drivingSystem.driveSidewaysUntil(DRIVE_SIDEWAYS_POWER,
+                    ()-> gamepad2.left_stick_x <= 0
+            );
+
+            return new DriveSidewaysInstruction(DRIVE_SIDEWAYS_POWER, distanceDriven);
+        }else {
+            // drive to the left
+            double distanceDriven = systems.drivingSystem.driveSidewaysUntil(-DRIVE_SIDEWAYS_POWER,
+                    ()-> gamepad2.left_stick_x >= 0
+            );
+            return new DriveSidewaysInstruction(-DRIVE_SIDEWAYS_POWER, distanceDriven);
+        }
+    }
+
+    private RouteInstruction recordDriveStraight() {
+        if(gamepad2.left_stick_y > 0){
+            // drive forwards
+            double distanceDriven = systems.drivingSystem.driveStraightUntil(DRIVE_STRAIGHT_POWER,
+                    ()-> gamepad2.left_stick_y <= 0
+            );
+
+            return new DriveStraightInstruction(DRIVE_STRAIGHT_POWER, distanceDriven);
+        }else {
+            // drive backwards
+            double distanceDriven = systems.drivingSystem.driveStraightUntil(-DRIVE_STRAIGHT_POWER,
+                    ()-> gamepad2.left_stick_y >= 0
+            );
+            return new DriveStraightInstruction(-DRIVE_STRAIGHT_POWER, distanceDriven);
+        }
+    }
+
+    private RouteInstruction recordTurn(){
+        if(gamepad2.left_stick_y > 0){
+            // turn counter-clockwise
+            systems.drivingSystem.turn(ROTATE_ANGLE, ROTATE_SPEED_DECREASE);
+            return new TurnInstruction(ROTATE_ANGLE, ROTATE_SPEED_DECREASE);
+        }else {
+            // turn clockwise
+            systems.drivingSystem.turn(ROTATE_ANGLE, ROTATE_SPEED_DECREASE);
+            return new TurnInstruction(-ROTATE_ANGLE, ROTATE_SPEED_DECREASE);
+        }
+    }
+
+}

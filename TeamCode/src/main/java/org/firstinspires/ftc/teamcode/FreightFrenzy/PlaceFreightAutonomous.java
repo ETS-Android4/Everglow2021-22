@@ -28,18 +28,18 @@ public class PlaceFreightAutonomous extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (g.buttonPress("a")) {
-                car.placeFreight();
-                stop();
-            }
-            if (g.buttonPress("b")) {
-                crater.placeFreight();
-                stop();
-            }
-            if (g.buttonPress("y")) {
-                d.driveStraight(100, 0.4);
-                stop();
-            }
+//            if (g.buttonPress("a")) {
+//                car.placeFreight();
+//                stop();
+//            }
+//            if (g.buttonPress("b")) {
+//                crater.placeFreight();
+//                stop();
+//            }
+//            if (g.buttonPress("y")) {
+//                d.driveStraight(100, 0.4);
+//                stop();
+//            }
         }
     }
 }

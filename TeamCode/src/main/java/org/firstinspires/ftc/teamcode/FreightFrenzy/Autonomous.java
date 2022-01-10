@@ -26,19 +26,19 @@ public class Autonomous extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (ourGamepad1.buttonPress("a")) {
+            if (ourGamepad1.a()) {
                 drivingSystem.driveStraight(50, 0.5);
             }
-            if (ourGamepad1.buttonPress("x")) {
+            if (ourGamepad1.x()) {
                 drivingSystem.driveSideways(50, 0.5);
             }
-            if (ourGamepad1.buttonPress("b")) {
+            if (ourGamepad1.b()) {
                 drivingSystem.turn(90, 200);
             }
-            if (ourGamepad1.buttonPress("y")) {
+            if (ourGamepad1.y()) {
                 drivingSystem.driveStraight(100, 0.5);
             }
-            if (ourGamepad1.buttonPress("y")) {
+            if (ourGamepad1.y()) {
 //                if (!toggle) {
 //                    armSystem.collect();
 //                    toggle = true;
@@ -48,26 +48,26 @@ public class Autonomous extends LinearOpMode {
 //                }
             }
 
-            if (ourGamepad2.buttonPress("a")) {
-                armSystem.moveArm(ArmSystem.Floors.FIRST);
-                while (armSystem.arm.isBusy()) {
-                }
-            }
-            if (ourGamepad2.buttonPress("b")) {
-                armSystem.moveArm(ArmSystem.Floors.SECOND);
-                while (armSystem.arm.isBusy()) {
-                }
-            }
-            if (ourGamepad2.buttonPress("x")) {
-                armSystem.moveArm(ArmSystem.Floors.THIRD);
-                while (armSystem.arm.isBusy()) {
-                }
-            }
-            if (ourGamepad2.buttonPress("y")) {
-                armSystem.reload();
-                while (armSystem.arm.isBusy()) {
-                }
-            }
+//            if (ourGamepad2.buttonPress("a")) {
+//                armSystem.moveArm(ArmSystem.Floors.FIRST);
+//                while (armSystem.arm.isBusy()) {
+//                }
+//            }
+//            if (ourGamepad2.buttonPress("b")) {
+//                armSystem.moveArm(ArmSystem.Floors.SECOND);
+//                while (armSystem.arm.isBusy()) {
+//                }
+//            }
+//            if (ourGamepad2.buttonPress("x")) {
+//                armSystem.moveArm(ArmSystem.Floors.THIRD);
+//                while (armSystem.arm.isBusy()) {
+//                }
+//            }
+//            if (ourGamepad2.buttonPress("y")) {
+//                armSystem.reload();
+//                while (armSystem.arm.isBusy()) {
+//                }
+//            }
 
             ourGamepad1.update();
             ourGamepad2.update();
