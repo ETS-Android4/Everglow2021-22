@@ -36,18 +36,30 @@ public class EverglowGamepad {
         this.gamepad = gamepad;
     }
 
+    /**
+     * cross
+     */
     public boolean a(){
         return currentA && !previousA;
     }
 
+    /**
+     * circle
+     */
     public boolean b(){
         return currentB && !previousB;
     }
 
+    /**
+     * square
+     */
     public boolean x(){
         return currentX && !previousX;
     }
 
+    /**
+     * triangle
+     */
     public boolean y(){
         return currentY && !previousY;
     }

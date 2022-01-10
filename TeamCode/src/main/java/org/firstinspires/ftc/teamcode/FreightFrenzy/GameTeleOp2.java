@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
@@ -14,7 +12,6 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 @TeleOp(name = "GameTeleOp2", group = "Linear Opmode")
-@Disabled
 public class GameTeleOp2 extends LinearOpMode {
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
