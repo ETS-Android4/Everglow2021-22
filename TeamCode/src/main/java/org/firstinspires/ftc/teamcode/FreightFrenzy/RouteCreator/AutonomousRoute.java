@@ -29,7 +29,7 @@ public class AutonomousRoute {
 
         @Override
         public String toJavaCode() {
-            return String.format("drivingSystem.driveStraight(%f, %f);\n", distance, power);
+            return String.format("drivingSystem.driveStraight(%.1f, %.1f);\n", distance, power);
         }
     }
 
@@ -49,7 +49,7 @@ public class AutonomousRoute {
 
         @Override
         public String toJavaCode() {
-            return String.format("drivingSystem.driveSideways(%f, %f);\n", distance, power);
+            return String.format("drivingSystem.driveSideways(%.1f, %.1f);\n", distance, power);
         }
     }
 
@@ -69,7 +69,7 @@ public class AutonomousRoute {
 
         @Override
         public String toJavaCode() {
-            return String.format("drivingSystem.turn(%f, %d);\n", degrees, speedDecrease);
+            return String.format("drivingSystem.turn(%.1f, %d);\n", degrees, speedDecrease);
         }
     }
 
@@ -105,7 +105,7 @@ public class AutonomousRoute {
 
         @Override
         public String toJavaCode() {
-            return String.format("drivingSystem.driveUntilObstacle(%f, 1);\n", distance);
+            return String.format("drivingSystem.driveUntilObstacle(%.1f, 1);\n", distance);
         }
     }
 
