@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.GameAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
 
 @Autonomous(name = "BlueLZYCO", group = "Linear Opmode")
+@Disabled
 public class L1BLUE extends LinearOpMode {
     Carousel carousel;
 
