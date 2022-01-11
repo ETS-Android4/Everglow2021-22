@@ -22,10 +22,10 @@ public class CreateRouteOpMode extends LinearOpMode {
 
     private static final double DRIVE_SIDEWAYS_POWER = 0.4;
     private static final double DRIVE_STRAIGHT_POWER = 0.4;
-    private static final float ROTATE_ANGLE = 90;
     private static final int ROTATE_SPEED_DECREASE = 150;
     private static final int DRIVE_TO_OBSTACLE_DISTANCE = 60;
     private static final long DUCK_DURATION = 5000;
+    private static final double DRIVE_TO_OBSTACLE_POWER = 1;
     private AllSystems systems;
     @Nullable
     private AutonomousRoute prevAutonomousRoute;
@@ -50,12 +50,17 @@ public class CreateRouteOpMode extends LinearOpMode {
             telemetry.addLine("Press cross to start recording route.");
             if (prevAutonomousRoute != null) {
                 telemetry.addLine("Press square to replay previous route.");
+                telemetry.addLine("Press circle to replay previous route mirrored.");
                 telemetry.addLine();
                 telemetry.addLine("Code: ");
                 telemetry.addLine(prevAutonomousRoute.toJavaCode());
 
                 if (ourGamepad2.x()) {
-                    prevAutonomousRoute.execute(systems);
+                    prevAutonomousRoute.execute(systems, 1);
+                }
+                if (ourGamepad2.b()){
+                    // runs the autonomous mirrored
+                    prevAutonomousRoute.execute(systems, -1);
                 }
             }
 
@@ -76,6 +81,7 @@ public class CreateRouteOpMode extends LinearOpMode {
 
             telemetry.addLine("Press square to stop recording. ");
             telemetry.addLine("Press triangle to run until wall");
+            telemetry.addLine("Press circle to rotate 180 degrees");
             telemetry.addLine("Press dpad up to active duck system");
             telemetry.addLine("Press dpad left to place freight on caursel side");
             telemetry.addLine("Press dpad right to place freight on crater side");
@@ -89,7 +95,7 @@ public class CreateRouteOpMode extends LinearOpMode {
             }
 
             if (gamepad2.left_stick_x != 0 || gamepad2.left_stick_y != 0 || gamepad2.right_stick_x != 0) {
-                TimeUtils.sleep(100); // delay for a few milliseconds, to ensure the use action is correct
+                TimeUtils.sleep(25); // delay for a few milliseconds, to ensure the use action is correct
                 ourGamepad1.update();
                 ourGamepad2.update();
                 // determine which direction is pressed the hardest, and record for that direction.
@@ -99,38 +105,47 @@ public class CreateRouteOpMode extends LinearOpMode {
                 if (left_stick_x_power == 0 && left_stick_y_power == 0 && right_stick_x_power == 0) {
                     // the user has let go of the joystick
                 } else if (left_stick_x_power > left_stick_y_power && left_stick_x_power > right_stick_x_power) {
-                    RouteInstruction routeInstruction = recordDriveSideways();
+                    RouteInstruction routeInstruction = recordDriveSideways(autonomousRoute.isRobotRotated());
                     autonomousRoute.addRouteInstruction(routeInstruction);
                 } else if (left_stick_y_power > left_stick_x_power && left_stick_y_power > right_stick_x_power) {
-                    RouteInstruction routeInstruction = recordDriveStraight();
+                    RouteInstruction routeInstruction = recordDriveStraight(autonomousRoute.isRobotRotated());
                     autonomousRoute.addRouteInstruction(routeInstruction);
                 } else {
-                    RouteInstruction routeInstruction = recordTurn();
+                    RouteInstruction routeInstruction = recordTurn90();
                     autonomousRoute.addRouteInstruction(routeInstruction);
                 }
             }
 
+            if (ourGamepad2.b()){
+                TurnInstruction turnInstruction = new TurnInstruction(180, ROTATE_SPEED_DECREASE);
+                turnInstruction.execute(systems, 1);
+                autonomousRoute.addRouteInstruction(turnInstruction);
+
+            }
+
             if (ourGamepad2.y()) {
-                DriveUntilObstacleInstruction routeInstruction = new DriveUntilObstacleInstruction(DRIVE_TO_OBSTACLE_DISTANCE);
-                routeInstruction.execute(systems);
+                DriveUntilObstacleInstruction routeInstruction =
+                        new DriveUntilObstacleInstruction(DRIVE_TO_OBSTACLE_DISTANCE, DRIVE_TO_OBSTACLE_POWER, autonomousRoute.isRobotRotated());
+
+                routeInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }
 
             if (ourGamepad2.dpad_up()) {
                 RouteInstruction routeInstruction = new DeployDuckInstruction(DUCK_DURATION);
-                routeInstruction.execute(systems);
+                routeInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }
 
             if (ourGamepad2.dpad_left()) {
                 RouteInstruction routeInstruction = new CarouselPlaceFreightInstruction();
-                routeInstruction.execute(systems);
+                routeInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }
 
             if (ourGamepad2.dpad_right()) {
                 RouteInstruction routeInstruction = new CraterPlaceFreightInstruction();
-                routeInstruction.execute(systems);
+                routeInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }
         }
@@ -138,44 +153,44 @@ public class CreateRouteOpMode extends LinearOpMode {
         return autonomousRoute;
     }
 
-    private RouteInstruction recordDriveSideways() {
+    private RouteInstruction recordDriveSideways(boolean isRobotRotated) {
         if (gamepad2.left_stick_x > 0) {
             // drive to the right
             double distanceDriven = systems.drivingSystem.driveSidewaysUntil(DRIVE_SIDEWAYS_POWER,
                     () -> gamepad2.left_stick_x <= 0
             );
 
-            return new DriveSidewaysInstruction(DRIVE_SIDEWAYS_POWER, distanceDriven);
+            return new DriveSidewaysInstruction(DRIVE_SIDEWAYS_POWER, distanceDriven, isRobotRotated);
         } else {
             // drive to the left
             double distanceDriven = systems.drivingSystem.driveSidewaysUntil(-DRIVE_SIDEWAYS_POWER,
                     () -> gamepad2.left_stick_x >= 0
             );
-            return new DriveSidewaysInstruction(-DRIVE_SIDEWAYS_POWER, distanceDriven);
+            return new DriveSidewaysInstruction(-DRIVE_SIDEWAYS_POWER, distanceDriven, isRobotRotated);
         }
     }
 
-    private RouteInstruction recordDriveStraight() {
+    private RouteInstruction recordDriveStraight(boolean isRobotRotated) {
         if (gamepad2.left_stick_y > 0) {
             // drive backwards
             double distanceDriven = systems.drivingSystem.driveStraightUntil(-DRIVE_STRAIGHT_POWER,
                     () -> gamepad2.left_stick_y <= 0
             );
 
-            return new DriveStraightInstruction(-DRIVE_STRAIGHT_POWER, distanceDriven);
+            return new DriveStraightInstruction(-DRIVE_STRAIGHT_POWER, distanceDriven, isRobotRotated);
         } else {
             // drive forwards
             double distanceDriven = systems.drivingSystem.driveStraightUntil(DRIVE_STRAIGHT_POWER,
                     () -> gamepad2.left_stick_y >= 0
             );
-            return new DriveStraightInstruction(DRIVE_STRAIGHT_POWER, distanceDriven);
+            return new DriveStraightInstruction(DRIVE_STRAIGHT_POWER, distanceDriven, isRobotRotated);
         }
     }
 
-    private RouteInstruction recordTurn() {
-        float rotateAngle = gamepad2.right_stick_x > 0 ? ROTATE_ANGLE : -ROTATE_ANGLE;
+    private RouteInstruction recordTurn90() {
+        float rotateAngle = gamepad2.right_stick_x > 0 ? 90 : -90;
         TurnInstruction turnInstruction = new TurnInstruction(rotateAngle, ROTATE_SPEED_DECREASE);
-        turnInstruction.execute(systems);
+        turnInstruction.execute(systems, 1);
         return turnInstruction;
     }
 

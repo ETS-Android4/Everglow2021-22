@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class DrivingSystem {
     private final DcMotor      frontRight;
@@ -211,6 +212,16 @@ public class DrivingSystem {
             this.opMode.telemetry.update();
         }
         stöp();
+    }
+
+    /**
+     * Same as driveUntilObstacle, but also lifts the arm so that it doesn't block the sensors.
+     */
+    public void moveArmAndDriveUntilObstacle(double distance, double power, ArmSystem armSystem){
+        armSystem.moveArm(-300);
+        TimeUtils.sleep(700);
+        driveUntilObstacle(distance, power);
+        armSystem.autonomousReload();
     }
 
 
