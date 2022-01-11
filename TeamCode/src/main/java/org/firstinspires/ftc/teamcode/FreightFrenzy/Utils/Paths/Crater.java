@@ -41,31 +41,33 @@ public class Crater {
      */
     public void placeFreight() {
         floor = detectionSystem.findTargetFloor2();
+        opMode.telemetry.addData("Floor: ", floor);
+        opMode.telemetry.update();
 
         //avoid totem
         switch (floor) {
             case FIRST:
-                drivingSystem.driveSideways(15, 0.4);
+                drivingSystem.driveSideways(10, 0.4);
                 drivingSystem.driveStraight(95, 0.5);
-                drivingSystem.driveSideways(15, -0.4);
                 drivingSystem.turn(90, 200);
                 break;
             case SECOND:
-                drivingSystem.driveSideways(7,0.4);
-                drivingSystem.driveStraight(5,0.4);
+                drivingSystem.driveSideways(7,0.5);
+                drivingSystem.driveStraight(5,0.5);
                 drivingSystem.turn(180,200);
-                drivingSystem.driveStraight(125,-0.4);
-                drivingSystem.driveStraight(30,0.4);
-                drivingSystem.driveSideways(7,-0.4);
+                drivingSystem.driveStraight(125,-0.5);
+                drivingSystem.driveStraight(30,0.5);
+                drivingSystem.driveSideways(7,-0.5);
                 drivingSystem.turn(-90,200);
+                drivingSystem.driveStraight(5,-0.4);
                 break;
             case THIRD:
+                drivingSystem.driveSideways(7,0.5);
                 drivingSystem.driveStraight(95, 0.5);
                 drivingSystem.turn(90, 200);
                 break;
         }
 
-        drivingSystem.driveStraight(10,-0.4);
         // place freight on alliance shipping hub
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
@@ -74,44 +76,42 @@ public class Crater {
         armSystem.spit();
         TimeUtils.sleep(500);
         armSystem.stop();
-        drivingSystem.driveStraight(7, -0.5);
+        if (floor == ArmSystem.Floors.FIRST) {
+            drivingSystem.driveStraight(15, -0.5);
+        } else {
+            drivingSystem.driveStraight(10, -0.5);
+        }
         TimeUtils.sleep(500);
-        armSystem.autonomousReload();
+        armSystem.moveArm(-300);
+//        armSystem.autonomousReload();
     }
 
-    /**
-     * Goes to crater.
-     */
-    public void R1() {
-        placeFreight();
-        // go to crater and collect
-        drivingSystem.turn(180, 200);
-        if(floor == ArmSystem.Floors.THIRD){
-            drivingSystem.driveStraight(10, 0.4);
-        }
-        drivingSystem.driveSideways(121.5, 0.4);
-        armSystem.moveArm(-300);
-        TimeUtils.sleep(700);
-        drivingSystem.driveUntilObstacle(60, 0.4);
-    }
     public void RZNCO() {
         placeFreight();
         // go to crater and collect
         drivingSystem.turn(180, 200);
-        drivingSystem.driveSideways(20, 0.4);
-        armSystem.moveArm(-300);
-        TimeUtils.sleep(700);
-        drivingSystem.driveUntilObstacle(60, 0.4);
+        if(floor == ArmSystem.Floors.THIRD){
+            drivingSystem.driveStraight(7, -0.4);
+        }
+        drivingSystem.driveSideways(60, 0.4);
+//        armSystem.moveArm(-300);
+//        TimeUtils.sleep(700);
+        drivingSystem.driveStraight(40, -0.6);
+        drivingSystem.driveStraight(180, 1);
+//        drivingSystem.driveUntilObstacle(60, 1);
     }
 
     public void RZNCP() {
         placeFreight();
         // go to crater and collect
         drivingSystem.turn(180, 200);
-        drivingSystem.driveSideways(100, 0.4);
-        armSystem.moveArm(-300);
-        TimeUtils.sleep(700);
-        drivingSystem.driveUntilObstacle(60, 0.4);
+        if(floor == ArmSystem.Floors.THIRD){
+            drivingSystem.driveStraight(7, -0.4);
+        }
+        drivingSystem.driveSideways(120, 0.4);
+//        armSystem.moveArm(-300);
+//        TimeUtils.sleep(700);
+        drivingSystem.driveStraight(100, 0.4);
     }
 
     /**
