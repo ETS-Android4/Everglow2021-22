@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveSidewaysInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveStraightInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveUntilObstacleInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.PlaceFreightInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.ReloadArmInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.RouteInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.TurnInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
@@ -82,6 +84,8 @@ public class CreateRouteOpMode extends LinearOpMode {
             telemetry.addLine("Press square to stop recording. ");
             telemetry.addLine("Press triangle to run until wall");
             telemetry.addLine("Press circle to rotate 180 degrees");
+            telemetry.addLine("Press cross to place freight now");
+            telemetry.addLine("Press dpad right to reload arm");
             telemetry.addLine("Press dpad up to active duck system");
             telemetry.addLine("Press dpad left to place freight on caursel side");
             telemetry.addLine("Press dpad right to place freight on crater side");
@@ -131,6 +135,12 @@ public class CreateRouteOpMode extends LinearOpMode {
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }
 
+            if (ourGamepad2.a()){
+                RouteInstruction routeInstruction = new PlaceFreightInstruction();
+                routeInstruction.execute(systems, 1);
+                autonomousRoute.addRouteInstruction(routeInstruction);
+            }
+
             if (ourGamepad2.dpad_up()) {
                 RouteInstruction routeInstruction = new DeployDuckInstruction(DUCK_DURATION);
                 routeInstruction.execute(systems, 1);
@@ -145,6 +155,12 @@ public class CreateRouteOpMode extends LinearOpMode {
 
             if (ourGamepad2.dpad_right()) {
                 RouteInstruction routeInstruction = new CraterPlaceFreightInstruction();
+                routeInstruction.execute(systems, 1);
+                autonomousRoute.addRouteInstruction(routeInstruction);
+            }
+
+            if (ourGamepad2.dpad_down()){
+                RouteInstruction routeInstruction = new ReloadArmInstruction();
                 routeInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }

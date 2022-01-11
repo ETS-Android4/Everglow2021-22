@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator;
 
 import android.annotation.SuppressLint;
 
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Crater;
 
@@ -193,6 +194,35 @@ public class AutonomousRoute {
         @Override
         public String toJavaCode() {
             return "placeFreight();\n";
+        }
+    }
+
+    static class PlaceFreightInstruction implements RouteInstruction {
+        public PlaceFreightInstruction() {
+        }
+
+        @Override
+        public void execute(AllSystems systems, int mirror) {
+            systems.armSystem.autonomousPlaceFreight(ArmSystem.Floors.THIRD);
+        }
+
+        @Override
+        public String toJavaCode() {
+            return "armSystem.autonomousPlaceFreight(floor);\n";
+        }
+    }
+    static class ReloadArmInstruction implements RouteInstruction {
+        public ReloadArmInstruction() {
+        }
+
+        @Override
+        public void execute(AllSystems systems, int mirror) {
+            systems.armSystem.autonomousReload();
+        }
+
+        @Override
+        public String toJavaCode() {
+            return "armSystem.autonomousReload();\n";
         }
     }
 

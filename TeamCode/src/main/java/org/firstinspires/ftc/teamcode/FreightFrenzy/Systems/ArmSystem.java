@@ -138,4 +138,12 @@ public class ArmSystem {
                 break;
         }
     }
+
+    public void autonomousPlaceFreight(Floors floor){
+        autonomousMoveArm(floor);
+        TimeUtils.sleep(1000);
+        spit();
+        TimeUtils.sleep(500);
+        stop();
+    }
 }
