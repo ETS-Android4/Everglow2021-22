@@ -109,10 +109,10 @@ public class CreateRouteOpMode extends LinearOpMode {
                 if (left_stick_x_power == 0 && left_stick_y_power == 0 && right_stick_x_power == 0) {
                     // the user has let go of the joystick
                 } else if (left_stick_x_power > left_stick_y_power && left_stick_x_power > right_stick_x_power) {
-                    RouteInstruction routeInstruction = recordDriveSideways(autonomousRoute.isRobotRotated());
+                    RouteInstruction routeInstruction = recordDriveSideways();
                     autonomousRoute.addRouteInstruction(routeInstruction);
                 } else if (left_stick_y_power > left_stick_x_power && left_stick_y_power > right_stick_x_power) {
-                    RouteInstruction routeInstruction = recordDriveStraight(autonomousRoute.isRobotRotated());
+                    RouteInstruction routeInstruction = recordDriveStraight();
                     autonomousRoute.addRouteInstruction(routeInstruction);
                 } else {
                     RouteInstruction routeInstruction = recordTurn90();
@@ -129,7 +129,7 @@ public class CreateRouteOpMode extends LinearOpMode {
 
             if (ourGamepad2.y()) {
                 DriveUntilObstacleInstruction routeInstruction =
-                        new DriveUntilObstacleInstruction(DRIVE_TO_OBSTACLE_DISTANCE, DRIVE_TO_OBSTACLE_POWER, autonomousRoute.isRobotRotated());
+                        new DriveUntilObstacleInstruction(DRIVE_TO_OBSTACLE_DISTANCE, DRIVE_TO_OBSTACLE_POWER);
 
                 routeInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(routeInstruction);
@@ -169,37 +169,37 @@ public class CreateRouteOpMode extends LinearOpMode {
         return autonomousRoute;
     }
 
-    private RouteInstruction recordDriveSideways(boolean isRobotRotated) {
+    private RouteInstruction recordDriveSideways() {
         if (gamepad2.left_stick_x > 0) {
             // drive to the right
             double distanceDriven = systems.drivingSystem.driveSidewaysUntil(DRIVE_SIDEWAYS_POWER,
                     () -> gamepad2.left_stick_x <= 0
             );
 
-            return new DriveSidewaysInstruction(DRIVE_SIDEWAYS_POWER, distanceDriven, isRobotRotated);
+            return new DriveSidewaysInstruction(DRIVE_SIDEWAYS_POWER, distanceDriven);
         } else {
             // drive to the left
             double distanceDriven = systems.drivingSystem.driveSidewaysUntil(-DRIVE_SIDEWAYS_POWER,
                     () -> gamepad2.left_stick_x >= 0
             );
-            return new DriveSidewaysInstruction(-DRIVE_SIDEWAYS_POWER, distanceDriven, isRobotRotated);
+            return new DriveSidewaysInstruction(-DRIVE_SIDEWAYS_POWER, distanceDriven);
         }
     }
 
-    private RouteInstruction recordDriveStraight(boolean isRobotRotated) {
+    private RouteInstruction recordDriveStraight() {
         if (gamepad2.left_stick_y > 0) {
             // drive backwards
             double distanceDriven = systems.drivingSystem.driveStraightUntil(-DRIVE_STRAIGHT_POWER,
                     () -> gamepad2.left_stick_y <= 0
             );
 
-            return new DriveStraightInstruction(-DRIVE_STRAIGHT_POWER, distanceDriven, isRobotRotated);
+            return new DriveStraightInstruction(-DRIVE_STRAIGHT_POWER, distanceDriven);
         } else {
             // drive forwards
             double distanceDriven = systems.drivingSystem.driveStraightUntil(DRIVE_STRAIGHT_POWER,
                     () -> gamepad2.left_stick_y >= 0
             );
-            return new DriveStraightInstruction(DRIVE_STRAIGHT_POWER, distanceDriven, isRobotRotated);
+            return new DriveStraightInstruction(DRIVE_STRAIGHT_POWER, distanceDriven);
         }
     }
 

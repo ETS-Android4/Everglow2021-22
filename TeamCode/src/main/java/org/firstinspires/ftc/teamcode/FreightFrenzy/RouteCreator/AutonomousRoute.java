@@ -15,14 +15,6 @@ public class AutonomousRoute {
         void execute(AllSystems systems, int mirror);
 
         String toJavaCode();
-
-        /**
-         * If this instruction rotates the robot, then the return value for this method should be true.
-         * Used to keep track of mirroring the robot when running the autonoamous on the other side.
-         */
-        default boolean rotatesRobot(){
-            return false;
-        }
     }
 
     // todo: make mirror work
@@ -31,60 +23,40 @@ public class AutonomousRoute {
     static class DriveStraightInstruction implements RouteInstruction {
         private final double power;
         private final double distance;
-        private final boolean isRobotRotated;
 
-        public DriveStraightInstruction(double power, double distance, boolean isRobotRotated) {
+        public DriveStraightInstruction(double power, double distance) {
             this.power = power;
             this.distance = distance;
-            this.isRobotRotated = isRobotRotated;
         }
 
         @Override
         public void execute(AllSystems systems, int mirror) {
-            if (isRobotRotated) {
-                systems.drivingSystem.driveStraight(distance, power*mirror);
-            } else {
-                systems.drivingSystem.driveStraight(distance, power);
-            }
+            systems.drivingSystem.driveStraight(distance, power);
         }
 
         @Override
         public String toJavaCode() {
-            if (isRobotRotated) {
-                return String.format("drivingSystem.driveStraight(%.1f, %.1f*mirror);\n", distance, power);
-            } else {
-                return String.format("drivingSystem.driveStraight(%.1f, %.1f);\n", distance, power);
-            }
+            return String.format("drivingSystem.driveStraight(%.1f, %.1f);\n", distance, power);
         }
     }
 
     static class DriveSidewaysInstruction implements RouteInstruction {
         private final double power;
         private final double distance;
-        private final boolean isRobotRotated;
 
-        public DriveSidewaysInstruction(double power, double distance, boolean isRobotRotated) {
+        public DriveSidewaysInstruction(double power, double distance) {
             this.power = power;
             this.distance = distance;
-            this.isRobotRotated = isRobotRotated;
         }
 
         @Override
         public void execute(AllSystems systems, int mirror) {
-            if (isRobotRotated) {
-                systems.drivingSystem.driveSideways(distance, power);
-            }else {
-                systems.drivingSystem.driveSideways(distance, power*mirror);
-            }
+            systems.drivingSystem.driveSideways(distance, power * mirror);
         }
 
         @Override
         public String toJavaCode() {
-            if (isRobotRotated) {
-                return String.format("drivingSystem.driveSideways(%.1f, %.1f);\n", distance, power);
-            }else {
-                return String.format("drivingSystem.driveSideways(%.1f, %.1f*mirror);\n", distance, power);
-            }
+            return String.format("drivingSystem.driveSideways(%.1f, %.1f*mirror);\n", distance, power);
         }
     }
 
@@ -99,21 +71,14 @@ public class AutonomousRoute {
 
         @Override
         public void execute(AllSystems systems, int mirror) {
-            systems.drivingSystem.turn(degrees, speedDecrease);
+            systems.drivingSystem.turn(degrees * mirror, speedDecrease);
         }
 
         @Override
         public String toJavaCode() {
-            return String.format("drivingSystem.turn(%.1f, %d);\n", degrees, speedDecrease);
+            return String.format("drivingSystem.turn(%.1f*mirror, %d);\n", degrees, speedDecrease);
         }
 
-        @Override
-        public boolean rotatesRobot() {
-            // if turning 90 degrees or -90 degrees, this rotates the robot.
-            // If turning 180 degrees, then the rotation will keep the rotation the same.
-            int degreesRounded = Math.round(degrees);
-            return degreesRounded == 90 || degreesRounded == -90;
-        }
     }
 
     static class DeployDuckInstruction implements RouteInstruction {
@@ -137,30 +102,21 @@ public class AutonomousRoute {
     static class DriveUntilObstacleInstruction implements RouteInstruction {
         private final double distance;
         private final double power;
-        private final boolean isRobotRotated;
 
-        public DriveUntilObstacleInstruction(double distance, double power, boolean isRobotRotated) {
+        public DriveUntilObstacleInstruction(double distance, double power) {
             this.distance = distance;
             this.power = power;
-            this.isRobotRotated = isRobotRotated;
         }
 
         @Override
         public void execute(AllSystems systems, int mirror) {
-            if (isRobotRotated) {
-                systems.drivingSystem.moveArmAndDriveUntilObstacle(distance, power*mirror, systems.armSystem);
-            }else {
-                systems.drivingSystem.moveArmAndDriveUntilObstacle(distance, power, systems.armSystem);
-            }
+            systems.drivingSystem.moveArmAndDriveUntilObstacle(distance, power, systems.armSystem);
         }
 
         @Override
         public String toJavaCode() {
-            if (isRobotRotated) {
-                return String.format("drivingSystem.moveArmAndDriveUntilObstacle(%.1f, %.1f*mirror, armSystem);\n", distance, power);
-            }else {
                 return String.format("drivingSystem.moveArmAndDriveUntilObstacle(%.1f, %.1f, armSystem);\n", distance, power);
-            }
+
         }
     }
 
@@ -176,7 +132,7 @@ public class AutonomousRoute {
 
         @Override
         public String toJavaCode() {
-            return "placeFreight();\n";
+            return "placeFreight(mirror);\n";
         }
 
     }
@@ -188,12 +144,12 @@ public class AutonomousRoute {
         @Override
         public void execute(AllSystems systems, int mirror) {
             Carousel carousel = new Carousel(systems);
-            carousel.placeFreight();
+            carousel.placeFreight(mirror);
         }
 
         @Override
         public String toJavaCode() {
-            return "placeFreight();\n";
+            return "placeFreight(mirror);\n";
         }
     }
 
@@ -211,6 +167,7 @@ public class AutonomousRoute {
             return "armSystem.autonomousPlaceFreight(floor);\n";
         }
     }
+
     static class ReloadArmInstruction implements RouteInstruction {
         public ReloadArmInstruction() {
         }
@@ -227,12 +184,7 @@ public class AutonomousRoute {
     }
 
     private final List<RouteInstruction> routeInstructions = new ArrayList<>();
-    private boolean isRobotRotated = false;
 
-
-    public boolean isRobotRotated() {
-        return isRobotRotated;
-    }
 
     public void execute(AllSystems systems, int mirror) {
         for (RouteInstruction routeInstruction : this.routeInstructions) {
@@ -250,8 +202,5 @@ public class AutonomousRoute {
 
     public void addRouteInstruction(RouteInstruction instruction) {
         routeInstructions.add(instruction);
-        if (instruction.rotatesRobot()){
-            isRobotRotated = !isRobotRotated;
-        }
     }
 }
