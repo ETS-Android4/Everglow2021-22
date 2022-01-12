@@ -17,9 +17,6 @@ public class AutonomousRoute {
         String toJavaCode();
     }
 
-    // todo: make mirror work
-
-
     static class DriveStraightInstruction implements RouteInstruction {
         private final double power;
         private final double distance;
@@ -116,7 +113,6 @@ public class AutonomousRoute {
         @Override
         public String toJavaCode() {
                 return String.format("drivingSystem.moveArmAndDriveUntilObstacle(%.1f, %.1f, armSystem);\n", distance, power);
-
         }
     }
 

@@ -43,7 +43,7 @@ public class Carousel {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight(int mirror) {
-        floor = detectionSystem.findTargetFloor2();
+        floor = detectionSystem.findTargetFloor2(mirror);
 
         this.opMode.telemetry.addData("floor: ", floor);
         this.opMode.telemetry.update();
@@ -58,7 +58,7 @@ public class Carousel {
                 break;
         }
         // move to carousel
-        drivingSystem.driveStraight(95, 0.5);
+        drivingSystem.driveStraight(100, 0.5);
 
         //get back to the same position for all
         switch (floor){
@@ -96,8 +96,9 @@ public class Carousel {
         drivingSystem.turn(180,150);
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
-        drivingSystem.driveUntilObstacle(60, 0.9);
-        armSystem.autonomousReload();
+        drivingSystem.driveStraight(240, 1);
+//        drivingSystem.driveUntilObstacle(60, 0.9);
+//        armSystem.autonomousReload();
     }
 
     /**
@@ -112,7 +113,7 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(5000);
         // go to alliance storage unit
-        drivingSystem.driveSideways(70, 0.4);
+        drivingSystem.driveSideways(70, 0.4* mirror);
     }
 
     /**
@@ -122,13 +123,15 @@ public class Carousel {
         placeFreight(mirror);
         // go to right of the shipping hub
         drivingSystem.driveSideways(50, -0.4*mirror);
-        drivingSystem.driveStraight(120, 0.4);
-        drivingSystem.driveSideways(100, 0.4*mirror);
+        drivingSystem.driveStraight(125, 0.4);
+        drivingSystem.driveSideways(120, 0.4*mirror);
         // drives through barrier, using max power
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
-        drivingSystem.driveUntilObstacle(60, 1);
-        armSystem.autonomousReload();
+        drivingSystem.driveStraight(40, -0.6);
+        drivingSystem.driveStraight(180, 1);
+//        drivingSystem.driveUntilObstacle(60, 1);
+//        armSystem.autonomousReload();
     }
 
     public void LZNW(int mirror){

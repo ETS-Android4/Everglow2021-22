@@ -40,7 +40,7 @@ public class Crater {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight(int mirror) {
-        floor = detectionSystem.findTargetFloor2();
+        floor = detectionSystem.findTargetFloor2(mirror);
         opMode.telemetry.addData("Floor: ", floor);
         opMode.telemetry.update();
 
@@ -48,12 +48,12 @@ public class Crater {
         switch (floor) {
             case FIRST:
                 drivingSystem.driveSideways(10, mirror * 0.4);
-                drivingSystem.driveStraight(95, 0.5);
+                drivingSystem.driveStraight(100, 0.5);
                 drivingSystem.turn(mirror * 90, 200);
                 break;
             case SECOND:
                 drivingSystem.driveSideways(7,mirror * 0.5);
-                drivingSystem.driveStraight(5,0.5);
+                drivingSystem.driveStraight(10,0.5);
                 drivingSystem.turn(mirror * 180,200);
                 drivingSystem.driveStraight(125,-0.5);
                 drivingSystem.driveStraight(30,0.5);
@@ -63,7 +63,7 @@ public class Crater {
                 break;
             case THIRD:
                 drivingSystem.driveSideways(7,mirror * 0.5);
-                drivingSystem.driveStraight(95, 0.5);
+                drivingSystem.driveStraight(100, 0.5);
                 drivingSystem.turn(mirror * 90, 200);
                 break;
         }
@@ -117,48 +117,49 @@ public class Crater {
     /**
      * Goes to carousel, then to crater.
      */
-    public void R2(int mirror) {
+    public void RBYCO(int mirror) {
         placeFreight(mirror);
         // move to carousel
-        drivingSystem.driveSideways(50, 0.6);
+        drivingSystem.driveSideways(50, 0.6*mirror);
         drivingSystem.driveStraight(180, 0.6);
         TimeUtils.sleep(100);
-        drivingSystem.driveSideways(120, -0.7);
+        drivingSystem.driveSideways(120, -0.7*mirror);
         drivingSystem.driveSideways(45, -0.4);
         // drop duck
         duckSystem.runFor(4000);
         // move to crater
-        drivingSystem.driveSideways(50, 0.6);
+        drivingSystem.driveSideways(50, 0.6*mirror);
         drivingSystem.turn(180, 200);
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
-        drivingSystem.driveUntilObstacle(60, 1);
-        armSystem.autonomousReload();
+        drivingSystem.driveStraight(240, 1);
+//        drivingSystem.driveUntilObstacle(60, 1);
+//        armSystem.autonomousReload();
     }
 
     /**
      * Goes to carousel, then to alliance storage unit.
      */
-    public void R3(int mirror) {
+    public void RBYW(int mirror) {
         placeFreight(mirror);
         // move to carousel
-        drivingSystem.driveSideways(50, 0.4);
+        drivingSystem.driveSideways(50, 0.4*mirror);
         drivingSystem.driveStraight(185, 0.4);
-        drivingSystem.driveSideways(170, -0.4);
+        drivingSystem.driveSideways(170, -0.4*mirror);
         // drop duck
         duckSystem.runFor(5000);
         // move to alliance storage unit
-        drivingSystem.driveSideways(66, 0.4);
+        drivingSystem.driveSideways(66, 0.4*mirror);
     }
 
     /**
      * Goes to alliance storage unit.
      */
-    public void R4(int mirror) {
+    public void RBNW(int mirror) {
         placeFreight(mirror);
         // move to storage unit
-        drivingSystem.driveSideways(50, 0.4);
+        drivingSystem.driveSideways(50, 0.4*mirror);
         drivingSystem.driveStraight(185, 0.4);
-        drivingSystem.driveSideways(90, -0.4);
+        drivingSystem.driveSideways(90, -0.4*mirror);
     }
 }

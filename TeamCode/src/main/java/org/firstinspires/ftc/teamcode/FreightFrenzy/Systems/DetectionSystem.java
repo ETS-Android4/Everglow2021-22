@@ -56,6 +56,7 @@ public class DetectionSystem {
     }
 
     public ArmSystem.Floors findTargetFloorAfterScan(){
+        // TODO: implement on blue side
         ArmSystem.Floors targetFloor;
         Double minErrorRight = MathUtils.min(errorRightValues);
         Double minErrorLeft = MathUtils.min(errorLeftValues);
@@ -105,7 +106,7 @@ public class DetectionSystem {
         return targetFloor;
     }
 
-    public ArmSystem.Floors findTargetFloor2() {
+    public ArmSystem.Floors findTargetFloor2(int mirror) {
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
         double distanceLeft = leftSensor.getDistance(DistanceUnit.CM);
@@ -118,9 +119,17 @@ public class DetectionSystem {
         if (errorLeft > ERROR_THRESHOLD_CM && errorRight > ERROR_THRESHOLD_CM) {
             targetFloor = ArmSystem.Floors.THIRD;
         } else if (errorLeft < errorRight) {
-            targetFloor = ArmSystem.Floors.FIRST;
+            if (mirror == 1) {
+                targetFloor = ArmSystem.Floors.FIRST;
+            }else {
+                targetFloor = ArmSystem.Floors.SECOND;
+            }
         } else {
-            targetFloor = ArmSystem.Floors.SECOND;
+            if (mirror == 1) {
+                targetFloor = ArmSystem.Floors.SECOND;
+            }else {
+                targetFloor = ArmSystem.Floors.FIRST;
+            }
         }
 //        opMode.telemetry.addData("distanceLeft", distanceLeft);
 //        opMode.telemetry.addData("distanceRight", distanceRight);

@@ -4,24 +4,21 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Crater;
 
-@Autonomous(name = "BlueLZYW", group = "Linear Opmode")
-@Disabled
-public class L2BLUE extends LinearOpMode {
-    Carousel carousel;
+@Autonomous(name = "BlueLZNCO", group = "Autonomous")
+public class BlueLZNCO extends LinearOpMode{
+    Crater crater;
 
     @Override
     public void runOpMode() {
-        carousel = new Carousel(this);
+        crater = new Crater(this);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.LZYW(-1);
+            crater.RZNCO(-1);
             stop();
         }
     }
 }
-
-

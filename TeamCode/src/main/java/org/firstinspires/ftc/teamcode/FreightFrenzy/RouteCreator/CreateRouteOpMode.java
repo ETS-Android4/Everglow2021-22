@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveSidewaysInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveStraightInstruction;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveUntilObstacleInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.PlaceFreightInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.ReloadArmInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.RouteInstruction;
@@ -23,7 +22,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 public class CreateRouteOpMode extends LinearOpMode {
 
     private static final double DRIVE_SIDEWAYS_POWER = 0.4;
-    private static final double DRIVE_STRAIGHT_POWER = 0.4;
+    private static final double DEFAULT_DRIVE_STRAIGHT_POWER = 0.6;
+    private static final double STRONG_DRIVE_STRAIGHT_POWER = 1;
     private static final int ROTATE_SPEED_DECREASE = 150;
     private static final int DRIVE_TO_OBSTACLE_DISTANCE = 60;
     private static final long DUCK_DURATION = 5000;
@@ -82,7 +82,7 @@ public class CreateRouteOpMode extends LinearOpMode {
             ourGamepad2.update();
 
             telemetry.addLine("Press square to stop recording. ");
-            telemetry.addLine("Press triangle to run until wall");
+            telemetry.addLine("Press triangle to drive forward strong");
             telemetry.addLine("Press circle to rotate 180 degrees");
             telemetry.addLine("Press cross to place freight now");
             telemetry.addLine("Press dpad right to reload arm");
@@ -99,7 +99,7 @@ public class CreateRouteOpMode extends LinearOpMode {
             }
 
             if (gamepad2.left_stick_x != 0 || gamepad2.left_stick_y != 0 || gamepad2.right_stick_x != 0) {
-                TimeUtils.sleep(25); // delay for a few milliseconds, to ensure the use action is correct
+                TimeUtils.sleep(50); // delay for a few milliseconds, to ensure the use action is correct
                 ourGamepad1.update();
                 ourGamepad2.update();
                 // determine which direction is pressed the hardest, and record for that direction.
@@ -128,10 +128,7 @@ public class CreateRouteOpMode extends LinearOpMode {
             }
 
             if (ourGamepad2.y()) {
-                DriveUntilObstacleInstruction routeInstruction =
-                        new DriveUntilObstacleInstruction(DRIVE_TO_OBSTACLE_DISTANCE, DRIVE_TO_OBSTACLE_POWER);
-
-                routeInstruction.execute(systems, 1);
+                RouteInstruction routeInstruction = recordStrongDriveStraight();
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }
 
@@ -189,18 +186,25 @@ public class CreateRouteOpMode extends LinearOpMode {
     private RouteInstruction recordDriveStraight() {
         if (gamepad2.left_stick_y > 0) {
             // drive backwards
-            double distanceDriven = systems.drivingSystem.driveStraightUntil(-DRIVE_STRAIGHT_POWER,
+            double distanceDriven = systems.drivingSystem.driveStraightUntil(-DEFAULT_DRIVE_STRAIGHT_POWER,
                     () -> gamepad2.left_stick_y <= 0
             );
 
-            return new DriveStraightInstruction(-DRIVE_STRAIGHT_POWER, distanceDriven);
+            return new DriveStraightInstruction(-DEFAULT_DRIVE_STRAIGHT_POWER, distanceDriven);
         } else {
             // drive forwards
-            double distanceDriven = systems.drivingSystem.driveStraightUntil(DRIVE_STRAIGHT_POWER,
+            double distanceDriven = systems.drivingSystem.driveStraightUntil(DEFAULT_DRIVE_STRAIGHT_POWER,
                     () -> gamepad2.left_stick_y >= 0
             );
-            return new DriveStraightInstruction(DRIVE_STRAIGHT_POWER, distanceDriven);
+            return new DriveStraightInstruction(DEFAULT_DRIVE_STRAIGHT_POWER, distanceDriven);
         }
+    }
+
+    private RouteInstruction recordStrongDriveStraight(){
+        double distanceDriven = systems.drivingSystem.driveStraightUntil(STRONG_DRIVE_STRAIGHT_POWER,
+                () -> gamepad2.y
+        );
+        return new DriveStraightInstruction(DEFAULT_DRIVE_STRAIGHT_POWER, distanceDriven);
     }
 
     private RouteInstruction recordTurn90() {

@@ -55,7 +55,7 @@ public class TestDetectionSystem extends LinearOpMode {
 
     private void testSimpleDetection(){
         detectionSystem.reset();
-        ArmSystem.Floors targetFloor = detectionSystem.findTargetFloor2();
+        ArmSystem.Floors targetFloor = detectionSystem.findTargetFloor2(1);
         telemetry.addData("targetFloor", targetFloor);
         telemetry.update();
 
