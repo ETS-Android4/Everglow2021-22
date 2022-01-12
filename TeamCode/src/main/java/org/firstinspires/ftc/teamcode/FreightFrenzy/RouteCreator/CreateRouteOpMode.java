@@ -124,7 +124,6 @@ public class CreateRouteOpMode extends LinearOpMode {
                 TurnInstruction turnInstruction = new TurnInstruction(180, ROTATE_SPEED_DECREASE);
                 turnInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(turnInstruction);
-
             }
 
             if (ourGamepad2.y()) {

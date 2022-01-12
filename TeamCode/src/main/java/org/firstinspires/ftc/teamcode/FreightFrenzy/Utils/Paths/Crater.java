@@ -40,6 +40,7 @@ public class Crater {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight(int mirror) {
+        drivingSystem.resetDistance();
         floor = detectionSystem.findTargetFloor2(mirror);
         opMode.telemetry.addData("Floor: ", floor);
         opMode.telemetry.update();
@@ -71,7 +72,7 @@ public class Crater {
         // place freight on alliance shipping hub
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
-        drivingSystem.driveStraight(7, 0.5);
+        drivingSystem.driveStraight(10, 0.5);
         TimeUtils.sleep(500);
         armSystem.spit();
         TimeUtils.sleep(500);
@@ -124,7 +125,7 @@ public class Crater {
         drivingSystem.driveStraight(180, 0.6);
         TimeUtils.sleep(100);
         drivingSystem.driveSideways(120, -0.7*mirror);
-        drivingSystem.driveSideways(45, -0.4);
+        drivingSystem.driveSideways(45, -0.4*mirror);
         // drop duck
         duckSystem.runFor(4000);
         // move to crater
@@ -132,7 +133,7 @@ public class Crater {
         drivingSystem.turn(180, 200);
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
-        drivingSystem.driveStraight(240, 1);
+        drivingSystem.driveStraight(250, 1);
 //        drivingSystem.driveUntilObstacle(60, 1);
 //        armSystem.autonomousReload();
     }

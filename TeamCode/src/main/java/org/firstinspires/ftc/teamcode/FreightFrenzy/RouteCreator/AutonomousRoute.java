@@ -183,6 +183,7 @@ public class AutonomousRoute {
 
 
     public void execute(AllSystems systems, int mirror) {
+        systems.drivingSystem.resetDistance();
         for (RouteInstruction routeInstruction : this.routeInstructions) {
             routeInstruction.execute(systems, mirror);
         }

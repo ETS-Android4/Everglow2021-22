@@ -20,7 +20,7 @@ public class ArmSystem {
     private CollectState collectState = CollectState.STOPPED;
 
     public enum Floors {
-        FIRST, SECOND, THIRD, TOTEM
+        FIRST, SECOND, THIRD, TOTEM;
     }
 
     public ArmSystem(LinearOpMode opMode) {

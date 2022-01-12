@@ -43,6 +43,7 @@ public class Carousel {
      * Goes to alliance shipping hub and places the loaded freight there.
      */
     public void placeFreight(int mirror) {
+        drivingSystem.resetDistance();
         floor = detectionSystem.findTargetFloor2(mirror);
 
         this.opMode.telemetry.addData("floor: ", floor);
@@ -140,5 +141,9 @@ public class Carousel {
         //drive to storage unit
         drivingSystem.driveStraight(55,-0.4);
         drivingSystem.driveSideways(30,0.4*mirror);
+    }
+
+    public void LFYCP(int mirror) {
+        // Tomer add from email
     }
 }

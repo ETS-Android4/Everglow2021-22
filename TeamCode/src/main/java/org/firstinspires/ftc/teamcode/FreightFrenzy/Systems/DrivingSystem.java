@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -22,8 +24,9 @@ public class DrivingSystem {
     private final DcMotor      backLeft;
     private final DistanceSensor distanceSensor;
     private final LinearOpMode opMode;
+    private BNO055IMU.Parameters parameters;
 
-    private final BNO055IMU imu;
+    private BNO055IMU imu;
 
     private double targetAngle = 0;
 
@@ -47,11 +50,8 @@ public class DrivingSystem {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        stöp();
-        resetDistance();
-
         // Create IMU
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters = new BNO055IMU.Parameters();
         parameters.angleUnit                        = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit                        = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile              = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -64,7 +64,11 @@ public class DrivingSystem {
         // and named "imu".
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+
+        stöp();
+        resetDistance();
     }
+
 
     public double getCurrentAngle() {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
@@ -118,6 +122,7 @@ public class DrivingSystem {
     }
 
     public void driveStraight(double distance, double power) {
+        targetAngle = getCurrentAngle();
         power *= -1;
         resetDistance();
         double AverageMotors = 0;
@@ -134,6 +139,7 @@ public class DrivingSystem {
 
 
     public void driveSideways(double distance, double power) {
+        targetAngle = getCurrentAngle();
         resetDistance();
         double AverageMotors = 0;
 //        this.opMode.telemetry.addData("distance", AverageMotors);
@@ -152,6 +158,7 @@ public class DrivingSystem {
      *  @return the total distance traveled.
      */
     public double driveSidewaysUntil(double power, StopCondition stopCondition){
+        targetAngle = getCurrentAngle();
         resetDistance();
         double averageMotors = 0;
         this.opMode.telemetry.addData("distance", averageMotors);
@@ -168,6 +175,7 @@ public class DrivingSystem {
     }
 
     public double driveStraightUntil(double power, StopCondition stopCondition) {
+        targetAngle = getCurrentAngle();
         power *= -1;
         resetDistance();
         double averageMotors = 0;
@@ -188,6 +196,7 @@ public class DrivingSystem {
      * Drives sideways, and repeatedly calls the DetectionSystem.scan() method.
      */
     public void driveSidewaysAndScan(double distance, double power, DetectionSystem detectionSystem) {
+        targetAngle = getCurrentAngle();
         resetDistance();
         double AverageMotors = 0;
         this.opMode.telemetry.addData("distance", AverageMotors);
@@ -204,6 +213,7 @@ public class DrivingSystem {
 
 
     public void driveUntilObstacle(double distance, double power) {
+        targetAngle = getCurrentAngle();
         power *= -1;
         resetDistance();
         while (distanceSensor.getDistance(DistanceUnit.CM) > distance) {
