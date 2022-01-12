@@ -83,6 +83,10 @@ public class GameTeleOp2 extends LinearOpMode {
                 armSystem.toggleSpitting();
             }
 
+            if (ourGamepad2.rb() || ourGamepad2.lb()){
+                armSystem.stop();
+            }
+
             if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && touch.isPressed()) {
                 armSystem.stop();
             }
