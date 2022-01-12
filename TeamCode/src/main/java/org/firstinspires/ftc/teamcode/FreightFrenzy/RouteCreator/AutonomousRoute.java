@@ -171,7 +171,7 @@ public class AutonomousRoute {
         @Override
         public void execute(AllSystems systems, int mirror) {
             Crater crater = new Crater(systems);
-            crater.placeFreight();
+            crater.placeFreight(mirror);
         }
 
         @Override

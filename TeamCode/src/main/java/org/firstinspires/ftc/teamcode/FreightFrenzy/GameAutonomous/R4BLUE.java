@@ -18,7 +18,7 @@ public class R4BLUE extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            crater.R4();
+            crater.R4(-1);
             stop();
         }
     }

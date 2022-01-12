@@ -18,7 +18,7 @@ public class R3BLUE extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            crater.R3();
+            crater.R3(-1);
             stop();
         }
     }

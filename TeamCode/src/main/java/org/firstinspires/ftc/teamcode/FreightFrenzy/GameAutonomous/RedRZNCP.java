@@ -16,7 +16,7 @@ public class RedRZNCP extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            crater.RZNCP();
+            crater.RZNCP(1);
             stop();
         }
     }

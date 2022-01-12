@@ -39,7 +39,7 @@ public class Crater {
     /**
      * Goes to alliance shipping hub and places the loaded freight there.
      */
-    public void placeFreight() {
+    public void placeFreight(int mirror) {
         floor = detectionSystem.findTargetFloor2();
         opMode.telemetry.addData("Floor: ", floor);
         opMode.telemetry.update();
@@ -47,24 +47,24 @@ public class Crater {
         //avoid totem
         switch (floor) {
             case FIRST:
-                drivingSystem.driveSideways(10, 0.4);
+                drivingSystem.driveSideways(10, mirror * 0.4);
                 drivingSystem.driveStraight(95, 0.5);
-                drivingSystem.turn(90, 200);
+                drivingSystem.turn(mirror * 90, 200);
                 break;
             case SECOND:
-                drivingSystem.driveSideways(7,0.5);
+                drivingSystem.driveSideways(7,mirror * 0.5);
                 drivingSystem.driveStraight(5,0.5);
-                drivingSystem.turn(180,200);
+                drivingSystem.turn(mirror * 180,200);
                 drivingSystem.driveStraight(125,-0.5);
                 drivingSystem.driveStraight(30,0.5);
-                drivingSystem.driveSideways(7,-0.5);
-                drivingSystem.turn(-90,200);
+                drivingSystem.driveSideways(7,mirror * -0.5);
+                drivingSystem.turn(mirror * -90,200);
                 drivingSystem.driveStraight(5,-0.4);
                 break;
             case THIRD:
-                drivingSystem.driveSideways(7,0.5);
+                drivingSystem.driveSideways(7,mirror * 0.5);
                 drivingSystem.driveStraight(95, 0.5);
-                drivingSystem.turn(90, 200);
+                drivingSystem.turn(mirror * 90, 200);
                 break;
         }
 
@@ -86,14 +86,14 @@ public class Crater {
 //        armSystem.autonomousReload();
     }
 
-    public void RZNCO() {
-        placeFreight();
+    public void RZNCO(int mirror) {
+        placeFreight(mirror);
         // go to crater and collect
-        drivingSystem.turn(180, 200);
+        drivingSystem.turn(mirror * 180, 200);
         if(floor == ArmSystem.Floors.THIRD){
             drivingSystem.driveStraight(7, -0.4);
         }
-        drivingSystem.driveSideways(60, 0.4);
+        drivingSystem.driveSideways(60, mirror * 0.4);
 //        armSystem.moveArm(-300);
 //        TimeUtils.sleep(700);
         drivingSystem.driveStraight(40, -0.6);
@@ -101,14 +101,14 @@ public class Crater {
 //        drivingSystem.driveUntilObstacle(60, 1);
     }
 
-    public void RZNCP() {
-        placeFreight();
+    public void RZNCP(int mirror) {
+        placeFreight(mirror);
         // go to crater and collect
-        drivingSystem.turn(180, 200);
+        drivingSystem.turn(mirror * 180, 200);
         if(floor == ArmSystem.Floors.THIRD){
             drivingSystem.driveStraight(7, -0.4);
         }
-        drivingSystem.driveSideways(120, 0.4);
+        drivingSystem.driveSideways(120, mirror * 0.4);
 //        armSystem.moveArm(-300);
 //        TimeUtils.sleep(700);
         drivingSystem.driveStraight(100, 0.4);
@@ -117,8 +117,8 @@ public class Crater {
     /**
      * Goes to carousel, then to crater.
      */
-    public void R2() {
-        placeFreight();
+    public void R2(int mirror) {
+        placeFreight(mirror);
         // move to carousel
         drivingSystem.driveSideways(50, 0.6);
         drivingSystem.driveStraight(180, 0.6);
@@ -139,8 +139,8 @@ public class Crater {
     /**
      * Goes to carousel, then to alliance storage unit.
      */
-    public void R3() {
-        placeFreight();
+    public void R3(int mirror) {
+        placeFreight(mirror);
         // move to carousel
         drivingSystem.driveSideways(50, 0.4);
         drivingSystem.driveStraight(185, 0.4);
@@ -154,8 +154,8 @@ public class Crater {
     /**
      * Goes to alliance storage unit.
      */
-    public void R4() {
-        placeFreight();
+    public void R4(int mirror) {
+        placeFreight(mirror);
         // move to storage unit
         drivingSystem.driveSideways(50, 0.4);
         drivingSystem.driveStraight(185, 0.4);
