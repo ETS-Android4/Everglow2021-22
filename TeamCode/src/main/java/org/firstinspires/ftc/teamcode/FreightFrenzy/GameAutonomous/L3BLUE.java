@@ -18,7 +18,7 @@ public class L3BLUE extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.LBNCO();
+            carousel.LBNCO(-1);
             stop();
         }
     }

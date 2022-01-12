@@ -16,7 +16,7 @@ public class RedLBNCO extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.LBNCO();
+            carousel.LBNCO(1);
             stop();
         }
     }

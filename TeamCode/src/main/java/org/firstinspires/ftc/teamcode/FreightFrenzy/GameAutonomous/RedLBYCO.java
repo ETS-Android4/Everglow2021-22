@@ -17,7 +17,7 @@ public class RedLBYCO extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.LBYCO();
+            carousel.LBYCO(1);
             stop();
         }
     }

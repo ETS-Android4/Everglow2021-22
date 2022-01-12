@@ -16,7 +16,7 @@ public class RedLZNW extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.LZNW();
+            carousel.LZNW(1);
             stop();
         }
     }

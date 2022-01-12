@@ -18,7 +18,7 @@ public class L2BLUE extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.LZYW();
+            carousel.LZYW(-1);
             stop();
         }
     }

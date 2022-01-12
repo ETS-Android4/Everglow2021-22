@@ -18,7 +18,7 @@ public class L4BLUE extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.LZNW();
+            carousel.LZNW(-1);
             stop();
         }
     }
