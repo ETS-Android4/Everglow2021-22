@@ -56,29 +56,34 @@ public class Carousel {
                 drivingSystem.driveSideways(25, -0.4 * mirror);
                 break;
         }
-        // move to carousel
+        // move to SH
         drivingSystem.driveStraight(100, 0.5);
+        drivingSystem.turn(-90 * mirror, 200);
 
-        //get back to the same position for all
+        // get back to the same position for all
         switch (floor) {
             case FIRST:
-                drivingSystem.driveSideways(15, -0.4 * mirror);
+                drivingSystem.driveStraight(15, -0.4 * mirror);
                 break;
             case SECOND:
-                drivingSystem.driveSideways(25, 0.4 * mirror);
+                drivingSystem.driveStraight(25, 0.4 * mirror);
                 break;
         }
-        drivingSystem.turn(-90 * mirror, 200);
-        // place duck on carousel
+
+        // place freight on SH
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(25, 0.4);
-        TimeUtils.sleep(500);
         armSystem.spit();
-        TimeUtils.sleep(500);
         armSystem.stop();
         drivingSystem.driveStraight(20, -0.4);
-        armSystem.autonomousReload();
+        armSystem.moveArm(-300);
+    }
+
+    public void goToCarousel(int mirror) {
+        drivingSystem.driveStraight(50, -0.6);
+        drivingSystem.turn(180, 200);
+        drivingSystem.driveSideways(100, -0.6 * mirror);
     }
 
     /**
@@ -86,19 +91,13 @@ public class Carousel {
      */
     public void LBYCO(int mirror) {
         placeFreight(mirror);
-        drivingSystem.driveStraight(50, -0.4);
-        drivingSystem.turn(180, 150);
-        drivingSystem.driveSideways(100, -0.6 * mirror);
+        goToCarousel(mirror);
         // spin duck
         duckSystem.runFor(5000);
-        // go to crater
-        drivingSystem.driveSideways(38, 0.6 * mirror);
+        // go to crater through obstacle
+        drivingSystem.driveSideways(40, 0.6 * mirror);
         drivingSystem.turn(180, 150);
-        armSystem.moveArm(-300);
-        TimeUtils.sleep(700);
-        drivingSystem.driveStraight(240, 1);
-//        drivingSystem.driveUntilObstacle(60, 0.9);
-//        armSystem.autonomousReload();
+        drivingSystem.driveStraight(250, 1);
     }
 
     /**
@@ -106,14 +105,11 @@ public class Carousel {
      */
     public void LZYW(int mirror) {
         placeFreight(mirror);
-        // go to duck
-        drivingSystem.driveStraight(50, -0.4);
-        drivingSystem.turn(180, 200);
-        drivingSystem.driveSideways(100, -0.4 * mirror);
+        goToCarousel(mirror);
         // spin duck
         duckSystem.runFor(5000);
         // go to alliance storage unit
-        drivingSystem.driveSideways(70, 0.4 * mirror);
+        drivingSystem.driveSideways(65, 0.6 * mirror);
     }
 
     /**
@@ -126,12 +122,8 @@ public class Carousel {
         drivingSystem.driveStraight(125, 0.4);
         drivingSystem.driveSideways(120, 0.4 * mirror);
         // drives through barrier, using max power
-        armSystem.moveArm(-300);
-        TimeUtils.sleep(700);
         drivingSystem.driveStraight(40, -0.6);
         drivingSystem.driveStraight(180, 1);
-//        drivingSystem.driveUntilObstacle(60, 1);
-//        armSystem.autonomousReload();
     }
 
     /**
@@ -149,14 +141,28 @@ public class Carousel {
      */
     public void LFYCP(int mirror) {
         placeFreight(mirror);
-        drivingSystem.turn(180 * mirror, 150);
-        drivingSystem.driveStraight(40, 0.6);
-        drivingSystem.driveSideways(125, -0.4 * mirror);
+        goToCarousel(mirror);
+        // spin duck
         duckSystem.runFor(5000);
+        // go to crater through path
         drivingSystem.driveSideways(50, 0.4 * mirror);
         drivingSystem.turn(180 * mirror, 150);
         drivingSystem.driveStraight(155, 0.6);
-        drivingSystem.driveSideways(70, 0.4 * mirror);
+        drivingSystem.driveSideways(70, 0.6 * mirror);
         drivingSystem.driveStraight(100, 0.6);
+    }
+
+    /**
+     * Goes to carousel, and then to crater in front of SH. Enters crater through obstacle.
+     */
+    public void LFYCO(int mirror) {
+        placeFreight(mirror);
+        goToCarousel(mirror);
+        // spin duck
+        duckSystem.runFor(5000);
+        // go to crater through obstacle
+        drivingSystem.driveSideways(50, 0.4 * mirror);
+        drivingSystem.turn(180 * mirror, 150);
+        drivingSystem.driveStraight(250, 1);
     }
 }
