@@ -87,6 +87,9 @@ public class Crater {
 //        armSystem.autonomousReload();
     }
 
+    /**
+     * Goes to crater. Rams through obstacle.
+     */
     public void RZNCO(int mirror) {
         placeFreight(mirror);
         // go to crater and collect
@@ -102,6 +105,9 @@ public class Crater {
 //        drivingSystem.driveUntilObstacle(60, 1);
     }
 
+    /**
+     * Goes to crater. Enters crater through path.
+     */
     public void RZNCP(int mirror) {
         placeFreight(mirror);
         // go to crater and collect
@@ -116,7 +122,7 @@ public class Crater {
     }
 
     /**
-     * Goes to carousel, then to crater.
+     * Goes to carousel, then to crater behind SH. Rams through obstacle.
      */
     public void RBYCO(int mirror) {
         placeFreight(mirror);
@@ -139,7 +145,7 @@ public class Crater {
     }
 
     /**
-     * Goes to carousel, then to alliance storage unit.
+     * Goes to carousel behind SH, then to warehouse.
      */
     public void RBYW(int mirror) {
         placeFreight(mirror);
@@ -154,7 +160,7 @@ public class Crater {
     }
 
     /**
-     * Goes to alliance storage unit.
+     * Goes to warehouse behind SH.
      */
     public void RBNW(int mirror) {
         placeFreight(mirror);

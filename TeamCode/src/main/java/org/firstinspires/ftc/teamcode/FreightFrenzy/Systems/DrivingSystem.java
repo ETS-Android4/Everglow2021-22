@@ -18,13 +18,13 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class DrivingSystem {
-    private final DcMotor      frontRight;
-    private final DcMotor      frontLeft;
-    private final DcMotor      backRight;
-    private final DcMotor      backLeft;
-    private final DistanceSensor distanceSensor;
-    private final LinearOpMode opMode;
-    private BNO055IMU.Parameters parameters;
+    private final DcMotor              frontRight;
+    private final DcMotor              frontLeft;
+    private final DcMotor              backRight;
+    private final DcMotor              backLeft;
+    private final DistanceSensor       distanceSensor;
+    private final LinearOpMode         opMode;
+    private       BNO055IMU.Parameters parameters;
 
     private BNO055IMU imu;
 
@@ -38,12 +38,12 @@ public class DrivingSystem {
     private static final double WHEEL_RADIUS_CM      = 4.8;
 
     public DrivingSystem(LinearOpMode opMode) {
-        this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");
-        this.frontLeft  = opMode.hardwareMap.get(DcMotor.class, "front_left");
-        this.backRight  = opMode.hardwareMap.get(DcMotor.class, "back_right");
-        this.backLeft   = opMode.hardwareMap.get(DcMotor.class, "back_left");
+        this.frontRight     = opMode.hardwareMap.get(DcMotor.class, "front_right");
+        this.frontLeft      = opMode.hardwareMap.get(DcMotor.class, "front_left");
+        this.backRight      = opMode.hardwareMap.get(DcMotor.class, "back_right");
+        this.backLeft       = opMode.hardwareMap.get(DcMotor.class, "back_left");
         this.distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
-        this.opMode     = opMode;
+        this.opMode         = opMode;
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -51,7 +51,7 @@ public class DrivingSystem {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Create IMU
-        parameters = new BNO055IMU.Parameters();
+        parameters                                  = new BNO055IMU.Parameters();
         parameters.angleUnit                        = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit                        = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile              = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -155,9 +155,10 @@ public class DrivingSystem {
 
     /**
      * Drives Sideways until the predicate of stopCondition returns true.
-     *  @return the total distance traveled.
+     *
+     * @return the total distance traveled.
      */
-    public double driveSidewaysUntil(double power, StopCondition stopCondition){
+    public double driveSidewaysUntil(double power, StopCondition stopCondition) {
         targetAngle = getCurrentAngle();
         resetDistance();
         double averageMotors = 0;
@@ -171,7 +172,7 @@ public class DrivingSystem {
         }
         stöp();
         // (Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) = averageMotors
-        return Math.abs(averageMotors /COUNTS_PER_MOTOR_REV*(2.0 * Math.PI * WHEEL_RADIUS_CM));
+        return Math.abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
     }
 
     public double driveStraightUntil(double power, StopCondition stopCondition) {
@@ -188,7 +189,7 @@ public class DrivingSystem {
             this.opMode.telemetry.update();
         }
         stöp();
-        return Math.abs(averageMotors /COUNTS_PER_MOTOR_REV*(2.0 * Math.PI * WHEEL_RADIUS_CM));
+        return Math.abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
     }
 
 
@@ -227,7 +228,7 @@ public class DrivingSystem {
     /**
      * Same as driveUntilObstacle, but also lifts the arm so that it doesn't block the sensors.
      */
-    public void moveArmAndDriveUntilObstacle(double distance, double power, ArmSystem armSystem){
+    public void moveArmAndDriveUntilObstacle(double distance, double power, ArmSystem armSystem) {
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
         driveUntilObstacle(distance, power);
