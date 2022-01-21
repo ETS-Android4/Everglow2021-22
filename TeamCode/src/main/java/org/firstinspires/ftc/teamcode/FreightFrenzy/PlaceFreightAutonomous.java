@@ -15,31 +15,31 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Crater;
 public class PlaceFreightAutonomous extends LinearOpMode {
     Carousel        car;
     Crater          crater;
-    EverglowGamepad g;
-    DrivingSystem   d;
 
     @Override
     public void runOpMode() {
         car    = new Carousel(this);
         crater = new Crater(this);
-        g      = new EverglowGamepad(gamepad1);
-        d      = new DrivingSystem(this);
 
         waitForStart();
 
         while (opModeIsActive()) {
-//            if (g.buttonPress("a")) {
-//                car.placeFreight();
-//                stop();
-//            }
-//            if (g.buttonPress("b")) {
-//                crater.placeFreight();
-//                stop();
-//            }
-//            if (g.buttonPress("y")) {
-//                d.driveStraight(100, 0.4);
-//                stop();
-//            }
+            if (gamepad1.a) {
+                car.placeFreight(1);
+                stop();
+            }
+            if (gamepad1.b) {
+                crater.placeFreight(1);
+                stop();
+            }
+            if (gamepad1.x) {
+                car.placeFreight(-1);
+                stop();
+            }
+            if (gamepad1.y) {
+                crater.placeFreight(-1);
+                stop();
+            }
         }
     }
 }

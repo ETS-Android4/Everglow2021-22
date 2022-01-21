@@ -22,7 +22,6 @@ public class GameTeleOp extends LinearOpMode {
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
     TouchSensor     touch;
-    int             counter = 0;
 
     @Override
     public void runOpMode() {
@@ -113,7 +112,6 @@ public class GameTeleOp extends LinearOpMode {
             armSystem.restOnLoad();
             armSystem.restOnFirstFloor();
 
-            telemetry.addData("counter: ", counter++);
             telemetry.addData("arm position: ", armSystem.arm.getCurrentPosition());
             telemetry.update();
         }
