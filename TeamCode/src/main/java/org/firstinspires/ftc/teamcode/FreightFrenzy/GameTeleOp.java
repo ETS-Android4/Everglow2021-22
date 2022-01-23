@@ -69,9 +69,6 @@ public class GameTeleOp extends LinearOpMode {
             if (ourGamepad2.dpad_right()){
                 armSystem.moveArm(ArmSystem.Floors.TOTEM);
             }
-            if (ourGamepad2.dpad_left()){
-                armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-            }
 
             if (ourGamepad2.rt()) {
                 armSystem.toggleCollecting();
@@ -89,10 +86,17 @@ public class GameTeleOp extends LinearOpMode {
                 armSystem.stop();
             }
 
-            if (ourGamepad2.dpad_up()) {
+            if (ourGamepad2.dpad_left()) {
                 duckSystem.toggle();
             }
 
+            if (ourGamepad2.dpad_up()) {
+                armSystem.moveArm(armSystem.arm.getCurrentPosition() + 50);
+            }
+
+            if (ourGamepad2.dpad_down()) {
+                armSystem.moveArm(armSystem.arm.getCurrentPosition() - 50);
+            }
             // rumble controller if touchSensor was just pressed
             if (touch.isPressed()) {
                 if (!prevTouchSensorPressed) {
