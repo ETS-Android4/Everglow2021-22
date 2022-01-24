@@ -49,7 +49,7 @@ public class Crater {
         switch (floor) {
             case FIRST:
                 drivingSystem.driveSideways(10, mirror * 0.4);
-                drivingSystem.driveStraight(100, 0.5);
+                drivingSystem.driveStraight(90, 0.5);
                 drivingSystem.turn(mirror * 90, 200);
                 break;
             case SECOND:
@@ -64,7 +64,7 @@ public class Crater {
                 break;
             case THIRD:
                 drivingSystem.driveSideways(7, mirror * 0.5);
-                drivingSystem.driveStraight(100, 0.5);
+                drivingSystem.driveStraight(90, 0.5);
                 drivingSystem.turn(mirror * 90, 200);
                 break;
         }
@@ -74,6 +74,7 @@ public class Crater {
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(10, 0.5);
         armSystem.spit();
+        TimeUtils.sleep(500);
         armSystem.stop();
         if (floor == ArmSystem.Floors.FIRST) {
             drivingSystem.driveStraight(15, -0.5);
@@ -155,5 +156,30 @@ public class Crater {
         drivingSystem.driveSideways(50, 0.4 * mirror);
         drivingSystem.driveStraight(185, 0.4);
         drivingSystem.driveSideways(90, -0.4 * mirror);
+    }
+
+    /**
+     * Goes to carouse in front of SH, then to warehouse.
+     */
+    public void RFYW(int mirror){
+        placeFreight(mirror);
+        drivingSystem.driveSideways(40, -0.6 * mirror);
+        drivingSystem.driveStraight(180, 0.5);
+        drivingSystem.driveSideways(30, -0.4 * mirror);
+        // drop duck
+        duckSystem.runFor(5000);
+        // go to warehouse
+        drivingSystem.driveSideways(65, 0.4 * mirror);
+    }
+
+    /**
+     * Goes to warehouse in front of SH.
+     */
+    public void RFNW(int mirror){
+        placeFreight(mirror);
+        armSystem.autonomousReload();
+        // go to warehouse
+        drivingSystem.driveSideways(40, -0.4 * mirror);
+        drivingSystem.driveStraight(185, 0.4);
     }
 }
