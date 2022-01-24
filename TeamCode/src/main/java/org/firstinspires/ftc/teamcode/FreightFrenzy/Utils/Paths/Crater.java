@@ -163,13 +163,15 @@ public class Crater {
      */
     public void RFYW(int mirror){
         placeFreight(mirror);
-        drivingSystem.driveSideways(40, -0.6 * mirror);
+        armSystem.autonomousReload();
+        drivingSystem.driveSideways(60, -0.6 * mirror);
         drivingSystem.driveStraight(180, 0.5);
         drivingSystem.driveSideways(30, -0.4 * mirror);
         // drop duck
         duckSystem.runFor(5000);
         // go to warehouse
         drivingSystem.driveSideways(65, 0.4 * mirror);
+        drivingSystem.driveStraight(5, 0.5);
     }
 
     /**
@@ -181,5 +183,6 @@ public class Crater {
         // go to warehouse
         drivingSystem.driveSideways(40, -0.4 * mirror);
         drivingSystem.driveStraight(185, 0.4);
+        drivingSystem.driveSideways(10, 0.4 * mirror);
     }
 }
