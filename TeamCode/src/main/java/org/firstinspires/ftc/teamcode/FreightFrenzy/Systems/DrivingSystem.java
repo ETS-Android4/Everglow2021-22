@@ -42,7 +42,7 @@ public class DrivingSystem {
         this.backRight = opMode.hardwareMap.get(DcMotor.class, "back_right");
         this.backLeft = opMode.hardwareMap.get(DcMotor.class, "back_left");
         this.distanceSensorLeft = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bl");
-        this.distanceSensorRight = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bl");
+        this.distanceSensorRight = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_br");
         this.opMode = opMode;
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -240,27 +240,19 @@ public class DrivingSystem {
         armSystem.autonomousReload();
     }
 
-    public void placeTotem(double targetDistance, StopCondition stopCondition, double driveStraightPower, ArmSystem armSystem) {
-        double rotateMaxPower = 0.5;
-        double errorForRotateMaxPower = 1;
+    public void placeTotem(double targetDistance, double driveStraightPower, ArmSystem armSystem) {
+        double rotateMaxPower = 0.2;
+        double rotateStartPower = 0.1;
+        double errorForRotateMaxPower = 10;
         // rotates until distances from both sensors are equal
-        final double ROTATE_EPSILON = 0.25;
+        final double ROTATE_EPSILON = 0.5;
         while (true) {
-            if (stopCondition.shouldStop()) {
-                stöp();
-                return;
-            }
             double distanceLeft = distanceSensorLeft.getDistance(DistanceUnit.CM);
             double distanceRight = distanceSensorRight.getDistance(DistanceUnit.CM);
             double error = distanceRight - distanceLeft;
             double absError = Math.abs(error);
-            if (absError < ROTATE_EPSILON) {
-                break;
-            }
-            double power = Math.min(1, absError / errorForRotateMaxPower) * rotateMaxPower;
+            double power = Math.min(1, absError / errorForRotateMaxPower) * rotateMaxPower + rotateStartPower;
             power = Math.copySign(power, error);
-            driveByJoystick(0, 0, power);
-
             opMode.telemetry.addLine("Inside of rotation loop");
             opMode.telemetry.addData("distanceLeft", distanceLeft);
             opMode.telemetry.addData("distanceRight", distanceRight);
@@ -268,28 +260,29 @@ public class DrivingSystem {
             opMode.telemetry.addData("absError", absError);
             opMode.telemetry.addData("power", power);
             opMode.telemetry.update();
+            if (absError < ROTATE_EPSILON) {
+                break;
+            }
+            driveByJoystick(0, 0, power);
         }
         stöp();
-        TimeUtils.sleep(2000);
+        TimeUtils.sleep(250);
 
         // moves forwards or backwards until the distance from both sensors is {targetDistance}
-        final double DRIVE_STRAIGHT_EPSILON = 0.25;
+        final double DRIVE_STRAIGHT_EPSILON = 1;
         targetAngle = getCurrentAngle();
         while (true) {
-            if (stopCondition.shouldStop()) {
-                return;
-            }
             double distanceLeft = distanceSensorLeft.getDistance(DistanceUnit.CM);
             double distanceRight = distanceSensorRight.getDistance(DistanceUnit.CM);
             double avg_distance = (distanceLeft + distanceRight) / 2;
             double error = avg_distance - targetDistance;
             double absError = Math.abs(error);
-            double power = Math.copySign(driveStraightPower, absError);
+            double power = Math.copySign(driveStraightPower, -error);
             if(absError < DRIVE_STRAIGHT_EPSILON){
                 break;
             }
             driveByJoystick(0, power, getAngleDeviation() / 40);
-            opMode.telemetry.addLine("Inside of rotation loop");
+            opMode.telemetry.addLine("Inside of drive straight loop");
             opMode.telemetry.addData("distanceLeft", distanceLeft);
             opMode.telemetry.addData("distanceRight", distanceRight);
             opMode.telemetry.addData("avg_distance", avg_distance);

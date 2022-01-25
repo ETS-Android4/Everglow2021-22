@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
+import java.nio.file.FileAlreadyExistsException;
+
 @TeleOp(name = "GameTeleOp", group = "Linear Opmode")
 public class GameTeleOp extends LinearOpMode {
 
@@ -22,6 +24,8 @@ public class GameTeleOp extends LinearOpMode {
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
     TouchSensor     touch;
+
+    boolean collectingTotem = false;
 
     @Override
     public void runOpMode() {
@@ -59,12 +63,15 @@ public class GameTeleOp extends LinearOpMode {
             }
             if (ourGamepad2.a()) {
                 armSystem.moveArm(ArmSystem.Floors.FIRST);
+                collectingTotem = false;
             }
             if (ourGamepad2.b()) {
                 armSystem.moveArm(ArmSystem.Floors.SECOND);
+                collectingTotem = false;
             }
             if (ourGamepad2.y()) {
                 armSystem.moveArm(ArmSystem.Floors.THIRD);
+                collectingTotem = false;
             }
             if (ourGamepad2.dpad_right()){
                 armSystem.moveArm(ArmSystem.Floors.TOTEM);
@@ -106,12 +113,22 @@ public class GameTeleOp extends LinearOpMode {
             } else {
                 prevTouchSensorPressed = false;
             }
+            if (!collectingTotem) {
+                armSystem.restOnLoad();
+            }
+            if (gamepad2.share) {
+                armSystem.moveArm(-100);
+                collectingTotem = true;
+            }
 
-            armSystem.restOnLoad();
+            if (gamepad2.options){
+                drivingSystem.placeTotem(10, 0.3, armSystem);
+            }
+
             armSystem.restOnFirstFloor();
 
-            telemetry.addData("arm position: ", armSystem.arm.getCurrentPosition());
-            telemetry.update();
+//            telemetry.addData("arm position: ", armSystem.arm.getCurrentPosition());
+//            telemetry.update();
         }
     }
 }
