@@ -58,16 +58,15 @@ public class TestDistanceSensor extends LinearOpMode {
         // you can use this as a regular DistanceSensor.
         Rev2mDistanceSensor leftSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
         Rev2mDistanceSensor rightSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
-
-        // you can also cast this to a Rev2mDistanceSensor if you want to use added
-        // methods associated with the Rev2mDistanceSensor class.
+        Rev2mDistanceSensor backLeftSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_bl");
+        Rev2mDistanceSensor backRightSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_br");
 
         waitForStart();
         while(opModeIsActive()) {
-            // generic DistanceSensor methods.
-            telemetry.addData("distance left", leftSensor.getDistance(DistanceUnit.CM));
-            telemetry.addData("distance right", rightSensor.getDistance(DistanceUnit.CM));
-
+            telemetry.addData("distance front left", leftSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance front right", rightSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance back left", backLeftSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance back right", backRightSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
     }

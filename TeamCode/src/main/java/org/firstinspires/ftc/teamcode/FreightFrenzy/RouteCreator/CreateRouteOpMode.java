@@ -21,13 +21,13 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 @TeleOp(name = "Create Route", group = "Linear Opmode")
 public class CreateRouteOpMode extends LinearOpMode {
 
-    private static final double DRIVE_SIDEWAYS_POWER = 0.4;
-    private static final double DEFAULT_DRIVE_STRAIGHT_POWER = 0.6;
+    private static final double DRIVE_SIDEWAYS_POWER = 0.6;
+    private static final double DRIVE_SIDEWAYS_DURING_CREATE_POWER = 0.3; // when creating a route, the robot may drive slower than when executing a route.
+    private static final double DRIVE_STRAIGHT_POWER = 0.6;
+    private static final double DRIVE_STRAIGHT_DURING_CREATE_POWER = 0.3;
     private static final double STRONG_DRIVE_STRAIGHT_POWER = 1;
     private static final int ROTATE_SPEED_DECREASE = 150;
-    private static final int DRIVE_TO_OBSTACLE_DISTANCE = 60;
     private static final long DUCK_DURATION = 5000;
-    private static final double DRIVE_TO_OBSTACLE_POWER = 1;
     private AllSystems systems;
     @Nullable
     private AutonomousRoute prevAutonomousRoute;
@@ -168,14 +168,14 @@ public class CreateRouteOpMode extends LinearOpMode {
     private RouteInstruction recordDriveSideways() {
         if (gamepad2.left_stick_x > 0) {
             // drive to the right
-            double distanceDriven = systems.drivingSystem.driveSidewaysUntil(DRIVE_SIDEWAYS_POWER,
+            double distanceDriven = systems.drivingSystem.driveSidewaysUntil(DRIVE_SIDEWAYS_DURING_CREATE_POWER,
                     () -> gamepad2.left_stick_x <= 0
             );
 
             return new DriveSidewaysInstruction(DRIVE_SIDEWAYS_POWER, distanceDriven);
         } else {
             // drive to the left
-            double distanceDriven = systems.drivingSystem.driveSidewaysUntil(-DRIVE_SIDEWAYS_POWER,
+            double distanceDriven = systems.drivingSystem.driveSidewaysUntil(-DRIVE_SIDEWAYS_DURING_CREATE_POWER,
                     () -> gamepad2.left_stick_x >= 0
             );
             return new DriveSidewaysInstruction(-DRIVE_SIDEWAYS_POWER, distanceDriven);
@@ -185,17 +185,17 @@ public class CreateRouteOpMode extends LinearOpMode {
     private RouteInstruction recordDriveStraight() {
         if (gamepad2.left_stick_y > 0) {
             // drive backwards
-            double distanceDriven = systems.drivingSystem.driveStraightUntil(-DEFAULT_DRIVE_STRAIGHT_POWER,
+            double distanceDriven = systems.drivingSystem.driveStraightUntil(-DRIVE_STRAIGHT_DURING_CREATE_POWER,
                     () -> gamepad2.left_stick_y <= 0
             );
 
-            return new DriveStraightInstruction(-DEFAULT_DRIVE_STRAIGHT_POWER, distanceDriven);
+            return new DriveStraightInstruction(-DRIVE_STRAIGHT_POWER, distanceDriven);
         } else {
             // drive forwards
-            double distanceDriven = systems.drivingSystem.driveStraightUntil(DEFAULT_DRIVE_STRAIGHT_POWER,
+            double distanceDriven = systems.drivingSystem.driveStraightUntil(DRIVE_STRAIGHT_DURING_CREATE_POWER,
                     () -> gamepad2.left_stick_y >= 0
             );
-            return new DriveStraightInstruction(DEFAULT_DRIVE_STRAIGHT_POWER, distanceDriven);
+            return new DriveStraightInstruction(DRIVE_STRAIGHT_POWER, distanceDriven);
         }
     }
 
@@ -203,7 +203,7 @@ public class CreateRouteOpMode extends LinearOpMode {
         double distanceDriven = systems.drivingSystem.driveStraightUntil(STRONG_DRIVE_STRAIGHT_POWER,
                 () -> gamepad2.y
         );
-        return new DriveStraightInstruction(DEFAULT_DRIVE_STRAIGHT_POWER, distanceDriven);
+        return new DriveStraightInstruction(DRIVE_STRAIGHT_POWER, distanceDriven);
     }
 
     private RouteInstruction recordTurn90() {

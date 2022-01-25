@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
 
-import androidx.annotation.NonNull;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,13 +16,14 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class DrivingSystem {
-    private final DcMotor              frontRight;
-    private final DcMotor              frontLeft;
-    private final DcMotor              backRight;
-    private final DcMotor              backLeft;
-    private final DistanceSensor       distanceSensor;
-    private final LinearOpMode         opMode;
-    private       BNO055IMU.Parameters parameters;
+    private final DcMotor frontRight;
+    private final DcMotor frontLeft;
+    private final DcMotor backRight;
+    private final DcMotor backLeft;
+    private final DistanceSensor distanceSensorLeft;
+    private final DistanceSensor distanceSensorRight;
+    private final LinearOpMode opMode;
+    private BNO055IMU.Parameters parameters;
 
     private BNO055IMU imu;
 
@@ -32,18 +31,19 @@ public class DrivingSystem {
 
     private static final double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
     private static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
-    private static final double WHEEL_DIAMETER_MM    = 50;     // For figuring circumference
-    private static final double COUNTS_PER_mm        = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    private static final double WHEEL_DIAMETER_MM = 50;     // For figuring circumference
+    private static final double COUNTS_PER_mm = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_MM * 3.1415);
-    private static final double WHEEL_RADIUS_CM      = 4.8;
+    private static final double WHEEL_RADIUS_CM = 4.8;
 
     public DrivingSystem(LinearOpMode opMode) {
-        this.frontRight     = opMode.hardwareMap.get(DcMotor.class, "front_right");
-        this.frontLeft      = opMode.hardwareMap.get(DcMotor.class, "front_left");
-        this.backRight      = opMode.hardwareMap.get(DcMotor.class, "back_right");
-        this.backLeft       = opMode.hardwareMap.get(DcMotor.class, "back_left");
-        this.distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
-        this.opMode         = opMode;
+        this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");
+        this.frontLeft = opMode.hardwareMap.get(DcMotor.class, "front_left");
+        this.backRight = opMode.hardwareMap.get(DcMotor.class, "back_right");
+        this.backLeft = opMode.hardwareMap.get(DcMotor.class, "back_left");
+        this.distanceSensorLeft = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bl");
+        this.distanceSensorRight = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bl");
+        this.opMode = opMode;
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -51,12 +51,12 @@ public class DrivingSystem {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Create IMU
-        parameters                                  = new BNO055IMU.Parameters();
-        parameters.angleUnit                        = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit                        = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile              = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled                   = true;
-        parameters.loggingTag                       = "IMU";
+        parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
@@ -212,14 +212,17 @@ public class DrivingSystem {
         stöp();
     }
 
-
+    /**
+     * Does not work, because we are now using the back distance sensors
+     */
+    @Deprecated
     public void driveUntilObstacle(double distance, double power) {
         targetAngle = getCurrentAngle();
         power *= -1;
         resetDistance();
-        while (distanceSensor.getDistance(DistanceUnit.CM) > distance) {
+        while (distanceSensorLeft.getDistance(DistanceUnit.CM) > distance) {
             driveByJoystick(0, power, getAngleDeviation() / 40);
-            this.opMode.telemetry.addData("distance", distanceSensor.getDistance(DistanceUnit.CM));
+            this.opMode.telemetry.addData("distance", distanceSensorLeft.getDistance(DistanceUnit.CM));
             this.opMode.telemetry.update();
         }
         stöp();
@@ -227,12 +230,85 @@ public class DrivingSystem {
 
     /**
      * Same as driveUntilObstacle, but also lifts the arm so that it doesn't block the sensors.
+     * Does not work, because we are now using the back distance sensors
      */
+    @Deprecated
     public void moveArmAndDriveUntilObstacle(double distance, double power, ArmSystem armSystem) {
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
         driveUntilObstacle(distance, power);
         armSystem.autonomousReload();
+    }
+
+    public void placeTotem(double targetDistance, StopCondition stopCondition, double driveStraightPower, ArmSystem armSystem) {
+        double rotateMaxPower = 0.5;
+        double errorForRotateMaxPower = 1;
+        // rotates until distances from both sensors are equal
+        final double ROTATE_EPSILON = 0.25;
+        while (true) {
+            if (stopCondition.shouldStop()) {
+                stöp();
+                return;
+            }
+            double distanceLeft = distanceSensorLeft.getDistance(DistanceUnit.CM);
+            double distanceRight = distanceSensorRight.getDistance(DistanceUnit.CM);
+            double error = distanceRight - distanceLeft;
+            double absError = Math.abs(error);
+            if (absError < ROTATE_EPSILON) {
+                break;
+            }
+            double power = Math.min(1, absError / errorForRotateMaxPower) * rotateMaxPower;
+            power = Math.copySign(power, error);
+            driveByJoystick(0, 0, power);
+
+            opMode.telemetry.addLine("Inside of rotation loop");
+            opMode.telemetry.addData("distanceLeft", distanceLeft);
+            opMode.telemetry.addData("distanceRight", distanceRight);
+            opMode.telemetry.addData("error", error);
+            opMode.telemetry.addData("absError", absError);
+            opMode.telemetry.addData("power", power);
+            opMode.telemetry.update();
+        }
+        stöp();
+        TimeUtils.sleep(2000);
+
+        // moves forwards or backwards until the distance from both sensors is {targetDistance}
+        final double DRIVE_STRAIGHT_EPSILON = 0.25;
+        targetAngle = getCurrentAngle();
+        while (true) {
+            if (stopCondition.shouldStop()) {
+                return;
+            }
+            double distanceLeft = distanceSensorLeft.getDistance(DistanceUnit.CM);
+            double distanceRight = distanceSensorRight.getDistance(DistanceUnit.CM);
+            double avg_distance = (distanceLeft + distanceRight) / 2;
+            double error = avg_distance - targetDistance;
+            double absError = Math.abs(error);
+            double power = Math.copySign(driveStraightPower, absError);
+            if(absError < DRIVE_STRAIGHT_EPSILON){
+                break;
+            }
+            driveByJoystick(0, power, getAngleDeviation() / 40);
+            opMode.telemetry.addLine("Inside of rotation loop");
+            opMode.telemetry.addData("distanceLeft", distanceLeft);
+            opMode.telemetry.addData("distanceRight", distanceRight);
+            opMode.telemetry.addData("avg_distance", avg_distance);
+            opMode.telemetry.addData("error", error);
+            opMode.telemetry.addData("absError", absError);
+            opMode.telemetry.addData("power", power);
+            opMode.telemetry.update();
+
+        }
+
+        stöp();
+
+        armSystem.moveArm(ArmSystem.Floors.TOTEM);
+        TimeUtils.sleep(1000);
+        armSystem.spit();
+
+
+
+
     }
 
 
