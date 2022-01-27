@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.GameAutonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Crater;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 
 @Autonomous(name = "BlueLBYW", group = "Autonomous")
 public class BlueLBYW extends LinearOpMode {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.Paths;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -75,6 +75,7 @@ public class Carousel {
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(25, 0.4);
         armSystem.spit();
+        TimeUtils.sleep(500);
         armSystem.stop();
         drivingSystem.driveStraight(20, -0.4);
         armSystem.moveArm(-300);
@@ -90,6 +91,20 @@ public class Carousel {
      * Goes to carousel, and then to crater behind SH. Rams through obstacle.
      */
     public void LBYCO(int mirror) {
+        placeFreight(mirror);
+        goToCarousel(mirror);
+        // spin duck
+        duckSystem.runFor(5000);
+        // go to crater through obstacle
+        drivingSystem.driveSideways(40, 0.6 * mirror);
+        drivingSystem.turn(180, 150);
+        drivingSystem.driveStraight(250, 1);
+    }
+
+    /**
+     * Goes to carousel, and then to crater behind SH. Rams through obstacle.
+     */
+    public void LBYCP(int mirror) {
         placeFreight(mirror);
         goToCarousel(mirror);
         // spin duck
@@ -123,7 +138,20 @@ public class Carousel {
         drivingSystem.driveSideways(120, 0.4 * mirror);
         // drives through barrier, using max power
         drivingSystem.driveStraight(40, -0.6);
-        drivingSystem.driveStraight(180, 1);
+        drivingSystem.driveStraight(150, 1);
+    }
+
+    /**
+     * Goes to carousel, then to crater behind SH. Goes through path.
+     */
+    public void LBNCP(int mirror) {
+        placeFreight(mirror);
+        // go to right of the shipping hub
+        drivingSystem.driveSideways(50, -0.4 * mirror);
+        drivingSystem.driveStraight(125, 0.4);
+        drivingSystem.driveSideways(150, 0.4 * mirror);
+        // drives through barrier, using max power
+        drivingSystem.driveStraight(100, 0.6);
     }
 
     /**

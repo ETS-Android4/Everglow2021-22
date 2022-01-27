@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.GameAutonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
 
 @Autonomous(name = "RedLZNW", group = "Linear Opmode")
 public class RedLZNW extends LinearOpMode {

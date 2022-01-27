@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.Paths;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;

@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator;
 import android.annotation.SuppressLint;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Carousel;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.Paths.Crater;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 
 import java.util.ArrayList;
 import java.util.List;
