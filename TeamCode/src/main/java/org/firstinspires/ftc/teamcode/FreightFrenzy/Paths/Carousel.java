@@ -57,18 +57,17 @@ public class Carousel {
                 break;
         }
         // move to SH
-        drivingSystem.driveStraight(100, 0.5);
-        drivingSystem.turn(-90 * mirror, 200);
-
-        // get back to the same position for all
+        drivingSystem.driveStraight(95, 0.5);
         switch (floor) {
             case FIRST:
-                drivingSystem.driveStraight(15, -0.4 * mirror);
+                drivingSystem.driveSideways(15, -0.4 * mirror);
                 break;
             case SECOND:
-                drivingSystem.driveStraight(25, 0.4 * mirror);
+                drivingSystem.driveSideways(25, 0.4 * mirror);
                 break;
         }
+        drivingSystem.turn(-90 * mirror, 200);
+
 
         // place freight on SH
         armSystem.autonomousMoveArm(floor);
@@ -78,7 +77,7 @@ public class Carousel {
         TimeUtils.sleep(500);
         armSystem.stop();
         drivingSystem.driveStraight(20, -0.4);
-        armSystem.moveArm(-300);
+        armSystem.autonomousReload();
     }
 
     public void goToCarousel(int mirror) {
@@ -173,10 +172,10 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(5000);
         // go to crater through path
-        drivingSystem.driveSideways(50, 0.4 * mirror);
+        drivingSystem.driveSideways(30, 0.4 * mirror);
         drivingSystem.turn(180 * mirror, 150);
         drivingSystem.driveStraight(155, 0.6);
-        drivingSystem.driveSideways(70, 0.6 * mirror);
+        drivingSystem.driveSideways(50, 0.6 * mirror);
         drivingSystem.driveStraight(100, 0.6);
     }
 
@@ -189,7 +188,7 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(5000);
         // go to crater through obstacle
-        drivingSystem.driveSideways(50, 0.4 * mirror);
+        drivingSystem.driveSideways(30, 0.4 * mirror);
         drivingSystem.turn(180 * mirror, 150);
         drivingSystem.driveStraight(250, 1);
     }

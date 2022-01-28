@@ -26,8 +26,8 @@ public class DuckSystem {
 
     public void run() {
         isRunning = true;
-        duck1.setPower(0.4);
-        duck2.setPower(-0.4);
+        duck1.setPower(-0.4);
+        duck2.setPower(0.4);
     }
 
     public void runFor(long durationMillis) {
