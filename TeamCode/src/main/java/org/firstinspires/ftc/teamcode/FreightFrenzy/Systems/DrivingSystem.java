@@ -2,26 +2,35 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
 
+import android.util.Pair;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DrivingSystem {
     private final DcMotor frontRight;
     private final DcMotor frontLeft;
     private final DcMotor backRight;
     private final DcMotor backLeft;
-    private final DistanceSensor distanceSensorLeft;
-    private final DistanceSensor distanceSensorRight;
+    private final DistanceSensor sensorBackUp;
+    private final DistanceSensor sensorBackDown;
+    private final DistanceSensor sensorFrontRight;
+    private final DistanceSensor sensorFrontLeft;
     private final LinearOpMode opMode;
     private BNO055IMU.Parameters parameters;
 
@@ -41,8 +50,10 @@ public class DrivingSystem {
         this.frontLeft = opMode.hardwareMap.get(DcMotor.class, "front_left");
         this.backRight = opMode.hardwareMap.get(DcMotor.class, "back_right");
         this.backLeft = opMode.hardwareMap.get(DcMotor.class, "back_left");
-        this.distanceSensorLeft = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bl");
-        this.distanceSensorRight = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_br");
+        this.sensorBackUp = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
+        this.sensorBackDown = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bd");
+        this.sensorFrontRight = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
+        this.sensorFrontLeft = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
         this.opMode = opMode;
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -122,6 +133,9 @@ public class DrivingSystem {
     }
 
     public void driveStraight(double distance, double power) {
+        if (distance < 0) {
+            throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
+        }
         targetAngle = getCurrentAngle();
         power *= -1;
         resetDistance();
@@ -139,6 +153,9 @@ public class DrivingSystem {
 
 
     public void driveSideways(double distance, double power) {
+        if (distance < 0) {
+            throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
+        }
         targetAngle = getCurrentAngle();
         resetDistance();
         double AverageMotors = 0;
@@ -215,14 +232,13 @@ public class DrivingSystem {
     /**
      * Does not work, because we are now using the back distance sensors
      */
-    @Deprecated
     public void driveUntilObstacle(double distance, double power) {
         targetAngle = getCurrentAngle();
         power *= -1;
         resetDistance();
-        while (distanceSensorLeft.getDistance(DistanceUnit.CM) > distance) {
+        while (sensorBackUp.getDistance(DistanceUnit.CM) > distance) {
             driveByJoystick(0, power, getAngleDeviation() / 40);
-            this.opMode.telemetry.addData("distance", distanceSensorLeft.getDistance(DistanceUnit.CM));
+            this.opMode.telemetry.addData("distance", sensorBackUp.getDistance(DistanceUnit.CM));
             this.opMode.telemetry.update();
         }
         stöp();
@@ -232,7 +248,6 @@ public class DrivingSystem {
      * Same as driveUntilObstacle, but also lifts the arm so that it doesn't block the sensors.
      * Does not work, because we are now using the back distance sensors
      */
-    @Deprecated
     public void moveArmAndDriveUntilObstacle(double distance, double power, ArmSystem armSystem) {
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
@@ -240,15 +255,17 @@ public class DrivingSystem {
         armSystem.autonomousReload();
     }
 
-    public void placeTotem(double targetDistance, double driveStraightPower, ArmSystem armSystem) {
+    public void straightenAndGoToFixedDistance(double targetDistance, double driveStraightPower, ArmSystem armSystem) {
         double rotateMaxPower = 0.2;
         double rotateStartPower = 0.1;
         double errorForRotateMaxPower = 10;
         // rotates until distances from both sensors are equal
         final double ROTATE_EPSILON = 0.5;
+        armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
+        TimeUtils.sleep(1000);
         while (true) {
-            double distanceLeft = distanceSensorLeft.getDistance(DistanceUnit.CM);
-            double distanceRight = distanceSensorRight.getDistance(DistanceUnit.CM);
+            double distanceLeft = sensorFrontLeft.getDistance(DistanceUnit.CM);
+            double distanceRight = sensorFrontRight.getDistance(DistanceUnit.CM);
             double error = distanceRight - distanceLeft;
             double absError = Math.abs(error);
             double power = Math.min(1, absError / errorForRotateMaxPower) * rotateMaxPower + rotateStartPower;
@@ -272,13 +289,13 @@ public class DrivingSystem {
         final double DRIVE_STRAIGHT_EPSILON = 1;
         targetAngle = getCurrentAngle();
         while (true) {
-            double distanceLeft = distanceSensorLeft.getDistance(DistanceUnit.CM);
-            double distanceRight = distanceSensorRight.getDistance(DistanceUnit.CM);
+            double distanceLeft = sensorFrontLeft.getDistance(DistanceUnit.CM);
+            double distanceRight = sensorFrontRight.getDistance(DistanceUnit.CM);
             double avg_distance = (distanceLeft + distanceRight) / 2;
             double error = avg_distance - targetDistance;
             double absError = Math.abs(error);
             double power = Math.copySign(driveStraightPower, -error);
-            if(absError < DRIVE_STRAIGHT_EPSILON){
+            if (absError < DRIVE_STRAIGHT_EPSILON) {
                 break;
             }
             driveByJoystick(0, power, getAngleDeviation() / 40);
@@ -298,12 +315,122 @@ public class DrivingSystem {
         armSystem.moveArm(ArmSystem.Floors.TOTEM);
         TimeUtils.sleep(1000);
         armSystem.spit();
-
-
-
-
     }
 
+    public double[] distanceSensorsAverage(double duration) {
+        List<Double> distancesDown1 = new ArrayList<>();
+        List<Double> distancesUp1 = new ArrayList<>();
+        List<Double> distancesDown2 = new ArrayList<>();
+        List<Double> distancesUp2 = new ArrayList<>();
+        ElapsedTime elapsedTime = new ElapsedTime();
+        elapsedTime.reset();
+        elapsedTime.startTime();
+        while (elapsedTime.seconds() < duration) {
+
+            double distanceDown = sensorBackDown.getDistance(DistanceUnit.CM);
+            if (distanceDown < 50) {
+                distancesDown1.add(distanceDown);
+            }
+            double distanceUp = sensorBackUp.getDistance(DistanceUnit.CM);
+            if (distanceUp < 50) {
+                distancesUp1.add(distanceUp);
+            }
+            distancesDown2.add(distanceDown);
+            distancesUp2.add(distanceUp);
+        }
+
+        double downAvg1 = MathUtils.average(distancesDown1);
+        double upAvg1 = MathUtils.average(distancesUp1);
+        double downAvg2 = MathUtils.average(distancesDown2);
+        double upAvg2 = MathUtils.average(distancesUp2);
+        return new double[]{downAvg1, upAvg1, downAvg2, upAvg2};
+    }
+
+    public void rotateAroundSH() {
+        driveByJoystick(-0.3, 0, -0.12);
+    }
+
+    public void placeTotem(ArmSystem armSystem) {
+        final double TARGET_DELTA = 6.8;
+        double[] avgDistances;
+        boolean drifting = false;
+
+        while (true) {
+            if (sensorBackUp.getDistance(DistanceUnit.CM) > 50 || sensorBackDown.getDistance(DistanceUnit.CM) > 50) {
+                if (sensorBackUp.getDistance(DistanceUnit.CM) > 50 && sensorBackDown.getDistance(DistanceUnit.CM) > 50) {
+                    driveByJoystick(-0.3, 0, 0);
+                    drifting = true;
+                } else {
+                    if (drifting) {
+                        driveSideways(3, -0.3);
+                        drifting = false;
+                    }
+                    rotateAroundSH();
+                }
+            } else {
+                if (drifting) {
+                    driveSideways(2, -0.3);
+                    drifting = false;
+                }
+                stöp();
+                avgDistances = distanceSensorsAverage(1.5);
+                double avgDistanceDown = avgDistances[2];
+                double avgDistanceUp = avgDistances[3];
+                double delta = avgDistanceUp - avgDistanceDown;
+                opMode.telemetry.addData("avgDown", avgDistanceDown);
+                opMode.telemetry.addData("avgUp", avgDistanceUp);
+                opMode.telemetry.addData("avgDown", avgDistances[0]);
+                opMode.telemetry.addData("avgUp", avgDistances[1]);
+                opMode.telemetry.addData("delta", delta);
+                opMode.telemetry.addData("delta", avgDistances[1] - avgDistances[0]);
+                opMode.telemetry.update();
+
+                if (delta > TARGET_DELTA) {
+                    break;
+                } else {
+                    rotateAroundSH();
+                    TimeUtils.sleep(100);
+                }
+            }
+        }
+
+        driveToFixedDistance(avgDistances[0], 35, 0.3);
+        armSystem.moveArm(ArmSystem.Floors.TOTEM);
+        TimeUtils.sleep(3000);
+        armSystem.moveArm(ArmSystem.Floors.THIRD);
+        TimeUtils.sleep(500);
+        armSystem.spit();
+        TimeUtils.sleep(200);
+        driveStraight(10, 0.3);
+        armSystem.stop();
+        armSystem.reload();
+        TimeUtils.sleep(3000);
+    }
+
+    public void driveToFixedDistance(double currentDistance, double distance, double power) {
+        if (currentDistance > distance) {
+            driveStraight(currentDistance - distance, -power);
+        } else {
+            driveStraight(distance - currentDistance, power);
+        }
+    }
+
+    public void placeTotemBetter(ArmSystem armSystem) {
+        while (sensorBackUp.getDistance(DistanceUnit.CM) > 50 || sensorBackDown.getDistance(DistanceUnit.CM) > 50) {
+            driveByJoystick(-0.4, 0, 0);
+        }
+        stöp();
+        double[] avgDistances = distanceSensorsAverage(2);
+        opMode.telemetry.addData("avgDistance: ", avgDistances[0]);
+        opMode.telemetry.update();
+        driveToFixedDistance(avgDistances[0], 27, 0.3);
+        turn(6, 200);
+        armSystem.placeTotem();
+        driveStraight(10, 0.3);
+        armSystem.stop();
+        armSystem.reload();
+        TimeUtils.sleep(3000);
+    }
 
     public void resetDistance() {
         this.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

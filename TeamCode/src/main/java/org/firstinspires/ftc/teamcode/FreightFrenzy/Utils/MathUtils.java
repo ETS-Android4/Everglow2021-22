@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils;
 
 import androidx.annotation.Nullable;
 
-import org.firstinspires.ftc.robotcore.internal.android.dx.util.IntIterator;
-
 import java.util.List;
 
 public class MathUtils {
@@ -32,16 +30,27 @@ public class MathUtils {
     }
 
     @Nullable
-    public static Double min(List<Double> values){
-        if (values.isEmpty()){
+    public static Double min(List<Double> values) {
+        if (values.isEmpty()) {
             return null;
         }
         Double minValue = Double.MAX_VALUE;
-        for(Double value: values){
-            if (value < minValue){
+        for (Double value : values) {
+            if (value < minValue) {
                 minValue = value;
             }
         }
         return minValue;
+    }
+
+    public static double average(List<Double> values) {
+        double sum = 0;
+        for (double val : values) {
+            sum += val;
+        }
+        if (values.size() == 0) {
+            return 0;
+        }
+        return sum / values.size();
     }
 }

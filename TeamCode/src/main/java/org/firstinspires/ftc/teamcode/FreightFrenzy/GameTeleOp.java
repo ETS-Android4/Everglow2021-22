@@ -9,8 +9,6 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-import java.nio.file.FileAlreadyExistsException;
-
 @TeleOp(name = "GameTeleOp", group = "Linear Opmode")
 public class GameTeleOp extends LinearOpMode {
 
@@ -55,6 +53,11 @@ public class GameTeleOp extends LinearOpMode {
                     left_stick_x/= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     left_stick_y/= LEFT_STICK_DOWN_MOVE_REDUCTION;
                 }
+
+                telemetry.addData("left_x", left_stick_x);
+                telemetry.addData("left_y", left_stick_y);
+                telemetry.addData("right_x", right_stick_x);
+
                 drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             }
 
@@ -122,13 +125,14 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.options){
-                drivingSystem.placeTotem(10, 0.3, armSystem);
+                drivingSystem.placeTotem(armSystem);
             }
+
 
             armSystem.restOnFirstFloor();
 
 //            telemetry.addData("arm position: ", armSystem.arm.getCurrentPosition());
-//            telemetry.update();
+            telemetry.update();
         }
     }
 }

@@ -58,15 +58,19 @@ public class TestDistanceSensor extends LinearOpMode {
         // you can use this as a regular DistanceSensor.
         Rev2mDistanceSensor leftSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
         Rev2mDistanceSensor rightSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
-        Rev2mDistanceSensor backLeftSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_bl");
-        Rev2mDistanceSensor backRightSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_br");
+        Rev2mDistanceSensor upperSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
+        Rev2mDistanceSensor lowerSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_bd");
 
         waitForStart();
         while(opModeIsActive()) {
             telemetry.addData("distance front left", leftSensor.getDistance(DistanceUnit.CM));
             telemetry.addData("distance front right", rightSensor.getDistance(DistanceUnit.CM));
-            telemetry.addData("distance back left", backLeftSensor.getDistance(DistanceUnit.CM));
-            telemetry.addData("distance back right", backRightSensor.getDistance(DistanceUnit.CM));
+
+            double up = upperSensor.getDistance(DistanceUnit.CM);
+            double down = lowerSensor.getDistance(DistanceUnit.CM);
+            telemetry.addData("distance up ", up);
+            telemetry.addData("distance down", down);
+            telemetry.addData("Difference", up - down);
             telemetry.update();
         }
     }

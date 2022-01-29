@@ -133,6 +133,24 @@ public class AutonomousRoute {
 
     }
 
+    static class CraterPlaceFreightAndCraterInstruction implements RouteInstruction {
+        public CraterPlaceFreightAndCraterInstruction() {
+        }
+
+        @Override
+        public void execute(AllSystems systems, int mirror) {
+            Crater crater = new Crater(systems);
+            crater.placeFreight(mirror);
+            crater.goToCarouselB(mirror);
+        }
+
+        @Override
+        public String toJavaCode() {
+            return "placeFreight(mirror);\ngoToCarouselB(mirror);";
+        }
+    }
+
+
     static class CarouselPlaceFreightInstruction implements RouteInstruction {
         public CarouselPlaceFreightInstruction() {
         }
@@ -148,6 +166,24 @@ public class AutonomousRoute {
             return "placeFreight(mirror);\n";
         }
     }
+
+    static class CarouselPlaceFreightAndCraterInstruction implements RouteInstruction {
+        public CarouselPlaceFreightAndCraterInstruction() {
+        }
+
+        @Override
+        public void execute(AllSystems systems, int mirror) {
+            Carousel carousel = new Carousel(systems);
+            carousel.placeFreight(mirror);
+            carousel.goToCarousel(mirror);
+        }
+
+        @Override
+        public String toJavaCode() {
+            return "placeFreight(mirror);\ngoToCarousel(mirror);";
+        }
+    }
+
 
     static class PlaceFreightInstruction implements RouteInstruction {
         public PlaceFreightInstruction() {

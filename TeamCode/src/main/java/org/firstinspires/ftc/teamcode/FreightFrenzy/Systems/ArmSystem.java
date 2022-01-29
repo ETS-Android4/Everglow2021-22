@@ -120,7 +120,7 @@ public class ArmSystem {
                 firstFloor = true;
                 break;
             case TOTEM:
-                moveArm(-1850);
+                moveArm(-1600);
                 break;
         }
     }
@@ -145,5 +145,15 @@ public class ArmSystem {
         spit();
         TimeUtils.sleep(500);
         stop();
+    }
+
+    public void placeTotem() {
+        moveArm(Floors.TOTEM);
+        TimeUtils.sleep(2000);
+        arm.setTargetPosition(-2000);
+        arm.setPower(0.1);
+        TimeUtils.sleep(2000);
+        spit();
+        TimeUtils.sleep(200);
     }
 }

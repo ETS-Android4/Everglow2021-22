@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.CarouselPlaceFreightAndCraterInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.CraterPlaceFreightAndCraterInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveSidewaysInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveStraightInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.PlaceFreightInstruction;
@@ -89,6 +91,8 @@ public class CreateRouteOpMode extends LinearOpMode {
             telemetry.addLine("Press dpad up to active duck system");
             telemetry.addLine("Press dpad left to place freight on caursel side");
             telemetry.addLine("Press dpad right to place freight on crater side");
+            telemetry.addLine("Press left bumper to place freight and go to Carousel on caursel side");
+            telemetry.addLine("Press right bumper to place freight and go to Carousel on crater side");
             telemetry.addLine();
             telemetry.addLine("Current code: ");
             telemetry.addLine(autonomousRoute.toJavaCode());
@@ -154,6 +158,21 @@ public class CreateRouteOpMode extends LinearOpMode {
                 routeInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }
+
+            if (ourGamepad2.lb()) {
+                RouteInstruction routeInstruction = new CarouselPlaceFreightAndCraterInstruction();
+                routeInstruction.execute(systems, 1);
+                autonomousRoute.addRouteInstruction(routeInstruction);
+            }
+
+
+            if (ourGamepad2.rb()) {
+                RouteInstruction routeInstruction = new CraterPlaceFreightAndCraterInstruction();
+                routeInstruction.execute(systems, 1);
+                autonomousRoute.addRouteInstruction(routeInstruction);
+            }
+
+
 
             if (ourGamepad2.dpad_down()){
                 RouteInstruction routeInstruction = new ReloadArmInstruction();
