@@ -47,21 +47,26 @@ public class Crater {
         // avoid totem
         switch (floor) {
             case FIRST:
-                drivingSystem.driveSideways(8, mirror * 0.4);
+                drivingSystem.driveSideways(10, mirror * 0.4);
                 drivingSystem.driveStraight(95, 0.5);
+                drivingSystem.driveSideways(6,-0.4 * mirror);
+                drivingSystem.turn(mirror * 90, 200);
                 break;
             case SECOND:
-                drivingSystem.driveSideways(10,-0.5);
-                drivingSystem.driveStraight(50,0.5);
-                drivingSystem.driveSideways(15,0.15);
-                drivingSystem.driveStraight(48,0.5);
+                drivingSystem.turn(30*mirror,200);
+                drivingSystem.driveStraight(55,0.4);
+                drivingSystem.turn(-60*mirror,200);
+                drivingSystem.driveStraight(65,0.4);
+                drivingSystem.turn(120*mirror,200);
                 break;
             case THIRD:
                 drivingSystem.driveStraight(95, 0.5);
-                drivingSystem.driveSideways(8,mirror*0.4);
+                drivingSystem.driveSideways(4,mirror*0.4);
+                drivingSystem.turn(mirror * 90, 200);
+
                 break;
         }
-        drivingSystem.turn(mirror * 90, 200);
+        drivingSystem.driveStraight(3,-0.5);
         // place freight on SH
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
@@ -80,6 +85,27 @@ public class Crater {
         drivingSystem.driveSideways(43, -0.4 * mirror);
     }
 
+    public void dodgeToFront(int firstTurnDirection,int mirror){
+        drivingSystem.turn(90*mirror*firstTurnDirection,200);
+        switch(floor){
+            case FIRST:
+                drivingSystem.driveSideways(-10*mirror,0.5);
+                drivingSystem.driveStraight(30,0.5);
+                drivingSystem.driveSideways(10*mirror,-0.5);
+                break;
+            case SECOND:
+                drivingSystem.driveSideways(10*mirror,0.5);
+                drivingSystem.driveStraight(30,0.5);
+                drivingSystem.driveSideways(-10*mirror,-0.5);
+                break;
+            case THIRD:
+                drivingSystem.driveSideways(10*mirror,0.5);
+                drivingSystem.driveStraight(30,0.5);
+                drivingSystem.driveSideways(-10*mirror,-0.5);
+                break;
+        }
+        drivingSystem.turn(-90*mirror*firstTurnDirection,200);
+    }
     /**
      * Goes to crater. Rams through obstacle.
      */
