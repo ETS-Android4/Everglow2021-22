@@ -87,12 +87,12 @@ public class Crater {
         placeFreight(mirror);
         // go to crater through obstacle
         drivingSystem.turn(180, 200);
-        if (floor == ArmSystem.Floors.THIRD) {
-            drivingSystem.driveStraight(7, -0.4); // avoid totem
-        }
+        //DODGE
         drivingSystem.driveSideways(60, mirror * 0.4);
         drivingSystem.driveStraight(40, -0.6);
-        drivingSystem.driveStraight(180, 1);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        TimeUtils.sleep(500);
+        drivingSystem.driveUntilObstacle(50, 1);
     }
 
     /**
@@ -102,9 +102,7 @@ public class Crater {
         placeFreight(mirror);
         // go to crater through path
         drivingSystem.turn(180, 200);
-        if (floor == ArmSystem.Floors.THIRD) {
-            drivingSystem.driveStraight(7, -0.4); // avoid totem
-        }
+        //DODGE
         drivingSystem.driveSideways(120, mirror * 0.4);
         drivingSystem.driveStraight(100, 0.4);
     }
@@ -119,11 +117,31 @@ public class Crater {
         // drop duck
         duckSystem.runFor(4000);
         // go to crater through obstacle
-        drivingSystem.driveSideways(40, 0.6 * mirror);
+        drivingSystem.driveSideways(20, 0.6 * mirror);
         drivingSystem.turn(180, 200);
-        drivingSystem.driveStraight(250, 1);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        TimeUtils.sleep(500);
+        drivingSystem.driveUntilObstacle(50, 0.6);
     }
 
+    /**
+     * Goes to carousel behind SH, then to crater. Through Pass.
+     */
+    public void RBYCP(int mirror) {
+        placeFreight(mirror);
+        // go to carousel
+        goToCarouselB(mirror);
+        // drop duck
+        duckSystem.runFor(4000);
+        // go to crater through obstacle
+        drivingSystem.driveSideways(35, 0.6 * mirror);
+        drivingSystem.turn(180, 200);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(50, 0.6);
+        drivingSystem.driveSideways(70,0.4);
+        drivingSystem.driveUntilObstacle(50,0.6);
+    }
     /**
      * Goes to carousel behind SH, then to warehouse.
      */
@@ -153,9 +171,8 @@ public class Crater {
     public void RFYW(int mirror){
         placeFreight(mirror);
         armSystem.autonomousReload();
-        drivingSystem.driveSideways(60, -0.6 * mirror);
-        drivingSystem.driveStraight(180, 0.5);
-        drivingSystem.driveSideways(30, -0.4 * mirror);
+        //DODGE
+        goToCarouselB(mirror);
         // drop duck
         duckSystem.runFor(5000);
         // go to warehouse
@@ -169,9 +186,47 @@ public class Crater {
     public void RFNW(int mirror){
         placeFreight(mirror);
         armSystem.autonomousReload();
+        //DODGE
+        goToCarouselB(mirror);
         // go to warehouse
         drivingSystem.driveSideways(40, -0.4 * mirror);
         drivingSystem.driveStraight(185, 0.4);
         drivingSystem.driveSideways(10, 0.4 * mirror);
+    }
+
+    /**
+     * Goes to carousel, then to crater from pass.
+     */
+    public void RFYCO(int mirror){
+        placeFreight(mirror);
+        armSystem.autonomousReload();
+        //DODGE
+        // go to warehouse
+        goToCarouselB(mirror);
+        duckSystem.runFor(5000);
+        drivingSystem.driveSideways(50, 0.4 * mirror);
+        drivingSystem.turn(180,200);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        TimeUtils.sleep(500);
+        drivingSystem.driveUntilObstacle(50, 0.6);
+    }
+
+    /**
+     * Goes to carousel, then to crater from obstacle.
+     */
+    public void RFYCP(int mirror){
+        placeFreight(mirror);
+        armSystem.autonomousReload();
+        //DODGE
+        // go to warehouse
+        goToCarouselB(mirror);
+        duckSystem.runFor(5000);
+        drivingSystem.driveSideways(50, 0.4 * mirror);
+        drivingSystem.turn(180,200);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(50, 0.6);
+        drivingSystem.driveSideways(70,0.4);
+        drivingSystem.driveUntilObstacle(50,0.6);
     }
 }
