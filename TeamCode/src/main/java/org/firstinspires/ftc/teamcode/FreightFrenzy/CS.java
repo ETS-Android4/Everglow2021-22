@@ -2,13 +2,9 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "CS", group = "Linear Opmode")
 public class CS extends LinearOpMode {
@@ -24,7 +20,7 @@ public class CS extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            drivingSystem.placeTotemBetter(armSystem);
+            drivingSystem.CS(armSystem);
             stop();
         }
     }

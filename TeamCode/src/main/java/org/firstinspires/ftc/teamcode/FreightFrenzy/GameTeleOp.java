@@ -14,25 +14,25 @@ public class GameTeleOp extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
-    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION  = 5;
+    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION = 5;
 
-    DrivingSystem   drivingSystem;
-    ArmSystem       armSystem;
-    DuckSystem      duckSystem;
+    DrivingSystem drivingSystem;
+    ArmSystem armSystem;
+    DuckSystem duckSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
-    TouchSensor     touch;
+    TouchSensor touch;
 
     boolean collectingTotem = false;
 
     @Override
     public void runOpMode() {
         drivingSystem = new DrivingSystem(this);
-        armSystem     = new ArmSystem(this);
-        duckSystem    = new DuckSystem(this);
-        ourGamepad1   = new EverglowGamepad(gamepad1);
-        ourGamepad2   = new EverglowGamepad(gamepad2);
-        touch         = hardwareMap.get(TouchSensor.class, "touch");
+        armSystem = new ArmSystem(this);
+        duckSystem = new DuckSystem(this);
+        ourGamepad1 = new EverglowGamepad(gamepad1);
+        ourGamepad2 = new EverglowGamepad(gamepad2);
+        touch = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchSensorPressed = false;
 
@@ -46,12 +46,12 @@ public class GameTeleOp extends LinearOpMode {
                 double left_stick_x = gamepad2.left_stick_x;
                 double left_stick_y = gamepad2.left_stick_y;
                 double right_stick_x = gamepad2.right_stick_x;
-                if (gamepad2.right_stick_button){
-                    right_stick_x/=RIGHT_STICK_DOWN_MOVE_REDUCTION;
+                if (gamepad2.right_stick_button) {
+                    right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
-                if (gamepad2.left_stick_button){
-                    left_stick_x/= LEFT_STICK_DOWN_MOVE_REDUCTION;
-                    left_stick_y/= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                if (gamepad2.left_stick_button) {
+                    left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                    left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                 }
 
                 telemetry.addData("left_x", left_stick_x);
@@ -76,7 +76,7 @@ public class GameTeleOp extends LinearOpMode {
                 armSystem.moveArm(ArmSystem.Floors.THIRD);
                 collectingTotem = false;
             }
-            if (ourGamepad2.dpad_right()){
+            if (ourGamepad2.dpad_right()) {
                 armSystem.moveArm(ArmSystem.Floors.TOTEM);
             }
 
@@ -88,7 +88,7 @@ public class GameTeleOp extends LinearOpMode {
                 armSystem.toggleSpitting();
             }
 
-            if (ourGamepad2.rb() || ourGamepad2.lb()){
+            if (ourGamepad2.rb() || ourGamepad2.lb()) {
                 armSystem.stop();
             }
 
@@ -107,6 +107,7 @@ public class GameTeleOp extends LinearOpMode {
             if (ourGamepad2.dpad_down()) {
                 armSystem.moveArm(armSystem.arm.getCurrentPosition() - 50);
             }
+
             // rumble controller if touchSensor was just pressed
             if (touch.isPressed()) {
                 if (!prevTouchSensorPressed) {
@@ -124,15 +125,11 @@ public class GameTeleOp extends LinearOpMode {
                 collectingTotem = true;
             }
 
-            if (gamepad2.options){
-                drivingSystem.placeTotem(armSystem);
+            if (gamepad2.options) {
+                drivingSystem.CS(armSystem);
             }
 
-
             armSystem.restOnFirstFloor();
-
-//            telemetry.addData("arm position: ", armSystem.arm.getCurrentPosition());
-            telemetry.update();
         }
     }
 }
