@@ -20,7 +20,7 @@ public class ArmSystem {
     private CollectState collectState = CollectState.STOPPED;
 
     public enum Floors {
-        FIRST, SECOND, THIRD, TOTEM;
+        FIRST, SECOND, THIRD, TOTEM
     }
 
     public ArmSystem(LinearOpMode opMode) {
@@ -120,7 +120,7 @@ public class ArmSystem {
                 firstFloor = true;
                 break;
             case TOTEM:
-                moveArm(-1850);
+                moveArm(-1900);
                 break;
         }
     }

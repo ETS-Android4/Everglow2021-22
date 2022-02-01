@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "GameTeleOp", group = "Linear Opmode")
-public class GameTeleOp extends LinearOpMode {
+@TeleOp(name = "TwoDriverGameTeleOp", group = "Linear Opmode")
+public class TwoDriverGameTeleOp extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
@@ -43,13 +43,13 @@ public class GameTeleOp extends LinearOpMode {
             ourGamepad1.update();
             ourGamepad2.update();
             {
-                double left_stick_x = gamepad2.left_stick_x;
-                double left_stick_y = gamepad2.left_stick_y;
+                double left_stick_x = gamepad1.left_stick_x;
+                double left_stick_y = gamepad1.left_stick_y;
                 double right_stick_x = gamepad2.right_stick_x;
-                if (gamepad2.right_stick_button) {
+                if (gamepad1.right_stick_button) {
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
-                if (gamepad2.left_stick_button) {
+                if (gamepad1.left_stick_button) {
                     left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                 }
