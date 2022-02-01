@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -31,7 +32,7 @@ public class DrivingSystem {
     private final LinearOpMode opMode;
 
     private final BNO055IMU.Parameters parameters;
-    private final BNO055IMU imu;
+    private final BNO055IMU            imu;
 
     /**
      * If the robot is turning, this is the angle it will try to reach relatively to the
@@ -40,7 +41,7 @@ public class DrivingSystem {
     private double targetAngle = 0;
 
     private static final double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
-    private static final double WHEEL_RADIUS_CM = 4.8;
+    private static final double WHEEL_RADIUS_CM      = 4.8;
 
     /**
      * Constructor of the Driving System class.
@@ -53,12 +54,12 @@ public class DrivingSystem {
     public DrivingSystem(LinearOpMode opMode) {
         // Get the driving motors from the Hardware Map
         this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");
-        this.frontLeft = opMode.hardwareMap.get(DcMotor.class, "front_left");
-        this.backRight = opMode.hardwareMap.get(DcMotor.class, "back_right");
-        this.backLeft = opMode.hardwareMap.get(DcMotor.class, "back_left");
+        this.frontLeft  = opMode.hardwareMap.get(DcMotor.class, "front_left");
+        this.backRight  = opMode.hardwareMap.get(DcMotor.class, "back_right");
+        this.backLeft   = opMode.hardwareMap.get(DcMotor.class, "back_left");
 
         // Get sensors from the Hardware Map
-        this.sensorBackUp = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
+        this.sensorBackUp   = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
         this.sensorBackDown = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bd");
 
         this.opMode = opMode;
@@ -70,12 +71,12 @@ public class DrivingSystem {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Create IMU
-        parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
+        parameters                                  = new BNO055IMU.Parameters();
+        parameters.angleUnit                        = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit                        = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile              = "BNO055IMUCalibration.json";
+        parameters.loggingEnabled                   = true;
+        parameters.loggingTag                       = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
@@ -262,6 +263,55 @@ public class DrivingSystem {
         TimeUtils.sleep(700);
         driveUntilObstacle(distance, power);
         armSystem.autonomousReload();
+    }
+
+    /**
+     * Drives sideways until the predicate of stopCondition returns true.
+     *
+     * @return the total distance traveled.
+     */
+    public double driveSidewaysUntil(double power, StopCondition stopCondition) {
+        targetAngle = getCurrentAngle();
+        resetDistance();
+        double averageMotors = 0;
+        this.opMode.telemetry.addData("distance", averageMotors);
+        while (!stopCondition.shouldStop()) {
+            driveByJoystick(power, 0, getAngleDeviation() / 40);
+            averageMotors = Math.abs(
+                    (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
+                            + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
+                    ) / 4.0
+            );
+            this.opMode.telemetry.addData("distance", averageMotors);
+            this.opMode.telemetry.update();
+        }
+        stop();
+        return Math.abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
+    }
+
+    /**
+     * Drives straight until the predicate of stopCondition returns true.
+     *
+     * @return the total distance traveled.
+     */
+    public double driveStraightUntil(double power, StopCondition stopCondition) {
+        targetAngle = getCurrentAngle();
+        power *= -1;
+        resetDistance();
+        double averageMotors = 0;
+        this.opMode.telemetry.addData("distance", averageMotors);
+        while (!stopCondition.shouldStop()) {
+            driveByJoystick(0, power, getAngleDeviation() / 40);
+            averageMotors = Math.abs(
+                    (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
+                            - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
+                    ) / 4.0
+            );
+            this.opMode.telemetry.addData("distance", averageMotors);
+            this.opMode.telemetry.update();
+        }
+        stop();
+        return Math.abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
     }
 
     /**
