@@ -53,11 +53,11 @@ public class Crater {
                 drivingSystem.turn(mirror * 90, 200);
                 break;
             case SECOND:
-                drivingSystem.turn(30*mirror,200);
+                drivingSystem.turn(30*mirror,50);
                 drivingSystem.driveStraight(55,0.4);
-                drivingSystem.turn(-60*mirror,200);
-                drivingSystem.driveStraight(65,0.4);
-                drivingSystem.turn(120*mirror,200);
+                drivingSystem.turn(-59*mirror,50);
+                drivingSystem.driveStraight(53,0.4);
+                drivingSystem.turn(119*mirror,50);
                 break;
             case THIRD:
                 drivingSystem.driveStraight(95, 0.5);
@@ -86,25 +86,25 @@ public class Crater {
     }
 
     public void dodgeToFront(int firstTurnDirection,int mirror){
-        drivingSystem.turn(90*mirror*firstTurnDirection,200);
+        drivingSystem.turn(-90*mirror*firstTurnDirection,50);
         switch(floor){
             case FIRST:
-                drivingSystem.driveSideways(-10*mirror,0.5);
-                drivingSystem.driveStraight(30,0.5);
-                drivingSystem.driveSideways(10*mirror,-0.5);
+                drivingSystem.driveSideways(3,-0.5*mirror);
+                drivingSystem.driveStraight(65,0.5);
+                drivingSystem.driveSideways(3*mirror,0.5*mirror);
                 break;
             case SECOND:
-                drivingSystem.driveSideways(10*mirror,0.5);
-                drivingSystem.driveStraight(30,0.5);
-                drivingSystem.driveSideways(-10*mirror,-0.5);
+                drivingSystem.driveSideways(20,0.5*mirror);
+                drivingSystem.driveStraight(65,0.5);
+                drivingSystem.driveSideways(20,-0.5*mirror);
                 break;
             case THIRD:
-                drivingSystem.driveSideways(10*mirror,0.5);
-                drivingSystem.driveStraight(30,0.5);
-                drivingSystem.driveSideways(-10*mirror,-0.5);
+                drivingSystem.driveSideways(13,0.5*mirror);
+                drivingSystem.driveStraight(65,0.5);
+                drivingSystem.driveSideways(13,-0.5*mirror);
                 break;
         }
-        drivingSystem.turn(-90*mirror*firstTurnDirection,200);
+        drivingSystem.turn(90*mirror*firstTurnDirection,50);
     }
     /**
      * Goes to crater. Rams through obstacle.
@@ -226,15 +226,14 @@ public class Crater {
     public void RFYCO(int mirror){
         placeFreight(mirror);
         armSystem.autonomousReload();
-        //DODGE
+        dodgeToFront(-1,mirror);
         // go to warehouse
-        goToCarouselB(mirror);
+        drivingSystem.driveStraight(183,0.5);
+        drivingSystem.driveSideways(50, -0.5 * mirror);
         duckSystem.runFor(5000);
-        drivingSystem.driveSideways(50, 0.4 * mirror);
-        drivingSystem.turn(180,200);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-        TimeUtils.sleep(500);
-        drivingSystem.driveUntilObstacle(50, 0.6);
+        drivingSystem.driveSideways(50, 0.5 * mirror);
+        drivingSystem.turn(180,50);
+        drivingSystem.driveStraight(200,0.6);
     }
 
     /**
@@ -243,16 +242,15 @@ public class Crater {
     public void RFYCP(int mirror){
         placeFreight(mirror);
         armSystem.autonomousReload();
-        //DODGE
+        dodgeToFront(-1,mirror);
         // go to warehouse
-        goToCarouselB(mirror);
+        drivingSystem.driveStraight(183,0.5);
+        drivingSystem.driveSideways(50, -0.5 * mirror);
         duckSystem.runFor(5000);
         drivingSystem.driveSideways(50, 0.4 * mirror);
         drivingSystem.turn(180,200);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-        TimeUtils.sleep(500);
         drivingSystem.driveStraight(50, 0.6);
         drivingSystem.driveSideways(70,0.4);
-        drivingSystem.driveUntilObstacle(50,0.6);
+        drivingSystem.driveStraight(150,0.);
     }
 }

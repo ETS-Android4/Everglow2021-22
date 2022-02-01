@@ -17,6 +17,7 @@ public class TestDodge extends LinearOpMode {
 
         while (opModeIsActive()) {
             crater.placeFreight(1);
+            crater.dodgeToFront(-1,1);
             stop();
         }
     }

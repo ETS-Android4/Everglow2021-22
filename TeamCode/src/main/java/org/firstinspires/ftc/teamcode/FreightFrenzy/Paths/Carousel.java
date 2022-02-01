@@ -80,6 +80,28 @@ public class Carousel {
         armSystem.autonomousReload();
     }
 
+    public void dodgeToFront(int firstTurnDirection,int mirror) {
+        drivingSystem.turn(-90 * mirror * firstTurnDirection, 50);
+        switch (floor) {
+            case FIRST:
+                drivingSystem.driveSideways(3, -0.5 * mirror);
+                drivingSystem.driveStraight(65, 0.5);
+                drivingSystem.driveSideways(3 * mirror, 0.5 * mirror);
+                break;
+            case SECOND:
+                drivingSystem.driveSideways(20, 0.5 * mirror);
+                drivingSystem.driveStraight(65, 0.5);
+                drivingSystem.driveSideways(20, -0.5 * mirror);
+                break;
+            case THIRD:
+                drivingSystem.driveSideways(13, 0.5 * mirror);
+                drivingSystem.driveStraight(65, 0.5);
+                drivingSystem.driveSideways(13, -0.5 * mirror);
+                break;
+        }
+        drivingSystem.turn(90*mirror*firstTurnDirection,50);
+    }
+
     public void goToCarousel(int mirror) {
         drivingSystem.driveStraight(45, -0.6);
         drivingSystem.turn(180, 200);
@@ -114,13 +136,14 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(5000);
         // go to crater through obstacle
+
         drivingSystem.driveSideways(140, 0.6 * mirror);
-        drivingSystem.turn(180, 150);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-        TimeUtils.sleep(500);
-        //DODGE
-        drivingSystem.driveSideways(70,0.4);
-        drivingSystem.driveUntilObstacle(50,0.6);
+        drivingSystem.turn(180 * mirror,100);
+        drivingSystem.driveStraight(125, 0.4);
+        drivingSystem.driveSideways(15, 0.4 * mirror);
+        dodgeToFront(1,mirror);
+        drivingSystem.driveSideways(55, 0.4 * mirror);
+        drivingSystem.driveStraight(50,0.4);
     }
 
     /**
