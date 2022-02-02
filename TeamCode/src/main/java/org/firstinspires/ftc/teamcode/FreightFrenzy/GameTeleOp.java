@@ -43,13 +43,13 @@ public class GameTeleOp extends LinearOpMode {
             ourGamepad1.update();
             ourGamepad2.update();
             {
-                double left_stick_x = gamepad2.left_stick_x;
-                double left_stick_y = gamepad2.left_stick_y;
-                double right_stick_x = gamepad2.right_stick_x;
-                if (gamepad2.right_stick_button) {
+                double left_stick_x = gamepad1.left_stick_x;
+                double left_stick_y = gamepad1.left_stick_y;
+                double right_stick_x = gamepad1.right_stick_x;
+                if (gamepad1.right_stick_button) {
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
-                if (gamepad2.left_stick_button) {
+                if (gamepad1.left_stick_button) {
                     left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                 }
@@ -77,9 +77,6 @@ public class GameTeleOp extends LinearOpMode {
                 armSystem.moveArm(ArmSystem.Floors.THIRD);
                 passingObstacle = false;
             }
-            if (ourGamepad2.dpad_right()) {
-                armSystem.moveArm(ArmSystem.Floors.TOTEM);
-            }
 
             if (ourGamepad2.rt()) {
                 armSystem.toggleCollecting();
@@ -101,6 +98,7 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.dpad_left() || ourGamepad2.dpad_right()) {
+                duckSystem.toggle();
                 duckSystem.toggle();
             }
 
