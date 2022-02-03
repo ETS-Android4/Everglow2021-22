@@ -12,8 +12,8 @@ import java.util.List;
 
 public class DetectionSystem {
 
-    public static final double LEFT_TARGET_DISTANCE_CM  = 45;
-    public static final double RIGHT_TARGET_DISTANCE_CM = 45;
+    public static final double LEFT_TARGET_DISTANCE_CM  = 30;
+    public static final double RIGHT_TARGET_DISTANCE_CM = 30;
     public static final double ERROR_THRESHOLD_CM       = 15;
 
     private static final double INFINITY = 9999999;
@@ -108,7 +108,7 @@ public class DetectionSystem {
 
     public ArmSystem.Floors findTargetFloor2(int mirror) {
         armSystem.moveArm(-300);
-        TimeUtils.sleep(700);
+        TimeUtils.sleep(1200);
         double distanceLeft = leftSensor.getDistance(DistanceUnit.CM);
         double distanceRight = rightSensor.getDistance(DistanceUnit.CM);
         armSystem.autonomousReload();

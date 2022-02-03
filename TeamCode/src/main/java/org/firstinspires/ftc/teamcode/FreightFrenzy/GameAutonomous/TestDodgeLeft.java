@@ -3,21 +3,22 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.GameAutonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 
-@Autonomous(name = "TestDodge", group = "Autonomous")
-public class TestDodge extends LinearOpMode {
-    Crater crater;
+@Autonomous(name = "TestDodgeLeft", group = "Autonomous")
+public class TestDodgeLeft extends LinearOpMode {
+    Carousel car;
 
     @Override
     public void runOpMode() {
-        crater = new Crater(this);
+        car = new Carousel(this);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            crater.placeFreight(1);
-            crater.dodgeToFront(-1,1);
+            car.placeFreight(1);
+            car.dodgeToFront(-1,1);
             stop();
         }
     }
