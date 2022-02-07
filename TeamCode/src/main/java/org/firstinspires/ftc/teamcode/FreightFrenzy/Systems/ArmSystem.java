@@ -131,10 +131,10 @@ public class ArmSystem {
                 moveArm(-550);
                 break;
             case SECOND:
-                moveArm(-300);
+                moveArm(-335);
                 break;
             case FIRST:
-                moveArm(-110);
+                moveArm(-120);
                 break;
         }
     }

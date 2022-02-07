@@ -50,20 +50,20 @@ public class Carousel {
         //avoid totem
         switch (floor) {
             case FIRST:
-                drivingSystem.driveSideways(15, 0.4 * mirror);
+                drivingSystem.driveSideways(15, 0.6 * mirror);
                 break;
             case SECOND:
-                drivingSystem.driveSideways(25, -0.4 * mirror);
+                drivingSystem.driveSideways(25, -0.6 * mirror);
                 break;
         }
         // move to SH
         drivingSystem.driveStraight(100, 0.5);
         switch (floor) {
             case FIRST:
-                drivingSystem.driveSideways(15, -0.4 * mirror);
+                drivingSystem.driveSideways(15, -0.6 * mirror);
                 break;
             case SECOND:
-                drivingSystem.driveSideways(25, 0.4 * mirror);
+                drivingSystem.driveSideways(25, 0.6 * mirror);
                 break;
         }
         drivingSystem.turn(-90 * mirror, 200);
@@ -71,15 +71,15 @@ public class Carousel {
         // place freight on SH
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
-        drivingSystem.driveStraight(20, 0.4);
+        drivingSystem.driveStraight(20, 0.6);
         armSystem.spit();
         TimeUtils.sleep(500);
         armSystem.stop();
-        drivingSystem.driveStraight(20, -0.4);
+        drivingSystem.driveStraight(20, -0.6);
         armSystem.autonomousReload();
     }
 
-    public void dodgeToFront(int firstTurnDirection,int mirror) {
+    public void dodgeToFront(int firstTurnDirection, int mirror) {
         switch (floor) {
             case FIRST:
                 drivingSystem.driveSideways(65, 0.5 * mirror);
@@ -105,7 +105,7 @@ public class Carousel {
     }
 
     public void goToCarousel(int mirror) {
-        drivingSystem.driveStraight(45, -0.6);
+        drivingSystem.driveStraight(35, -0.6);
         drivingSystem.turn(180, 200);
         drivingSystem.driveSideways(100, -0.6 * mirror);
     }
@@ -119,14 +119,13 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(5000);
         // go to crater through obstacle
-        drivingSystem.turn(180,200);
-        drivingSystem.driveSideways(140, -0.4 * mirror);
-        drivingSystem.driveStraight(125, 0.4);
-        drivingSystem.driveSideways(120, 0.4 * mirror);
-        //DODGE
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        drivingSystem.driveSideways(150, 0.6 * mirror);
+        drivingSystem.turn(180, 200);
+        drivingSystem.driveStraight(125, 0.6);
+        drivingSystem.driveSideways(120, 0.6 * mirror);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
         TimeUtils.sleep(500);
-        drivingSystem.driveUntilObstacle(50, 0.6);
+        drivingSystem.driveStraight(100, 1);
     }
 
     /**
@@ -138,13 +137,13 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(5000);
         // go to crater through obstacle
-        drivingSystem.driveSideways(140, 0.6 * mirror);
-        drivingSystem.turn(180 * mirror,100);
-        drivingSystem.driveStraight(125, 0.4);
-        drivingSystem.driveSideways(15, 0.4 * mirror);
-        dodgeToFront(1,mirror);
-        drivingSystem.driveSideways(55, 0.4 * mirror);
-        drivingSystem.driveStraight(50,0.4);
+        drivingSystem.driveSideways(150, 0.6 * mirror);
+        drivingSystem.turn(180 * mirror, 200);
+        drivingSystem.driveStraight(125, 0.6);
+        drivingSystem.driveSideways(15, 0.6 * mirror);
+        dodgeToFront(1, mirror);
+        drivingSystem.driveSideways(55, 0.6 * mirror);
+        drivingSystem.driveStraight(50, 0.6);
     }
 
     /**
@@ -165,16 +164,16 @@ public class Carousel {
     public void LBNCO(int mirror) {
         placeFreight(mirror);
         // go to right of the shipping hub and dodge
-        drivingSystem.driveSideways(50, -0.4 * mirror);
-        drivingSystem.driveStraight(125, 0.4);
-        drivingSystem.driveSideways(45, 0.4 * mirror);
+        drivingSystem.driveSideways(50, -0.6 * mirror);
+        drivingSystem.driveStraight(125, 0.6);
+        drivingSystem.driveSideways(45, 0.6 * mirror);
         drivingSystem.turn(180, 200);
         dodgeOtherTotem(-1, mirror);
         drivingSystem.turn(180, 200);
         // drives through barrier, using max power
         drivingSystem.driveSideways(10, -0.6 * mirror);
         drivingSystem.driveStraight(30, -0.6);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(100, 1);
     }
@@ -185,9 +184,9 @@ public class Carousel {
     public void LBNCP(int mirror) {
         placeFreight(mirror);
         // go to right of the shipping hub and dodge
-        drivingSystem.driveSideways(50, -0.4 * mirror);
-        drivingSystem.driveStraight(125, 0.4);
-        drivingSystem.driveSideways(45, 0.4 * mirror);
+        drivingSystem.driveSideways(50, -0.6 * mirror);
+        drivingSystem.driveStraight(125, 0.6);
+        drivingSystem.driveSideways(45, 0.6 * mirror);
         drivingSystem.turn(180, 200);
         dodgeOtherTotem(-1, mirror);
         drivingSystem.turn(180, 200);
@@ -202,8 +201,8 @@ public class Carousel {
     public void LZNW(int mirror) {
         placeFreight(mirror);
         //drive to storage unit
-        drivingSystem.driveStraight(55, -0.4);
-        drivingSystem.driveSideways(30, 0.4 * mirror);
+        drivingSystem.driveStraight(55, -0.6);
+        drivingSystem.driveSideways(30, 0.6 * mirror);
     }
 
     /**
@@ -215,13 +214,13 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(5000);
         // go to crater through path
-        drivingSystem.driveSideways(30, 0.4 * mirror);
+        drivingSystem.driveSideways(30, 0.6 * mirror);
         drivingSystem.turn(180, 150);
         armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(50, 0.6);
-        drivingSystem.driveSideways(70,0.4);
-        drivingSystem.driveUntilObstacle(50,0.6);
+        drivingSystem.driveSideways(70, 0.6);
+        drivingSystem.driveUntilObstacle(50, 0.6);
     }
 
     /**
@@ -233,9 +232,9 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(5000);
         // go to crater through obstacle
-        drivingSystem.driveSideways(20, 0.4 * mirror);
+        drivingSystem.driveSideways(20, 0.6 * mirror);
         drivingSystem.turn(180 * mirror, 150);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
         TimeUtils.sleep(500);
         drivingSystem.driveUntilObstacle(50, 0.6);
     }

@@ -174,7 +174,7 @@ public class DrivingSystem {
             throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
         }
 
-        this.targetAngle = getCurrentAngle();
+//        this.targetAngle = getCurrentAngle();
         resetDistance();
         double AverageMotors = 0;
 
@@ -203,7 +203,7 @@ public class DrivingSystem {
             throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
         }
 
-        this.targetAngle = getCurrentAngle();
+//        this.targetAngle = getCurrentAngle();
         resetDistance();
         double AverageMotors = 0;
 

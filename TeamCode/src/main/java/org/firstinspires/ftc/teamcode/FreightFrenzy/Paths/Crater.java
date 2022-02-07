@@ -47,62 +47,68 @@ public class Crater {
         // avoid totem
         switch (floor) {
             case FIRST:
-                drivingSystem.driveSideways(15, 0.4 * mirror);
-                drivingSystem.driveStraight(95, 0.5);
-                drivingSystem.driveSideways(11, -0.4 * mirror);
+                drivingSystem.driveSideways(12, 0.6 * mirror);
+                drivingSystem.driveStraight(95, 0.6);
+                drivingSystem.driveSideways(11, -0.6 * mirror);
+                TimeUtils.sleep(200);
                 drivingSystem.turn(mirror * 90, 200);
                 break;
             case SECOND:
-                drivingSystem.driveStraight(5, 0.4);
-                drivingSystem.turn(30 * mirror, 50);
-                drivingSystem.driveStraight(51, 0.4);
-                drivingSystem.turn(-60 * mirror, 50);
-                drivingSystem.driveStraight(50, 0.4);
-                drivingSystem.turn(120 * mirror, 50);
+                drivingSystem.driveStraight(5, 0.5);
+                TimeUtils.sleep(200);
+                drivingSystem.turn(30 * mirror, 100);
+                drivingSystem.driveStraight(51, 0.5);
+                TimeUtils.sleep(200);
+                drivingSystem.turn(-60 * mirror, 100);
+                drivingSystem.driveStraight(50, 0.5);
+                TimeUtils.sleep(200);
+                drivingSystem.turn(120 * mirror, 100);
                 break;
             case THIRD:
-                drivingSystem.driveStraight(95, 0.5);
-                drivingSystem.driveSideways(4, mirror * 0.4);
+                drivingSystem.driveStraight(95, 0.6);
+                drivingSystem.driveSideways(4, mirror * 0.6);
+                TimeUtils.sleep(200);
                 drivingSystem.turn(mirror * 90, 200);
-
                 break;
         }
-        drivingSystem.driveStraight(3, -0.5);
+        drivingSystem.driveStraight(3, -0.6);
         // place freight on SH
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
-        drivingSystem.driveStraight(7, 0.5);
+        drivingSystem.driveStraight(7, 0.6);
         armSystem.spit();
         TimeUtils.sleep(1000);
         armSystem.stop();
-        drivingSystem.driveStraight(7, -0.5);
+        drivingSystem.driveStraight(7, -0.6);
         armSystem.autonomousReload();
     }
 
     public void goToCarouselB(int mirror) {
         drivingSystem.driveSideways(50, 0.6 * mirror);
-        drivingSystem.driveStraight(183, 0.5);
+        drivingSystem.driveStraight(183, 0.6);
         drivingSystem.driveSideways(110, -0.7 * mirror);
-        drivingSystem.driveSideways(43, -0.4 * mirror);
+        drivingSystem.driveSideways(43, -0.6 * mirror);
     }
 
     public void dodgeToFront(int firstTurnDirection, int mirror) {
         switch (floor) {
             case FIRST:
-                armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-                drivingSystem.driveSideways(65, -0.5 * mirror);
+                armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
+                drivingSystem.driveStraight(3, -0.6);
+                drivingSystem.driveSideways(77, -0.6 * mirror);
                 armSystem.autonomousReload();
+                drivingSystem.driveStraight(3, 0.6);
                 break;
             case SECOND:
                 drivingSystem.turn(-90 * mirror * firstTurnDirection, 50);
-                drivingSystem.driveSideways(18, 0.5 * mirror);
-                drivingSystem.driveStraight(65, 0.5);
+                drivingSystem.driveSideways(18, 0.6 * mirror);
+                drivingSystem.driveStraight(65, 0.6);
                 drivingSystem.turn(90 * mirror * firstTurnDirection, 50);
-                drivingSystem.driveStraight(15, -0.5 * mirror);
+                drivingSystem.driveStraight(15, -0.6 * mirror);
                 break;
             case THIRD:
-                drivingSystem.driveStraight(3, 0.5);
-                drivingSystem.driveSideways(65, -0.5);
+                drivingSystem.driveStraight(3, 0.6);
+                drivingSystem.driveSideways(65, -0.6);
                 break;
         }
     }
@@ -115,7 +121,7 @@ public class Crater {
         // go to crater through obstacle
         dodgeToFront(-1, mirror);
         drivingSystem.turn(180, 200);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(100, 1);
     }
@@ -128,8 +134,8 @@ public class Crater {
         // go to crater through path
         dodgeToFront(-1, mirror);
         drivingSystem.turn(180, 200);
-        drivingSystem.driveSideways(60, 0.4);
-        drivingSystem.driveStraight(100, 0.4);
+        drivingSystem.driveSideways(60, 0.6);
+        drivingSystem.driveStraight(100, 0.6);
     }
 
     /**
@@ -144,9 +150,9 @@ public class Crater {
         // go to crater through obstacle
         drivingSystem.driveSideways(20, 0.6 * mirror);
         drivingSystem.turn(180, 200);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
         TimeUtils.sleep(500);
-        drivingSystem.driveUntilObstacle(50, 0.6);
+        drivingSystem.driveStraight(200, 1);
     }
 
     /**
@@ -161,11 +167,9 @@ public class Crater {
         // go to crater through obstacle
         drivingSystem.driveSideways(35, 0.6 * mirror);
         drivingSystem.turn(180, 200);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-        TimeUtils.sleep(500);
         drivingSystem.driveStraight(50, 0.6);
         drivingSystem.driveSideways(70, 0.4);
-        drivingSystem.driveUntilObstacle(50, 0.6);
+        drivingSystem.driveStraight(200, 0.6);
     }
 
     /**
@@ -177,7 +181,7 @@ public class Crater {
         // drop duck
         duckSystem.runFor(5000);
         // go to warehouse
-        drivingSystem.driveSideways(65, 0.4 * mirror);
+        drivingSystem.driveSideways(65, 0.6 * mirror);
     }
 
     /**
@@ -186,9 +190,9 @@ public class Crater {
     public void RBNW(int mirror) {
         placeFreight(mirror);
         // go to warehouse
-        drivingSystem.driveSideways(50, 0.4 * mirror);
-        drivingSystem.driveStraight(185, 0.4);
-        drivingSystem.driveSideways(90, -0.4 * mirror);
+        drivingSystem.driveSideways(50, 0.6 * mirror);
+        drivingSystem.driveStraight(185, 0.6);
+        drivingSystem.driveSideways(90, -0.6 * mirror);
     }
 
     /**
@@ -199,13 +203,13 @@ public class Crater {
         armSystem.autonomousReload();
         //DODGE
         dodgeToFront(-1, mirror);
-        drivingSystem.driveSideways(20, -0.4 * mirror);
-        drivingSystem.driveStraight(185, 0.4);
+        drivingSystem.driveSideways(20, -0.6 * mirror);
+        drivingSystem.driveStraight(185, 0.6);
         // drop duck
         duckSystem.runFor(5000);
         // go to warehouse
-        drivingSystem.driveSideways(65, 0.4 * mirror);
-        drivingSystem.driveStraight(5, 0.5);
+        drivingSystem.driveSideways(65, 0.6 * mirror);
+        drivingSystem.driveStraight(5, 0.6);
     }
 
     /**
@@ -217,8 +221,8 @@ public class Crater {
         //DODGE
         dodgeToFront(-1, mirror);
         // go to warehouse
-        drivingSystem.driveStraight(180, 0.4);
-        drivingSystem.driveSideways(40, 0.4 * mirror);
+        drivingSystem.driveStraight(180, 0.6);
+        drivingSystem.driveSideways(40, 0.6 * mirror);
     }
 
     /**
@@ -229,12 +233,14 @@ public class Crater {
         armSystem.autonomousReload();
         dodgeToFront(-1, mirror);
         // go to warehouse
-        drivingSystem.driveStraight(183, 0.5);
-        drivingSystem.driveSideways(50, -0.5 * mirror);
+        drivingSystem.driveStraight(180, 0.6);
+        drivingSystem.driveSideways(15, -0.6 * mirror);
         duckSystem.runFor(5000);
-        drivingSystem.driveSideways(50, 0.5 * mirror);
+        drivingSystem.driveSideways(20, 0.6 * mirror);
         drivingSystem.turn(180, 50);
-        drivingSystem.driveStraight(200, 0.6);
+        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
+        drivingSystem.driveSideways(10, -0.6);
+        drivingSystem.driveStraight(250, 1);
     }
 
     /**
@@ -245,13 +251,12 @@ public class Crater {
         armSystem.autonomousReload();
         dodgeToFront(-1, mirror);
         // go to warehouse
-        drivingSystem.driveStraight(183, 0.5);
-        drivingSystem.driveSideways(50, -0.5 * mirror);
+        drivingSystem.driveStraight(180, 0.6);
+        drivingSystem.driveSideways(15, -0.6 * mirror);
         duckSystem.runFor(5000);
-        drivingSystem.driveSideways(50, 0.4 * mirror);
+        drivingSystem.driveStraight(50, -0.6);
         drivingSystem.turn(180, 200);
-        drivingSystem.driveStraight(50, 0.6);
-        drivingSystem.driveSideways(70, 0.4);
-        drivingSystem.driveStraight(150, 0.);
+        drivingSystem.driveSideways(25, 0.6);
+        drivingSystem.driveStraight(150, 0.8);
     }
 }

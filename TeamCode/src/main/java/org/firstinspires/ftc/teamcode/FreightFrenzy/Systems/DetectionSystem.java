@@ -32,7 +32,7 @@ public class DetectionSystem {
         this.opMode      = opMode;
         this.leftSensor  = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
         this.rightSensor = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
-        this.armSystem = armSystem; // todo: this creates a new arm system, which can cause bugs since it's a seprate arm system and ArmSystem has local variables`
+        this.armSystem = armSystem; // todo: this creates a new arm system, which can cause bugs since it's a separate arm system and ArmSystem has local variables
         reset();
     }
 
