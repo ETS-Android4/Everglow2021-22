@@ -32,16 +32,16 @@ public class DrivingSystem {
     private final LinearOpMode opMode;
 
     private final BNO055IMU.Parameters parameters;
-    private final BNO055IMU            imu;
+    private final BNO055IMU imu;
 
     /**
      * If the robot is turning, this is the angle it will try to reach relatively to the
-     * IMU's zero around the Z-axis
+     * IMU's zero around the Z-axis.
      */
     private double targetAngle = 0;
 
     private static final double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
-    private static final double WHEEL_RADIUS_CM      = 4.8;
+    private static final double WHEEL_RADIUS_CM = 4.8;
 
     /**
      * Constructor of the Driving System class.
@@ -54,12 +54,12 @@ public class DrivingSystem {
     public DrivingSystem(LinearOpMode opMode) {
         // Get the driving motors from the Hardware Map
         this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");
-        this.frontLeft  = opMode.hardwareMap.get(DcMotor.class, "front_left");
-        this.backRight  = opMode.hardwareMap.get(DcMotor.class, "back_right");
-        this.backLeft   = opMode.hardwareMap.get(DcMotor.class, "back_left");
+        this.frontLeft = opMode.hardwareMap.get(DcMotor.class, "front_left");
+        this.backRight = opMode.hardwareMap.get(DcMotor.class, "back_right");
+        this.backLeft = opMode.hardwareMap.get(DcMotor.class, "back_left");
 
         // Get sensors from the Hardware Map
-        this.sensorBackUp   = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
+        this.sensorBackUp = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
         this.sensorBackDown = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bd");
 
         this.opMode = opMode;
@@ -71,12 +71,12 @@ public class DrivingSystem {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Create IMU
-        parameters                                  = new BNO055IMU.Parameters();
-        parameters.angleUnit                        = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit                        = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile              = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled                   = true;
-        parameters.loggingTag                       = "IMU";
+        parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
@@ -120,7 +120,7 @@ public class DrivingSystem {
         double backRightPower = -y1 + x1 - 0.7 * x2;
         double backLeftPower = y1 + x1 - 0.7 * x2;
 
-        // Normalization of the motors' power
+        // Normalization of the driving motors' power
         if (Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1
                 || Math.abs(backRightPower) > 1 || Math.abs(backRightPower) > 1) {
             double norm = Math.max(
@@ -150,7 +150,7 @@ public class DrivingSystem {
         this.targetAngle = normalizeAngle(this.targetAngle + deg);
         double theta = getAngleDeviation();
 
-        // Rotate until the desired angle is reached within an error of 0.5 degrees
+        // Rotate until the desired angle is met within an error of 0.5 degrees
         while (Math.abs(theta) > 0.5) {
             theta = getAngleDeviation();
             double direction = (theta / Math.abs(theta));
@@ -174,15 +174,18 @@ public class DrivingSystem {
             throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
         }
 
-//        this.targetAngle = getCurrentAngle();
         resetDistance();
-        double AverageMotors = 0;
+        /*
+         * The average distance the motors have travelled (in ticks).
+         * Basically means how far the robot has travelled.
+         */
+        double averageMotors = 0;
 
         // Go until the desired distance is reached
-        while (distance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
-            // x2 is used to fix the natural deviation of the robot from a straight line
+        while (distance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
+            // x2 is used to fix the natural deviation of the robot from a straight line due to friction
             driveByJoystick(0, -power, getAngleDeviation() / 40);
-            AverageMotors = Math.abs(
+            averageMotors = Math.abs(
                     (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
@@ -203,15 +206,18 @@ public class DrivingSystem {
             throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
         }
 
-//        this.targetAngle = getCurrentAngle();
         resetDistance();
-        double AverageMotors = 0;
+        /*
+         * The average distance the motors have travelled (in ticks).
+         * Basically means how far the robot has travelled.
+         */
+        double averageMotors = 0;
 
         // Go until the desired distance is reached
-        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
+        while ((distance * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
             // x2 is used to fix the natural deviation of the robot from a straight line
             driveByJoystick(power, 0, getAngleDeviation() / 40);
-            AverageMotors = Math.abs(
+            averageMotors = Math.abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
@@ -225,12 +231,21 @@ public class DrivingSystem {
      */
     public void driveSidewaysAndScan(double distance, double power, DetectionSystem detectionSystem) {
         this.targetAngle = getCurrentAngle();
-        resetDistance();
-        double AverageMotors = 0;
+        // The method receives a positive distance.
+        if (distance < 0) {
+            throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
+        }
 
-        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > AverageMotors) {
+        resetDistance();
+        /*
+         * The average distance the motors have travelled (in ticks).
+         * Basically means how far the robot has travelled.
+         */
+        double averageMotors = 0;
+
+        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
             driveByJoystick(power, 0, getAngleDeviation() / 40);
-            AverageMotors = Math.abs(
+            averageMotors = Math.abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
@@ -249,8 +264,6 @@ public class DrivingSystem {
 
         while (sensorBackUp.getDistance(DistanceUnit.CM) > distance) {
             driveByJoystick(0, -power, getAngleDeviation() / 40);
-            this.opMode.telemetry.addData("distance", sensorBackUp.getDistance(DistanceUnit.CM));
-            this.opMode.telemetry.update();
         }
         stop();
     }
@@ -258,6 +271,7 @@ public class DrivingSystem {
     /**
      * Same as driveUntilObstacle, but also lifts the arm so that it doesn't block the sensors.
      */
+    @Deprecated
     public void moveArmAndDriveUntilObstacle(double distance, double power, ArmSystem armSystem) {
         armSystem.moveArm(-300);
         TimeUtils.sleep(700);
@@ -272,9 +286,15 @@ public class DrivingSystem {
      */
     public double driveSidewaysUntil(double power, StopCondition stopCondition) {
         targetAngle = getCurrentAngle();
+
         resetDistance();
+        /*
+         * The average distance the motors have travelled (in ticks).
+         * Basically means how far the robot has travelled.
+         */
         double averageMotors = 0;
-        this.opMode.telemetry.addData("distance", averageMotors);
+
+        // Run until the stop condition is met
         while (!stopCondition.shouldStop()) {
             driveByJoystick(power, 0, getAngleDeviation() / 40);
             averageMotors = Math.abs(
@@ -282,8 +302,6 @@ public class DrivingSystem {
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
             );
-            this.opMode.telemetry.addData("distance", averageMotors);
-            this.opMode.telemetry.update();
         }
         stop();
         return Math.abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
@@ -296,19 +314,22 @@ public class DrivingSystem {
      */
     public double driveStraightUntil(double power, StopCondition stopCondition) {
         targetAngle = getCurrentAngle();
-        power *= -1;
+
         resetDistance();
+        /*
+         * The average distance the motors have travelled (in ticks).
+         * Basically means how far the robot has travelled.
+         */
         double averageMotors = 0;
-        this.opMode.telemetry.addData("distance", averageMotors);
+
+        // Run until the stop condition is met
         while (!stopCondition.shouldStop()) {
-            driveByJoystick(0, power, getAngleDeviation() / 40);
+            driveByJoystick(0, -power, getAngleDeviation() / 40);
             averageMotors = Math.abs(
                     (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
             );
-            this.opMode.telemetry.addData("distance", averageMotors);
-            this.opMode.telemetry.update();
         }
         stop();
         return Math.abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
@@ -326,10 +347,11 @@ public class DrivingSystem {
         elapsedTime.reset();
         elapsedTime.startTime();
 
+        // Run for [duration] seconds
         while (elapsedTime.seconds() < duration) {
-            double distanceDown = distanceSensor.getDistance(DistanceUnit.CM);
-            if (distanceDown < 50) {
-                distances.add(distanceDown);
+            double distance = distanceSensor.getDistance(DistanceUnit.CM);
+            if (distance < 50) {
+                distances.add(distance);
             }
         }
 
@@ -338,6 +360,7 @@ public class DrivingSystem {
 
     /**
      * Goes to a fixed distance from an object, given the current distance from said object.
+     * If too far, go forward, and if too close go backward.
      *
      * @param currentDistance The current distance from the object.
      * @param distance        The wanted distance from the object.
@@ -357,22 +380,17 @@ public class DrivingSystem {
      * @param armSystem The Arm System to be used by the CS.
      */
     public void CS(ArmSystem armSystem) {
-        // Go right until left until the Shipping Hubs' stem is detected
+        // Go right until the Shipping Hubs' stem is detected
         while (sensorBackUp.getDistance(DistanceUnit.CM) > 50 || sensorBackDown.getDistance(DistanceUnit.CM) > 50) {
             driveByJoystick(-0.4, 0, 0);
         }
         stop();
 
         double avgDistance = distanceSensorAverage(2, sensorBackDown);
-        opMode.telemetry.addData("avgDistance: ", avgDistance);
-        opMode.telemetry.update();
         driveToFixedDistance(avgDistance, 35, 0.3);
 
         while (sensorBackDown.getDistance(DistanceUnit.CM) < 40) {
-            turn(1, 200);
-//            avgDistance = distanceSensorAverage(2, sensorBackDown);
-//            opMode.telemetry.addData("avgDistance: ", avgDistance);
-//            opMode.telemetry.update();
+            driveByJoystick(0, 0, 0.2);
         }
 
         armSystem.placeTotem();

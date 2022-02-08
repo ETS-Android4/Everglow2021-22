@@ -42,7 +42,9 @@ public class Carousel {
      */
     public void placeFreight(int mirror) {
         drivingSystem.resetDistance();
+        drivingSystem.driveStraight(15, 0.5);
         floor = detectionSystem.findTargetFloor2(mirror);
+        drivingSystem.driveStraight(15, -0.5);
 
         this.opMode.telemetry.addData("floor: ", floor);
         this.opMode.telemetry.update();

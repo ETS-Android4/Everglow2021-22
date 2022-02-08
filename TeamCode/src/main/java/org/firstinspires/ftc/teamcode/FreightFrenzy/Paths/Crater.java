@@ -40,7 +40,10 @@ public class Crater {
      */
     public void placeFreight(int mirror) {
         drivingSystem.resetDistance();
+        drivingSystem.driveStraight(15, 0.5);
         floor = detectionSystem.findTargetFloor2(mirror);
+        drivingSystem.driveStraight(15, -0.5);
+
         opMode.telemetry.addData("Floor: ", floor);
         opMode.telemetry.update();
 

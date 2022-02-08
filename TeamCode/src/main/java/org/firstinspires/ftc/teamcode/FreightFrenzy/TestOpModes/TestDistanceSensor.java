@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 /**
  * {@link TestDistanceSensor} illustrates how to use the REV Robotics
@@ -63,6 +64,7 @@ public class TestDistanceSensor extends LinearOpMode {
 
         waitForStart();
         while(opModeIsActive()) {
+            TimeUtils.sleep(100);
             telemetry.addData("distance front left", leftSensor.getDistance(DistanceUnit.CM));
             telemetry.addData("distance front right", rightSensor.getDistance(DistanceUnit.CM));
 

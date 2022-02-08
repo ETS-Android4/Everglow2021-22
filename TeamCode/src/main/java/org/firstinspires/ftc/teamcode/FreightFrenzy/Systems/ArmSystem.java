@@ -7,15 +7,17 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class ArmSystem {
 
-    public enum CollectState{
+    public enum CollectState {
         STOPPED, COLLECTING, SPITTING
     }
 
-    public        DcMotor      flyWheels;
-    public        DcMotor      arm;
-    private       boolean      loaded     = false;
-    private       boolean      firstFloor = false;
+    public DcMotor flyWheels;
+    public DcMotor arm;
+    private boolean loaded = false;
+    private boolean firstFloor = false;
+    private Integer targetPosition = null;
     private final LinearOpMode opMode;
+
 
     private CollectState collectState = CollectState.STOPPED;
 
@@ -25,7 +27,7 @@ public class ArmSystem {
 
     public ArmSystem(LinearOpMode opMode) {
         this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "flywheels");
-        this.arm       = opMode.hardwareMap.get(DcMotor.class, "arm");
+        this.arm = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.opMode = opMode;
@@ -41,18 +43,18 @@ public class ArmSystem {
         flyWheels.setPower(1);
     }
 
-    public void toggleCollecting(){
-        if (collectState == CollectState.COLLECTING){
+    public void toggleCollecting() {
+        if (collectState == CollectState.COLLECTING) {
             stop();
-        }else {
+        } else {
             collect();
         }
     }
 
-    public void toggleSpitting(){
-        if (collectState == CollectState.SPITTING){
+    public void toggleSpitting() {
+        if (collectState == CollectState.SPITTING) {
             stop();
-        }else {
+        } else {
             spit();
         }
     }
@@ -69,12 +71,35 @@ public class ArmSystem {
     }
 
     public void moveArm(int place) {
-        loaded     = false;
+        loaded = false;
         firstFloor = false;
+        this.targetPosition = null;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(0.5);
+    }
+
+    public void moveArmWithoutWobble(int place) {
+        loaded = false;
+        firstFloor = false;
+        this.targetPosition = place;
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setTargetPosition(place);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(0.8);
+        this.opMode.telemetry.addLine("fast");
+        this.opMode.telemetry.update();
+    }
+
+    public void slowArm() {
+        if (targetPosition != null && Math.abs(targetPosition - arm.getCurrentPosition()) < 800) {
+            arm.setPower(0.2);
+            this.opMode.telemetry.addLine("slow");
+        } else {
+            this.opMode.telemetry.addLine("fast inside slow arm");
+        }
+        this.opMode.telemetry.update();
     }
 
     public void reload() {
@@ -93,8 +118,9 @@ public class ArmSystem {
     }
 
     public void restOnFirstFloor() {
-        if (-2400 >= arm.getCurrentPosition() && firstFloor) {
-            arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (-2380 >= arm.getCurrentPosition() && firstFloor) {
+            arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            arm.setPower(0);
             arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
     }
@@ -110,17 +136,17 @@ public class ArmSystem {
         this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
         switch (level) {
             case THIRD:
-                moveArm(-2050);
+                moveArmWithoutWobble(-2050);
                 break;
             case SECOND:
-                moveArm(-2300);
+                moveArmWithoutWobble(-2300);
                 break;
             case FIRST:
-                moveArm(-2400);
+                moveArmWithoutWobble(-2400);
                 firstFloor = true;
                 break;
             case TOTEM:
-                moveArm(-1900);
+                moveArmWithoutWobble(-1900);
                 break;
         }
     }
@@ -139,7 +165,7 @@ public class ArmSystem {
         }
     }
 
-    public void autonomousPlaceFreight(Floors floor){
+    public void autonomousPlaceFreight(Floors floor) {
         autonomousMoveArm(floor);
         TimeUtils.sleep(1000);
         spit();

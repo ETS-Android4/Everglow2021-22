@@ -51,10 +51,6 @@ public class GameTeleOp extends LinearOpMode {
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                 }
 
-                telemetry.addData("left_x", left_stick_x);
-                telemetry.addData("left_y", left_stick_y);
-                telemetry.addData("right_x", right_stick_x);
-
                 drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             }
 
@@ -84,10 +80,10 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.rb()) {
-                armSystem.moveArm(armSystem.arm.getCurrentPosition() + 50);
+                armSystem.moveArmWithoutWobble(armSystem.arm.getTargetPosition() + 50);
             }
             if (ourGamepad1.lb()) {
-                armSystem.moveArm(armSystem.arm.getCurrentPosition() - 50);
+                armSystem.moveArmWithoutWobble(armSystem.arm.getTargetPosition() - 50);
             }
 
             if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && touch.isPressed()) {
@@ -104,7 +100,7 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.dpad_down() && !passingObstacle) {
-                armSystem.moveArm(-300);
+                armSystem.moveArmWithoutWobble(-300);
                 passingObstacle = true;
             }
             if (ourGamepad1.dpad_down() && passingObstacle) {
@@ -130,6 +126,7 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             armSystem.restOnFirstFloor();
+            armSystem.slowArm();
         }
     }
 }
