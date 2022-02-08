@@ -77,9 +77,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 armSystem.moveArm(ArmSystem.Floors.THIRD);
                 passingObstacle = false;
             }
-            if (ourGamepad2.dpad_right()) {
-                armSystem.moveArm(ArmSystem.Floors.TOTEM);
-            }
 
             if (ourGamepad2.rt()) {
                 armSystem.toggleCollecting();
@@ -120,8 +117,8 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             // rumble controller if touchSensor was just pressed
             if (touch.isPressed()) {
                 if (!prevTouchSensorPressed) {
-                    gamepad1.rumble(1000);
-                    gamepad2.rumble(1000);
+                    //gamepad1.rumble(1000);
+                    //gamepad2.rumble(1000);
                 }
                 prevTouchSensorPressed = true;
             } else {

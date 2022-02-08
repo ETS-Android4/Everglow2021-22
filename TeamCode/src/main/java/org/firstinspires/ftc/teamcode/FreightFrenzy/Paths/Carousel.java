@@ -218,7 +218,7 @@ public class Carousel {
         drivingSystem.turn(180, 150);
         drivingSystem.driveStraight(50, 0.7);
         drivingSystem.driveSideways(70, 0.7);
-        drivingSystem.driveStraight(150, 1);
+        drivingSystem.driveStraight(155, 1);
     }
 
     /**
