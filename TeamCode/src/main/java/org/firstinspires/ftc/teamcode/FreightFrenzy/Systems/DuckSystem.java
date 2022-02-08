@@ -19,15 +19,17 @@ public class DuckSystem {
     public void toggle(){
         if (isRunning){
             stöp();
+            isRunning = false;
         }else {
             run();
+            isRunning = true;
         }
     }
 
     public void run() {
         isRunning = true;
-        duck1.setPower(-0.4);
-        duck2.setPower(0.4);
+        duck1.setPower(-0.6);
+        duck2.setPower(0.6);
     }
 
     public void runFor(long durationMillis) {

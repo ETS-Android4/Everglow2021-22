@@ -120,12 +120,14 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             // rumble controller if touchSensor was just pressed
             if (touch.isPressed()) {
                 if (!prevTouchSensorPressed) {
+                    gamepad1.rumble(1000);
                     gamepad2.rumble(1000);
                 }
                 prevTouchSensorPressed = true;
             } else {
                 prevTouchSensorPressed = false;
             }
+
             if (!passingObstacle) {
                 armSystem.restOnLoad();
             }

@@ -179,7 +179,7 @@ public class Crater {
         placeFreight(mirror);
         goToCarouselB(mirror);
         // drop duck
-        duckSystem.runFor(5000);
+        duckSystem.runFor(3000);
         // go to warehouse
         drivingSystem.driveSideways(65, 0.6 * mirror);
     }
@@ -206,7 +206,7 @@ public class Crater {
         drivingSystem.driveSideways(20, -0.6 * mirror);
         drivingSystem.driveStraight(185, 0.6);
         // drop duck
-        duckSystem.runFor(5000);
+        duckSystem.runFor(3000);
         // go to warehouse
         drivingSystem.driveSideways(65, 0.6 * mirror);
         drivingSystem.driveStraight(5, 0.6);
@@ -235,7 +235,7 @@ public class Crater {
         // go to warehouse
         drivingSystem.driveStraight(180, 0.6);
         drivingSystem.driveSideways(15, -0.6 * mirror);
-        duckSystem.runFor(5000);
+        duckSystem.runFor(3000);
         drivingSystem.driveSideways(20, 0.6 * mirror);
         drivingSystem.turn(180, 50);
         armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
@@ -253,7 +253,7 @@ public class Crater {
         // go to warehouse
         drivingSystem.driveStraight(180, 0.6);
         drivingSystem.driveSideways(15, -0.6 * mirror);
-        duckSystem.runFor(5000);
+        duckSystem.runFor(3000);
         drivingSystem.driveStraight(50, -0.6);
         drivingSystem.turn(180, 200);
         drivingSystem.driveSideways(25, 0.6);
