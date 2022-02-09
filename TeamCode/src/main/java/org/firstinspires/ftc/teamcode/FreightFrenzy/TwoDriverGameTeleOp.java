@@ -90,10 +90,10 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.rb()) {
-                armSystem.moveArm(armSystem.arm.getCurrentPosition() + 50);
+                armSystem.moveArm(armSystem.arm.getTargetPosition() + 50);
             }
             if (ourGamepad2.lb()) {
-                armSystem.moveArm(armSystem.arm.getCurrentPosition() - 50);
+                armSystem.moveArm(armSystem.arm.getTargetPosition() - 50);
             }
 
             if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && touch.isPressed()) {
