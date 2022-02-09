@@ -162,6 +162,7 @@ public class Crater {
     public void RZNCO(int mirror) {
         placeFreight(mirror);
         dodgeToFront(mirror);
+        
         drivingSystem.turn(180, 200);
         armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
         drivingSystem.driveStraight(30, -0.6);
@@ -174,6 +175,7 @@ public class Crater {
     public void RZNCP(int mirror) {
         placeFreight(mirror);
         dodgeToFront(mirror);
+        
         drivingSystem.turn(180, 200);
         drivingSystem.driveSideways(60, 0.6 * mirror);
         drivingSystem.driveStraight(100, 0.6);
@@ -185,7 +187,9 @@ public class Crater {
     public void RBYCO(int mirror) {
         placeFreight(mirror);
         goToCarouselB(mirror);
-        duckSystem.runFor(4000);
+        
+        duckSystem.runFor(3000);
+        
         drivingSystem.driveSideways(30, 0.7 * mirror);
         drivingSystem.turn(180, 200);
         armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
@@ -198,12 +202,14 @@ public class Crater {
     public void RBYCP(int mirror) {
         placeFreight(mirror);
         goToCarouselB(mirror);
-        duckSystem.runFor(4000);
+        
+        duckSystem.runFor(3000);
+        
         drivingSystem.driveSideways(35, 0.7 * mirror);
         drivingSystem.turn(180, 200);
-        drivingSystem.driveStraight(50, 0.7);
+        drivingSystem.driveStraight(100, 0.7);
         drivingSystem.driveSideways(70, 0.7 * mirror);
-        drivingSystem.driveStraight(200, 0.7);
+        drivingSystem.driveStraight(150, 0.7);
     }
 
     /**
@@ -212,7 +218,9 @@ public class Crater {
     public void RBYW(int mirror) {
         placeFreight(mirror);
         goToCarouselB(mirror);
+        
         duckSystem.runFor(3000);
+        
         drivingSystem.driveSideways(55, 0.6 * mirror);
         drivingSystem.driveStraight(7, 0.6);
     }
@@ -222,6 +230,7 @@ public class Crater {
      */
     public void RBNW(int mirror) {
         placeFreight(mirror);
+
         drivingSystem.driveSideways(50, 0.6 * mirror);
         drivingSystem.driveStraight(185, 0.6);
         drivingSystem.driveSideways(90, -0.6 * mirror);
@@ -233,9 +242,12 @@ public class Crater {
     public void RFYW(int mirror) {
         placeFreight(mirror);
         dodgeToFront(mirror);
+
         drivingSystem.driveStraight(185, 0.6);
         drivingSystem.driveSideways(40, -0.6 * mirror);
+
         duckSystem.runFor(3000);
+
         drivingSystem.driveSideways(65, 0.6 * mirror);
         drivingSystem.driveStraight(5, 0.6);
     }
@@ -246,6 +258,7 @@ public class Crater {
     public void RFNW(int mirror) {
         placeFreight(mirror);
         dodgeToFront(mirror);
+
         drivingSystem.driveStraight(175, 0.6);
         drivingSystem.driveSideways(40, 0.6 * mirror);
     }
@@ -256,9 +269,12 @@ public class Crater {
     public void RFYCO(int mirror) {
         placeFreight(mirror);
         dodgeToFront(mirror);
+
         drivingSystem.driveStraight(180, 0.6);
         drivingSystem.driveSideways(40, -0.6 * mirror);
+
         duckSystem.runFor(3000);
+
         drivingSystem.driveSideways(30, 0.6 * mirror);
         drivingSystem.turn(180, 50);
         armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
@@ -271,9 +287,12 @@ public class Crater {
     public void RFYCP(int mirror) {
         placeFreight(mirror);
         dodgeToFront(mirror);
+        
         drivingSystem.driveStraight(180, 0.6);
         drivingSystem.driveSideways(40, -0.6 * mirror);
+        
         duckSystem.runFor(3000);
+        
         drivingSystem.driveStraight(50, -0.8);
         drivingSystem.turn(180, 200);
         drivingSystem.driveSideways(25, 0.6 * mirror);

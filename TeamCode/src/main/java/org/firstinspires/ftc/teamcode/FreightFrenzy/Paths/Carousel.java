@@ -222,9 +222,9 @@ public class Carousel {
         // Go to Crater through path
         drivingSystem.driveSideways(30, 0.7 * mirror);
         drivingSystem.turn(180, 150);
-        drivingSystem.driveStraight(50, 0.7);
+        drivingSystem.driveStraight(100, 0.7);
         drivingSystem.driveSideways(70, 0.7 * mirror);
-        drivingSystem.driveStraight(170, 1);
+        drivingSystem.driveStraight(150, 1);
     }
 
     /**
