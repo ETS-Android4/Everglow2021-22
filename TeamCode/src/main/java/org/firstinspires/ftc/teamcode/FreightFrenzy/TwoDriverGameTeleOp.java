@@ -131,11 +131,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             if (!passingObstacle) {
                 armSystem.restOnLoad();
             }
-
-            if (gamepad2.options) {
-                drivingSystem.CS(armSystem);
-            }
-
             armSystem.restOnFirstFloor();
         }
     }

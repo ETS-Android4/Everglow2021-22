@@ -136,17 +136,17 @@ public class ArmSystem {
         this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
         switch (level) {
             case THIRD:
-                moveArmWithoutWobble(-2050);
+                moveArm(-2050);
                 break;
             case SECOND:
-                moveArmWithoutWobble(-2300);
+                moveArm(-2300);
                 break;
             case FIRST:
-                moveArmWithoutWobble(-2400);
+                moveArm(-2400);
                 firstFloor = true;
                 break;
             case TOTEM:
-                moveArmWithoutWobble(-1900);
+                moveArm(-1900);
                 break;
         }
     }
