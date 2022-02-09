@@ -36,8 +36,11 @@ import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 /**
@@ -51,30 +54,35 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
  *
  * @see <a href="http://revrobotics.com">REV Robotics Web Page</a>
  */
-@TeleOp(name = "Distance Sensor Test", group = "Test")
-public class TestDistanceSensor extends LinearOpMode {
+@TeleOp(name = "middle distance test", group = "Test")
+public class middleDistance extends LinearOpMode {
+    DrivingSystem drivingSystem;
+    EverglowGamepad gamepad;
+    double leftDistance = 5;
+
 
     @Override
     public void runOpMode() {
-        // you can use this as a regular DistanceSensor.
-        DistanceSensor leftSensor = hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
-        DistanceSensor rightSensor = hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
-//        Rev2mDistanceSensor upperSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
-//        Rev2mDistanceSensor lowerSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_bd");
+        gamepad = new EverglowGamepad(gamepad1);
+        drivingSystem = new DrivingSystem(this);
 
         waitForStart();
         while(opModeIsActive()) {
-            TimeUtils.sleep(100);
-            telemetry.addData("distance front left", leftSensor.getDistance(DistanceUnit.CM));
-            telemetry.addData("distance front right", rightSensor.getDistance(DistanceUnit.CM));
-
-//            double up = upperSensor.getDistance(DistanceUnit.CM);
-//            double down = lowerSensor.getDistance(DistanceUnit.CM);
-//            telemetry.addData("distance up ", up);
-//            telemetry.addData("distance down", down);
-//            telemetry.addData("Difference", up - down);
+            if(gamepad.rb()){
+                leftDistance++;
+            }
+            if(gamepad.lb()){
+                leftDistance--;
+            }
+            if(gamepad.a()){
+                drivingSystem.driveSideways(leftDistance, -0.5);
+                drivingSystem.driveStraight(100,0.5);
+            }
+            telemetry.addData("distance: ", leftDistance);
             telemetry.update();
         }
     }
 
 }
+
+
