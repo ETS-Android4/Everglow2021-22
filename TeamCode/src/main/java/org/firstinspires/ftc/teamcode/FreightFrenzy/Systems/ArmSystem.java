@@ -7,27 +7,32 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class ArmSystem {
 
+    /**
+     * Enum of collection states: STOPPED, COLLECTING, SPITTING.
+     */
     public enum CollectState {
         STOPPED, COLLECTING, SPITTING
     }
 
-    public DcMotor flyWheels;
-    public DcMotor arm;
-    private boolean loaded = false;
-    private boolean firstFloor = false;
-    private Integer targetPosition = null;
-    private final LinearOpMode opMode;
-
-
-    private CollectState collectState = CollectState.STOPPED;
-
+    /**
+     * Enum of the different floors the arm should be able reach: FIRST, SECOND, THIRD, TOTEM.
+     */
     public enum Floors {
         FIRST, SECOND, THIRD, TOTEM
     }
 
+    public        DcMotor      flyWheels;
+    public        DcMotor      arm;
+    private       boolean      loaded         = false;
+    private       boolean      firstFloor     = false;
+    private       Integer      targetPosition = null;
+    private final LinearOpMode opMode;
+
+    private CollectState collectState = CollectState.STOPPED;
+
     public ArmSystem(LinearOpMode opMode) {
         this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "flywheels");
-        this.arm = opMode.hardwareMap.get(DcMotor.class, "arm");
+        this.arm       = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.opMode = opMode;
@@ -37,12 +42,18 @@ public class ArmSystem {
         return collectState;
     }
 
+    /**
+     * Activate the flywheels inwards, in order to collect a freight.
+     */
     public void collect() {
         collectState = CollectState.COLLECTING;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flyWheels.setPower(1);
     }
 
+    /**
+     * Toggle the collection on and off.
+     */
     public void toggleCollecting() {
         if (collectState == CollectState.COLLECTING) {
             stop();
@@ -51,6 +62,17 @@ public class ArmSystem {
         }
     }
 
+    /**
+     * Activate the flywheels outwards, in order to deploy a freight.
+     */
+    public void spit() {
+        collectState = CollectState.SPITTING;
+        flyWheels.setPower(-0.5);
+    }
+
+    /**
+     * Toggle the deployment on and off
+     */
     public void toggleSpitting() {
         if (collectState == CollectState.SPITTING) {
             stop();
@@ -59,20 +81,21 @@ public class ArmSystem {
         }
     }
 
-
-    public void spit() {
-        collectState = CollectState.SPITTING;
-        flyWheels.setPower(-0.5);
-    }
-
+    /**
+     * Stops the flywheels.
+     */
     public void stop() {
         collectState = CollectState.STOPPED;
         flyWheels.setPower(0);
     }
 
+    /**
+     * Move the arm to a target position in ticks.
+     * @param place the target position in ticks.
+     */
     public void moveArm(int place) {
-        loaded = false;
-        firstFloor = false;
+        loaded              = false;
+        firstFloor          = false;
         this.targetPosition = null;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place);
@@ -81,8 +104,8 @@ public class ArmSystem {
     }
 
     public void moveArmWithoutWobble(int place) {
-        loaded = false;
-        firstFloor = false;
+        loaded              = false;
+        firstFloor          = false;
         this.targetPosition = place;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place);
@@ -102,6 +125,9 @@ public class ArmSystem {
         this.opMode.telemetry.update();
     }
 
+    /**
+     * Return the arm to the resting position.
+     */
     public void reload() {
         firstFloor = false;
         arm.setTargetPosition(-100);
@@ -110,6 +136,9 @@ public class ArmSystem {
         loaded = true;
     }
 
+    /**
+     * Turns the arm motor off when the arm is close to resting position.
+     */
     public void restOnLoad() {
         if (-105 <= arm.getCurrentPosition() && loaded) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -117,6 +146,9 @@ public class ArmSystem {
         }
     }
 
+    /**
+     * Turns the arm motor off when the arm is close to the first floor resting position.
+     */
     public void restOnFirstFloor() {
         if (-2380 >= arm.getCurrentPosition() && firstFloor) {
             arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -125,6 +157,9 @@ public class ArmSystem {
         }
     }
 
+    /**
+     * Reload method to be used in an autonomous. Contains restOnLoad() as well.
+     */
     public void autonomousReload() {
         reload();
         restOnLoad();
@@ -132,8 +167,11 @@ public class ArmSystem {
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    /**
+     * Move the arm to a target floor behind the robot.
+     * @param level the target floor.
+     */
     public void moveArm(Floors level) {
-        this.opMode.telemetry.addData("armPosition", arm.getCurrentPosition());
         switch (level) {
             case THIRD:
                 moveArm(-2050);
@@ -151,6 +189,10 @@ public class ArmSystem {
         }
     }
 
+    /**
+     * Move the arm to a target floor in front of the robot.
+     * @param level the target floor.
+     */
     public void autonomousMoveArm(Floors level) {
         switch (level) {
             case THIRD:
@@ -165,6 +207,11 @@ public class ArmSystem {
         }
     }
 
+    /**
+     * Autonomous freight placement sequence. Moves the arm to the target floor in front of the robot,
+     * and deploys the freight.
+     * @param floor the target floor.
+     */
     public void autonomousPlaceFreight(Floors floor) {
         autonomousMoveArm(floor);
         TimeUtils.sleep(1000);
@@ -173,6 +220,10 @@ public class ArmSystem {
         stop();
     }
 
+    /**
+     * Autonomous Shipping Element placement sequence. Moves the arm to the TOTEM level,
+     * lowers the arm and spits.
+     */
     public void placeTotem() {
         moveArm(Floors.TOTEM);
         TimeUtils.sleep(2000);

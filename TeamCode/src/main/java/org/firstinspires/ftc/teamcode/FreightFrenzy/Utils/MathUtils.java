@@ -43,6 +43,30 @@ public class MathUtils {
         return minValue;
     }
 
+    @Nullable
+    public static Double max(List<Double> values) {
+        if (values.isEmpty()) {
+            return null;
+        }
+        Double maxValue = Double.MIN_VALUE;
+        for (Double value : values) {
+            if (value > maxValue) {
+                maxValue = value;
+            }
+        }
+        return maxValue;
+    }
+
+    public static Double max(double[] values) {
+        Double maxValue = Double.MIN_VALUE;
+        for (Double value : values) {
+            if (value > maxValue) {
+                maxValue = value;
+            }
+        }
+        return maxValue;
+    }
+
     public static double average(List<Double> values) {
         double sum = 0;
         for (double val : values) {
