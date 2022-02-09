@@ -42,9 +42,8 @@ public class Carousel {
      */
     public void placeFreight(int mirror) {
         drivingSystem.resetDistance();
-        drivingSystem.driveStraight(15, 0.5);
+        drivingSystem.driveStraight(20, 0.6);
         floor = detectionSystem.findTargetFloor2(mirror);
-        drivingSystem.driveStraight(15, -0.5);
 
         this.opMode.telemetry.addData("floor: ", floor);
         this.opMode.telemetry.update();
@@ -59,7 +58,7 @@ public class Carousel {
                 break;
         }
         // move to SH
-        drivingSystem.driveStraight(100, 0.5);
+        drivingSystem.driveStraight(80, 0.6);
         switch (floor) {
             case FIRST:
                 drivingSystem.driveSideways(15, -0.6 * mirror);
@@ -84,17 +83,17 @@ public class Carousel {
     public void dodgeToFront(int firstTurnDirection, int mirror) {
         switch (floor) {
             case FIRST:
-                drivingSystem.driveSideways(65, 0.5 * mirror);
+                drivingSystem.driveSideways(65, 0.6 * mirror);
                 break;
             case SECOND:
-                drivingSystem.driveStraight(50, -0.5);
-                drivingSystem.driveSideways(65, 0.5 * mirror);
-                drivingSystem.driveStraight(50, 0.5);
+                drivingSystem.driveStraight(50, -0.6);
+                drivingSystem.driveSideways(65, 0.6 * mirror);
+                drivingSystem.driveStraight(50, 0.6);
                 break;
             case THIRD:
-                drivingSystem.driveStraight(10, -0.5);
-                drivingSystem.driveSideways(65, 0.5 * mirror);
-                drivingSystem.driveStraight(10, 0.5);
+                drivingSystem.driveStraight(10, -0.6);
+                drivingSystem.driveSideways(65, 0.6 * mirror);
+                drivingSystem.driveStraight(10, 0.6);
                 break;
         }
     }
@@ -126,7 +125,7 @@ public class Carousel {
         drivingSystem.driveStraight(125, 0.6);
         drivingSystem.driveSideways(120, 0.6 * mirror);
         armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
-        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(30, -0.7);
         drivingSystem.driveStraight(100, 1);
     }
 
@@ -140,7 +139,7 @@ public class Carousel {
         duckSystem.runFor(3000);
         // go to crater through obstacle
         drivingSystem.driveSideways(150, 0.6 * mirror);
-        drivingSystem.turn(180 * mirror, 200);
+        drivingSystem.turn(180, 200);
         drivingSystem.driveStraight(125, 0.6);
         drivingSystem.driveSideways(15, 0.6 * mirror);
         dodgeToFront(1, mirror);
@@ -219,7 +218,7 @@ public class Carousel {
         drivingSystem.driveSideways(30, 0.7 * mirror);
         drivingSystem.turn(180, 150);
         drivingSystem.driveStraight(50, 0.7);
-        drivingSystem.driveSideways(70, 0.7);
+        drivingSystem.driveSideways(70, 0.7 * mirror);
         drivingSystem.driveStraight(155, 1);
     }
 
@@ -232,8 +231,8 @@ public class Carousel {
         // spin duck
         duckSystem.runFor(3000);
         // go to crater through obstacle
-        drivingSystem.driveSideways(20, 0.7 * mirror);
-        drivingSystem.turn(180 * mirror, 150);
+        drivingSystem.driveSideways(30, 0.6 * mirror);
+        drivingSystem.turn(180, 150);
         armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(250, 1);
