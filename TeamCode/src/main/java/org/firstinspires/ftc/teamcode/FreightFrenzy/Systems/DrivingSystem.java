@@ -26,7 +26,7 @@ public class DrivingSystem {
     private final DcMotor backRight;
     private final DcMotor backLeft;
 
-    private final DistanceSensor sensorBackUp;
+    private DistanceSensor sensorBackUp;
     private final DistanceSensor sensorBackDown;
 
     private final LinearOpMode opMode;
@@ -59,7 +59,6 @@ public class DrivingSystem {
         this.backLeft = opMode.hardwareMap.get(DcMotor.class, "back_left");
 
         // Get sensors from the Hardware Map
-        this.sensorBackUp = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
         this.sensorBackDown = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bd");
 
         this.opMode = opMode;

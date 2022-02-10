@@ -92,7 +92,6 @@ public class GameTeleOp extends LinearOpMode {
 
             if (ourGamepad1.dpad_left() || ourGamepad1.dpad_right()) {
                 duckSystem.toggle();
-                duckSystem.toggle();
             }
 
             if (ourGamepad1.dpad_up()) {
