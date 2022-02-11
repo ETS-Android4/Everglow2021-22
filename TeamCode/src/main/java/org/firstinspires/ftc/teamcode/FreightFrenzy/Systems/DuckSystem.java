@@ -10,7 +10,7 @@ public class DuckSystem {
     private final DcMotor duck2;
 
     private boolean isRunning = false;
-    private double  speed     = 0.7;
+    private double  speed     = 0.6;
 
     public DuckSystem(LinearOpMode opMode) {
         this.duck1 = opMode.hardwareMap.get(DcMotor.class, "duck1");

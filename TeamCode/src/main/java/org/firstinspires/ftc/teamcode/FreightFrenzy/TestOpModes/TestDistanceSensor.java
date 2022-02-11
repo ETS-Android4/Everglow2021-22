@@ -59,7 +59,6 @@ public class TestDistanceSensor extends LinearOpMode {
         // you can use this as a regular DistanceSensor.
         DistanceSensor leftSensor = hardwareMap.get(DistanceSensor.class, "distance_sensor_left");
         DistanceSensor rightSensor = hardwareMap.get(DistanceSensor.class, "distance_sensor_right");
-//        Rev2mDistanceSensor upperSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_bu");
 //        Rev2mDistanceSensor lowerSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "distance_sensor_bd");
 
         waitForStart();

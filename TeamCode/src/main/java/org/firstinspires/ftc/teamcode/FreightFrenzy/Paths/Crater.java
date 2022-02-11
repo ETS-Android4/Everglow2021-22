@@ -39,10 +39,11 @@ public class Crater {
      */
     public void placeFreight(int mirror) {
         drivingSystem.resetDistance();
+        drivingSystem.driveStraight(25,0.6);
         floor = detectionSystem.findTargetFloor2(mirror);
-
         opMode.telemetry.addData("Floor: ", floor);
         opMode.telemetry.update();
+        drivingSystem.driveStraight(25,-0.6);
 
         // avoid totem
         if (mirror == 1) {
@@ -164,9 +165,9 @@ public class Crater {
         dodgeToFront(mirror);
         
         drivingSystem.turn(180, 200);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
+        armSystem.moveArm(-200);
         drivingSystem.driveStraight(30, -0.6);
-        drivingSystem.driveStraight(150, 1);
+        drivingSystem.driveStraight(80, 1);
     }
 
     /**
@@ -187,13 +188,13 @@ public class Crater {
     public void RBYCO(int mirror) {
         placeFreight(mirror);
         goToCarouselB(mirror);
-        
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
         
         drivingSystem.driveSideways(30, 0.7 * mirror);
         drivingSystem.turn(180, 200);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
-        drivingSystem.driveStraight(300, 1);
+        armSystem.moveArm(-200);
+        drivingSystem.driveStraight(280, 1);
     }
 
     /**
@@ -202,7 +203,7 @@ public class Crater {
     public void RBYCP(int mirror) {
         placeFreight(mirror);
         goToCarouselB(mirror);
-        
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
         
         drivingSystem.driveSideways(35, 0.7 * mirror);
@@ -218,7 +219,7 @@ public class Crater {
     public void RBYW(int mirror) {
         placeFreight(mirror);
         goToCarouselB(mirror);
-        
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
         
         drivingSystem.driveSideways(55, 0.6 * mirror);
@@ -245,7 +246,7 @@ public class Crater {
 
         drivingSystem.driveStraight(185, 0.6);
         drivingSystem.driveSideways(40, -0.6 * mirror);
-
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
 
         drivingSystem.driveSideways(65, 0.6 * mirror);
@@ -272,13 +273,13 @@ public class Crater {
 
         drivingSystem.driveStraight(180, 0.6);
         drivingSystem.driveSideways(40, -0.6 * mirror);
-
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
 
         drivingSystem.driveSideways(30, 0.6 * mirror);
         drivingSystem.turn(180, 50);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
-        drivingSystem.driveStraight(300, 1);
+        armSystem.moveArm(-200);
+        drivingSystem.driveStraight(280, 1);
     }
 
     /**
@@ -290,7 +291,7 @@ public class Crater {
         
         drivingSystem.driveStraight(180, 0.6);
         drivingSystem.driveSideways(40, -0.6 * mirror);
-        
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
         
         drivingSystem.driveStraight(50, -0.8);

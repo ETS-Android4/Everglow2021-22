@@ -42,6 +42,7 @@ public class Carousel {
      */
     public void placeFreight(int mirror) {
         drivingSystem.resetDistance();
+        drivingSystem.driveStraight(25,0.6);
         floor = detectionSystem.findTargetFloor2(mirror);
 
         this.opMode.telemetry.addData("floor: ", floor);
@@ -68,7 +69,7 @@ public class Carousel {
             }
         }
         // move to SH
-        drivingSystem.driveStraight(100, 0.6);
+        drivingSystem.driveStraight(65, 0.6);
         if (mirror == 1) {
             switch (floor) {
                 case FIRST:
@@ -145,7 +146,7 @@ public class Carousel {
     public void goToCarousel(int mirror) {
         drivingSystem.driveStraight(35, -0.6);
         drivingSystem.turn(180, 200);
-        drivingSystem.driveSideways(105, -0.6 * mirror);
+        drivingSystem.driveSideways(110, -0.6 * mirror);
     }
 
     /**
@@ -154,7 +155,8 @@ public class Carousel {
     public void LZYW(int mirror) {
         placeFreight(mirror);
         goToCarousel(mirror);
-
+        drivingSystem.driveStraight(5, 0.5);
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
 
         drivingSystem.driveSideways(65, 0.6 * mirror);
@@ -176,7 +178,7 @@ public class Carousel {
 
         // Ram through obstacle
         drivingSystem.turn(180, 200);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
+        armSystem.moveArm(-200);
         drivingSystem.driveStraight(30, -0.6);
         drivingSystem.driveStraight(150, 1);
     }
@@ -216,7 +218,7 @@ public class Carousel {
     public void LFYCP(int mirror) {
         placeFreight(mirror);
         goToCarousel(mirror);
-
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
 
         // Go to Crater through path
@@ -233,13 +235,13 @@ public class Carousel {
     public void LFYCO(int mirror) {
         placeFreight(mirror);
         goToCarousel(mirror);
-
+        TimeUtils.sleep(500);
         duckSystem.runFor(3000);
 
         // Ram through obstacle
         drivingSystem.driveSideways(30, 0.6 * mirror);
         drivingSystem.turn(180, 150);
-        armSystem.autonomousMoveArm(ArmSystem.Floors.SECOND);
-        drivingSystem.driveStraight(300, 1);
+        armSystem.moveArm(-200);
+        drivingSystem.driveStraight(280, 1);
     }
 }
