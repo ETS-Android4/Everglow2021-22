@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "drive", group = "Linear Opmode")
+@TeleOp(name = "driveWithRelationToAxis", group = "Linear Opmode")
 public class driveWithRelationToAxis extends LinearOpMode {
     DrivingSystem drivingSystem;
     ArmSystem armSystem;
@@ -28,7 +28,6 @@ public class driveWithRelationToAxis extends LinearOpMode {
         touch = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchSensorPressed = false;
-
 
         waitForStart();
 
