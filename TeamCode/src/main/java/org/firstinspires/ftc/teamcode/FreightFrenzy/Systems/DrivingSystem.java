@@ -138,6 +138,12 @@ public class DrivingSystem {
         backLeft.setPower(backLeftPower);
     }
 
+    public void driveByJoystickWithRelationToAxis(double x1,double y1, double x2){
+        driveByJoystick(Math.cos(getCurrentAngle()*Math.PI/180)* x1 + Math.sin(-this.getCurrentAngle()*Math.PI/180)* y1,
+                -Math.sin(getCurrentAngle()*Math.PI/180)*x1 + Math.cos(this.getCurrentAngle()*Math.PI/180)*y1 ,
+                x2);
+    }
+
     /**
      * The method we use to rotate in place. The robot rotates rapidly if the Angle Deviation is
      * large, and decelerates as it gets closer to the target angle.
