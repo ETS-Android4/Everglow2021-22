@@ -18,24 +18,28 @@ public class TotemSystem {
     }
 
     public void setAzimuth(double pos) {
-        if (pos < 0) {
-            azimuth.setPosition(0);
-        } else {
-            azimuth.setPosition(pos);
-        }
+//        if (pos < 0) {
+//            azimuth.setPosition(0);
+//        } else {
+//            azimuth.setPosition(pos);
+//        }
+        azimuth.setPosition(pos);
+
     }
     public void setAltitude(double pos) {
-        if (pos < 0) {
-            altitude.setPosition(0);
-        } else {
-            altitude.setPosition(pos);
-        }
+//        if (pos < 0) {
+//            altitude.setPosition(0);
+//        } else {
+//            altitude.setPosition(pos);
+//        }
+        altitude.setPosition(pos);
     }
     public void extend(double pos) {
-        if (pos < 0) {
-            meter.setPosition(0);
-        } else {
-            meter.setPosition(pos);
-        }
+//        if (pos < 0) {
+//            meter.setPosition(0);
+//        } else {
+//            meter.setPosition(pos);
+//        }
+        meter.setPosition(pos);
     }
 }

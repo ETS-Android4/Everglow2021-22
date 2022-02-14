@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
+@TeleOp(name = "Totem Test", group = "Linear Opmode")
 public class TestTotem  extends LinearOpMode {
 
     private TotemSystem totemSystem;
@@ -23,10 +25,13 @@ public class TestTotem  extends LinearOpMode {
             alt = totemSystem.altitude.getPosition();
             meter = totemSystem.meter.getPosition();
 
-            totemSystem.setAzimuth(azi + gamepad1.right_stick_x / 10);
-            totemSystem.setAltitude(alt - gamepad1.left_stick_y / 10);
+            totemSystem.setAzimuth(azi + gamepad1.right_stick_x / 600);
+            totemSystem.setAltitude(alt - gamepad1.left_stick_y / 600);
             if (gamepad1.dpad_right) {
-                totemSystem.extend(meter + 0.1);
+                totemSystem.extend(meter + 0.005);
+            }
+            if (gamepad1.dpad_left) {
+                totemSystem.extend(meter - 0.005);
             }
 
             telemetry.addData("Azimuth: ", azi);
