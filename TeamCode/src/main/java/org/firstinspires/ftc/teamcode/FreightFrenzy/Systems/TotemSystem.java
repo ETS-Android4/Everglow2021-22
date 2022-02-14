@@ -19,20 +19,23 @@ public class TotemSystem {
 
     public void setAzimuth(double pos) {
         if (pos < 0) {
-            throw new IllegalArgumentException("Method setAzimuth was given a negative position: " + pos);
+            azimuth.setPosition(0);
+        } else {
+            azimuth.setPosition(pos);
         }
-        azimuth.setPosition(pos);
     }
     public void setAltitude(double pos) {
         if (pos < 0) {
-            throw new IllegalArgumentException("Method setAltitude was given a negative position: " + pos);
+            altitude.setPosition(0);
+        } else {
+            altitude.setPosition(pos);
         }
-        altitude.setPosition(pos);
     }
     public void extend(double pos) {
         if (pos < 0) {
-            throw new IllegalArgumentException("Method extend was given a negative position: " + pos);
+            meter.setPosition(0);
+        } else {
+            meter.setPosition(pos);
         }
-        meter.setPosition(pos);
     }
 }
