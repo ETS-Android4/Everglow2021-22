@@ -176,7 +176,7 @@ public class DrivingSystem {
     public void driveStraight(double distance, double power) {
         // The method receives a positive distance.
         if (distance < 0) {
-            throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
+            throw new IllegalArgumentException("Method driveStraight was given a negative distance: " + distance);
         }
 
         resetDistance();
@@ -208,7 +208,7 @@ public class DrivingSystem {
     public void driveSideways(double distance, double power) {
         // The method receives a positive distance.
         if (distance < 0) {
-            throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
+            throw new IllegalArgumentException("Method driveSideways was given a negative distance: " + distance);
         }
 
         resetDistance();
@@ -238,7 +238,7 @@ public class DrivingSystem {
         this.targetAngle = getCurrentAngle();
         // The method receives a positive distance.
         if (distance < 0) {
-            throw new IllegalArgumentException("driveStraight was given a negative distance: " + distance);
+            throw new IllegalArgumentException("Method driveSidewaysAndScan was given a negative distance: " + distance);
         }
 
         resetDistance();
