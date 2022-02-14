@@ -39,6 +39,8 @@ public class DrivingSystem {
      * IMU's zero around the Z-axis.
      */
     private double targetAngle = 0;
+    private double currentX = 0;
+    private double currentY = 0;
 
     private static final double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
     private static final double WHEEL_RADIUS_CM = 4.8;
@@ -140,8 +142,53 @@ public class DrivingSystem {
 
     public void driveByJoystickWithRelationToAxis(double x1,double y1, double x2){
         driveByJoystick(Math.cos(getCurrentAngle()*Math.PI/180)* x1 + Math.sin(-this.getCurrentAngle()*Math.PI/180)* y1,
-                -Math.sin(getCurrentAngle()*Math.PI/180)*x1 + Math.cos(this.getCurrentAngle()*Math.PI/180)*y1 ,
+                Math.sin(getCurrentAngle()*Math.PI/180)*x1 - Math.cos(this.getCurrentAngle()*Math.PI/180)*y1 ,
                 x2);
+    }
+
+    public void driveToPoint(double targetX,double targetY,double ang){
+        resetDistance();
+        double SPEED = 0.7;
+
+        this.targetAngle = normalizeAngle(this.targetAngle + ang);
+        double powerX = targetX - currentX;
+        double powerY = targetY - currentY;
+        if(Math.abs(powerX) > 1 || Math.abs(powerY) > 1){
+            double devider = Math.max(Math.abs(powerX),Math.abs(powerY));
+            powerX = powerX * SPEED /devider;
+            powerY = powerY * SPEED / devider;
+        }
+
+        double lastEncoder = 0;
+
+        while(Math.abs(powerX) > 0. || Math.abs(powerY) > 0.05 || getAngleDeviation() > 0.1) {
+            driveByJoystickWithRelationToAxis(powerX, powerY, getAngleDeviation()/200);
+
+            double currEncoder = Math.abs(backLeft.getCurrentPosition())
+                    + Math.abs(backRight.getCurrentPosition())
+                    + Math.abs(frontLeft.getCurrentPosition())
+                    + Math.abs(frontRight.getCurrentPosition());
+
+
+            currentX += Math.sin(getCurrentAngle()) * (currEncoder - lastEncoder) * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) * powerX / Math.abs(powerX);
+            currentY += Math.cos(getCurrentAngle()) * (currEncoder - lastEncoder) * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) * powerY / Math.abs(powerY);
+            powerX = targetX - currentX;
+            powerY = targetY - currentY;
+            if(Math.abs(powerX) > 1 || Math.abs(powerY) > 1){
+                double devider = Math.max(powerX,powerY);
+                powerX = powerX * SPEED /devider;
+                powerY = powerY * SPEED / devider;
+            }
+
+            lastEncoder = currEncoder;
+
+            opMode.telemetry.addData("currentX: ", currentX);
+            opMode.telemetry.addData("currentY: ", currentY);
+            opMode.telemetry.addData("powerX: ", powerX);
+            opMode.telemetry.addData("powerY: ", powerY);
+            opMode.telemetry.addData("currEncoder: ", currEncoder);
+            opMode.telemetry.update();
+        }
     }
 
     /**

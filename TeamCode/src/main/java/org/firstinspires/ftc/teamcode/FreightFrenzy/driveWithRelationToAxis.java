@@ -33,82 +33,20 @@ public class driveWithRelationToAxis extends LinearOpMode {
 
         while (opModeIsActive()) {
             ourGamepad1.update();
-            {
-                drivingSystem.driveByJoystickWithRelationToAxis(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-            }
+            drivingSystem.driveByJoystickWithRelationToAxis(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-            if (ourGamepad1.x()) {
-                armSystem.reload();
-                passingObstacle = false;
+            if(ourGamepad1.rt()){
+                drivingSystem.driveToPoint(50,50,0);
             }
-            if (ourGamepad1.a()) {
-                armSystem.moveArm(ArmSystem.Floors.FIRST);
-                passingObstacle = false;
+            if(ourGamepad1.rb()){
+                drivingSystem.driveToPoint(50,50,180);
             }
-            if (ourGamepad1.b()) {
-                armSystem.moveArm(ArmSystem.Floors.SECOND);
-                passingObstacle = false;
+            if(ourGamepad1.lt()){
+                drivingSystem.driveToPoint(60,30,0);
             }
-            if (ourGamepad1.y()) {
-                armSystem.moveArm(ArmSystem.Floors.THIRD);
-                passingObstacle = false;
+            if(ourGamepad1.lb()){
+                drivingSystem.driveToPoint(60,30,90);
             }
-
-            if (ourGamepad1.rt()) {
-                armSystem.toggleCollecting();
-            }
-
-            if (ourGamepad1.lt()) {
-                armSystem.toggleSpitting();
-            }
-
-            if (ourGamepad1.rb()) {
-                armSystem.moveArmWithoutWobble(armSystem.arm.getTargetPosition() + 50);
-            }
-            if (ourGamepad1.lb()) {
-                armSystem.moveArmWithoutWobble(armSystem.arm.getTargetPosition() - 50);
-            }
-
-            if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && touch.isPressed()) {
-                armSystem.stop();
-            }
-
-            if (ourGamepad1.dpad_left() || ourGamepad1.dpad_right()) {
-                duckSystem.toggle();
-            }
-
-            if (ourGamepad1.dpad_up()) {
-                armSystem.moveArm(ArmSystem.Floors.TOTEM);
-            }
-
-            if (ourGamepad1.dpad_down() && !passingObstacle) {
-                armSystem.moveArmWithoutWobble(-300);
-                passingObstacle = true;
-            }
-            if (ourGamepad1.dpad_down() && passingObstacle) {
-                armSystem.reload();
-                passingObstacle = false;
-            }
-
-            // rumble controller if touchSensor was just pressed
-            if (touch.isPressed()) {
-                if (!prevTouchSensorPressed) {
-                    gamepad1.rumble(1000);
-                }
-                prevTouchSensorPressed = true;
-            } else {
-                prevTouchSensorPressed = false;
-            }
-            if (!passingObstacle) {
-                armSystem.restOnLoad();
-            }
-
-            if (gamepad1.options) {
-                drivingSystem.CS(armSystem);
-            }
-
-            armSystem.restOnFirstFloor();
-            armSystem.slowArm();
         }
     }
 }
