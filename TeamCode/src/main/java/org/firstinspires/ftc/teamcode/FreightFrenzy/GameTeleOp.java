@@ -33,15 +33,14 @@ public class GameTeleOp extends LinearOpMode {
         touch = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchSensorPressed = false;
-
-
+        
         waitForStart();
 
         while (opModeIsActive()) {
             ourGamepad1.update();
             {
                 double left_stick_x = gamepad1.left_stick_x;
-                double left_stick_y = gamepad1.left_stick_y;
+                double left_stick_y = -gamepad1.left_stick_y;
                 double right_stick_x = gamepad1.right_stick_x;
                 if (gamepad1.right_stick_button) {
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
@@ -80,10 +79,10 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.rb()) {
-                armSystem.moveArmWithoutWobble(armSystem.arm.getTargetPosition() + 50);
+                armSystem.moveArm(armSystem.arm.getTargetPosition() + 50);
             }
             if (ourGamepad1.lb()) {
-                armSystem.moveArmWithoutWobble(armSystem.arm.getTargetPosition() - 50);
+                armSystem.moveArm(armSystem.arm.getTargetPosition() - 50);
             }
 
             if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && touch.isPressed()) {
@@ -126,6 +125,8 @@ public class GameTeleOp extends LinearOpMode {
 
             armSystem.restOnFirstFloor();
             armSystem.slowArm();
+
+            telemetry.addData("arm pos: ", armSystem.arm.getTargetPosition());
         }
     }
 }
