@@ -161,6 +161,31 @@ public class Crater {
         armSystem.autonomousReload();
     }
 
+    public void RZNCX(int mirror){
+        drivingSystem.driveStraight(25,-0.6);
+        floor = detectionSystem.findTargetFloor2(mirror);
+        //collect totem
+        drivingSystem.turn(135,100);
+        drivingSystem.driveStraight(10,0.6);
+        armSystem.autonomousPlaceFreight(floor);
+        drivingSystem.turn(180,100);
+        drivingSystem.driveToPoint(20,-50,-90);
+        armSystem.collect();
+        drivingSystem.driveStraight(20,0.3);
+        armSystem.stop();
+        drivingSystem.driveStraight(20,-0.3);
+        drivingSystem.driveToPoint(-20,50,45);
+        armSystem.moveArm(ArmSystem.Floors.THIRD);
+        armSystem.spit();
+        TimeUtils.sleep(300);
+        armSystem.stop();
+        drivingSystem.driveToPoint(20,-50,-90);
+        armSystem.collect();
+        drivingSystem.driveStraight(20,0.3);
+        armSystem.stop();
+    }
+
+
     /**
      * Goes to crater. Rams through obstacle.
      */

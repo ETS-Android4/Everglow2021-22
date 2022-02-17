@@ -25,13 +25,16 @@ public class TestTotem  extends LinearOpMode {
             alt = totemSystem.altitude.getPosition();
             meter = totemSystem.meter.getPosition();
 
-            totemSystem.setAzimuth(azi + gamepad1.right_stick_x / 600);
-            totemSystem.setAltitude(alt - gamepad1.left_stick_y / 600);
+            totemSystem.setAzimuth(azi + gamepad1.right_stick_x / 1000);
+            totemSystem.setAltitude(alt - gamepad1.left_stick_y / 1000);
             if (gamepad1.dpad_right) {
-                totemSystem.extend(meter + 0.005);
+                totemSystem.extend(0.8);
             }
-            if (gamepad1.dpad_left) {
-                totemSystem.extend(meter - 0.005);
+            else if (gamepad1.dpad_left) {
+                totemSystem.extend(0.2);
+            }
+            else{
+                totemSystem.extend(0.5);
             }
 
             telemetry.addData("Azimuth: ", azi);

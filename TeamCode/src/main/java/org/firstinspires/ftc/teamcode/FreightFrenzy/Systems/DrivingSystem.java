@@ -150,7 +150,7 @@ public class DrivingSystem {
         resetDistance();
         double SPEED = 0.7;
 
-        this.targetAngle = normalizeAngle(this.targetAngle + ang);
+        this.targetAngle = ang;
         double powerX = targetX - currentX;
         double powerY = targetY - currentY;
         if(Math.abs(powerX) > 1 || Math.abs(powerY) > 1){
@@ -162,7 +162,7 @@ public class DrivingSystem {
         double lastEncoder = 0;
 
         while(Math.abs(powerX) > 0. || Math.abs(powerY) > 0.05 || getAngleDeviation() > 0.1) {
-            driveByJoystickWithRelationToAxis(powerX, powerY, getAngleDeviation()/200);
+            driveByJoystickWithRelationToAxis(powerX, powerY, getAngleDeviation()/100);
 
             double currEncoder = Math.abs(backLeft.getCurrentPosition())
                     + Math.abs(backRight.getCurrentPosition())
