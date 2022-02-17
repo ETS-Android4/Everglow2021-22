@@ -8,13 +8,15 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Carousel {
-    DrivingSystem drivingSystem;
-    ArmSystem     armSystem;
-    DuckSystem    duckSystem;
-    public DetectionSystem detectionSystem;
+    DrivingSystem    drivingSystem;
+    ArmSystem        armSystem;
+    DuckSystem       duckSystem;
+    TotemSystem      totemSystem;
+    DetectionSystem  detectionSystem;
     LinearOpMode     opMode;
     ElapsedTime      timer;
     ArmSystem.Floors floor;
@@ -24,6 +26,7 @@ public class Carousel {
         drivingSystem   = new DrivingSystem(opMode);
         armSystem       = new ArmSystem(opMode);
         duckSystem      = new DuckSystem(opMode);
+        totemSystem     = new TotemSystem(opMode);
         detectionSystem = new DetectionSystem(opMode, armSystem);
         timer           = new ElapsedTime();
     }
@@ -42,11 +45,11 @@ public class Carousel {
      */
     public void placeFreight(int mirror) {
         drivingSystem.resetDistance();
-        drivingSystem.driveStraight(25,0.6);
+        drivingSystem.driveStraight(25, -0.6);
         floor = detectionSystem.findTargetFloor2(mirror);
-
         this.opMode.telemetry.addData("floor: ", floor);
         this.opMode.telemetry.update();
+        drivingSystem.turn(180, 300);
 
         //avoid totem
         if (mirror == 1) {
@@ -92,6 +95,43 @@ public class Carousel {
         drivingSystem.turn(-90 * mirror, 200);
 
         // place freight on SH
+        armSystem.autonomousMoveArm(floor);
+        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(20, 0.6);
+        armSystem.spit();
+        TimeUtils.sleep(500);
+        armSystem.stop();
+        drivingSystem.driveStraight(20, -0.6);
+        armSystem.autonomousReload();
+    }
+
+    public void placeFreightAndCollectTotem(int mirror) {
+        drivingSystem.resetDistance();
+        drivingSystem.driveStraight(25, -0.6);
+        floor = detectionSystem.findTargetFloor2(mirror);
+        this.opMode.telemetry.addData("floor: ", floor);
+        this.opMode.telemetry.update();
+
+        switch (floor) {
+            case FIRST:
+                totemSystem.moveAzimuth(-0.3);
+                break;
+            case THIRD:
+                totemSystem.moveAzimuth(0.3);
+        }
+        totemSystem.extend(10);
+        totemSystem.moveAltitude(0.3);
+        totemSystem.extend(-10);
+        switch (floor) {
+            case FIRST:
+                totemSystem.moveAzimuth(0.3);
+                break;
+            case THIRD:
+                totemSystem.moveAzimuth(-0.3);
+        }
+
+        drivingSystem.driveStraight(65, -0.6);
+        drivingSystem.turn(-90 * mirror, 200);
         armSystem.autonomousMoveArm(floor);
         TimeUtils.sleep(500);
         drivingSystem.driveStraight(20, 0.6);

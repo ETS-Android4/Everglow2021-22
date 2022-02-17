@@ -33,7 +33,7 @@ public class GameTeleOp extends LinearOpMode {
         touch = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchSensorPressed = false;
-        
+
         waitForStart();
 
         while (opModeIsActive()) {

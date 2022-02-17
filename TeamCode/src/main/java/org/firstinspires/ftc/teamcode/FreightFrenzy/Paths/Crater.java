@@ -115,6 +115,10 @@ public class Crater {
         armSystem.autonomousReload();
     }
 
+    public void placeFreightAndCollectTotem(int mirror) {
+        //
+    }
+
     /**
      * After placing the freight on the SH, move to the carousel from behind the SH.
      *
