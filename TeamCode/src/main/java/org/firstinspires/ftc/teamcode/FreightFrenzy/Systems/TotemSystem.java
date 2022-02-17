@@ -24,7 +24,6 @@ public class TotemSystem {
 //            azimuth.setPosition(pos);
 //        }
         azimuth.setPosition(pos);
-
     }
     public void setAltitude(double pos) {
 //        if (pos < 0) {
