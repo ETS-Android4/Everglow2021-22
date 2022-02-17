@@ -39,8 +39,6 @@ public class DrivingSystem {
      * IMU's zero around the Z-axis.
      */
     private double targetAngle = 0;
-    private double currentX = 0;
-    private double currentY = 0;
 
     private static final double COUNTS_PER_MOTOR_REV = 515;    // eg: GoBILDA Motor Encoder
     private static final double WHEEL_RADIUS_CM = 4.8;
@@ -116,10 +114,10 @@ public class DrivingSystem {
      */
     public void driveByJoystick(double x1, double y1,
                                 double x2) {
-        double frontRightPower = -x1 - y1 - 0.7 * x2;
-        double frontLeftPower = y1 - x1 - 0.7 * x2;
-        double backRightPower = -y1 + x1 - 0.7 * x2;
-        double backLeftPower = y1 + x1 - 0.7 * x2;
+        double frontRightPower = -x1 + y1 - 0.7 * x2;
+        double frontLeftPower = -y1 - x1 - 0.7 * x2;
+        double backRightPower = y1 + x1 - 0.7 * x2;
+        double backLeftPower = -y1 + x1 - 0.7 * x2;
 
         // Normalization of the driving motors' power
         if (Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1
@@ -140,43 +138,47 @@ public class DrivingSystem {
         backLeft.setPower(backLeftPower);
     }
 
-    public void driveByJoystickWithRelationToAxis(double x1,double y1, double x2){
-        driveByJoystick(Math.cos(getCurrentAngle()*Math.PI/180)* x1 + Math.sin(-this.getCurrentAngle()*Math.PI/180)* y1,
-                Math.sin(getCurrentAngle()*Math.PI/180)*x1 - Math.cos(this.getCurrentAngle()*Math.PI/180)*y1 ,
+    public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
+
+        driveByJoystick(Math.cos(getCurrentAngle() * Math.PI / 180) * x1 + Math.sin(getCurrentAngle() * Math.PI / 180) * y1,
+                Math.sin(getCurrentAngle() * Math.PI / 180) * x1 - Math.cos(getCurrentAngle() * Math.PI / 180) * y1,
                 x2);
     }
 
-    public void driveToPoint(double targetX,double targetY,double ang){
+    public void driveToPoint(double targetX, double targetY, double ang) {
         resetDistance();
         double SPEED = 0.7;
+
+        double currentX = 0;
+        double currentY = 0;
 
         this.targetAngle = ang;
         double powerX = targetX - currentX;
         double powerY = targetY - currentY;
-        if(Math.abs(powerX) > 1 || Math.abs(powerY) > 1){
-            double devider = Math.max(Math.abs(powerX),Math.abs(powerY));
-            powerX = powerX * SPEED /devider;
+        if (Math.abs(powerX) > 1 || Math.abs(powerY) > 1) {
+            double devider = Math.max(Math.abs(powerX), Math.abs(powerY));
+            powerX = powerX * SPEED / devider;
             powerY = powerY * SPEED / devider;
         }
 
         double lastEncoder = 0;
 
-        while(Math.abs(powerX) > 0. || Math.abs(powerY) > 0.05 || getAngleDeviation() > 0.1) {
-            driveByJoystickWithRelationToAxis(powerX, powerY, getAngleDeviation()/100);
+        while (Math.abs(powerX) > 0.05 || Math.abs(powerY) > 0.05 || getAngleDeviation() > 0.1) {
+            driveByJoystickWithRelationToAxis(powerX, powerY, getAngleDeviation() / 100);
 
             double currEncoder = Math.abs(backLeft.getCurrentPosition())
                     + Math.abs(backRight.getCurrentPosition())
                     + Math.abs(frontLeft.getCurrentPosition())
                     + Math.abs(frontRight.getCurrentPosition());
 
-
             currentX += Math.sin(getCurrentAngle()) * (currEncoder - lastEncoder) * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) * powerX / Math.abs(powerX);
             currentY += Math.cos(getCurrentAngle()) * (currEncoder - lastEncoder) * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) * powerY / Math.abs(powerY);
             powerX = targetX - currentX;
             powerY = targetY - currentY;
-            if(Math.abs(powerX) > 1 || Math.abs(powerY) > 1){
-                double devider = Math.max(powerX,powerY);
-                powerX = powerX * SPEED /devider;
+
+            if (Math.abs(powerX) > 1 || Math.abs(powerY) > 1) {
+                double devider = Math.max(powerX, powerY);
+                powerX = powerX * SPEED / devider;
                 powerY = powerY * SPEED / devider;
             }
 

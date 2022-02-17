@@ -40,7 +40,7 @@ public class GameTeleOp extends LinearOpMode {
             ourGamepad1.update();
             {
                 double left_stick_x = gamepad1.left_stick_x;
-                double left_stick_y = -gamepad1.left_stick_y;
+                double left_stick_y = gamepad1.left_stick_y;
                 double right_stick_x = gamepad1.right_stick_x;
                 if (gamepad1.right_stick_button) {
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
