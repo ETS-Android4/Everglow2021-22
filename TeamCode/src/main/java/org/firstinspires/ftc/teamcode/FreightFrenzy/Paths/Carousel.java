@@ -189,6 +189,11 @@ public class Carousel {
         drivingSystem.driveSideways(110, -0.6 * mirror);
     }
 
+    public void newGoToCarousel(int mirror){
+        drivingSystem.driveStraight(35, 0.6);
+        drivingSystem.turn(90, 200);
+        drivingSystem.driveSideways(110, 0.6*mirror);
+    }
     /**
      * Goes to Carousel, and then to Storage Unit.
      */
