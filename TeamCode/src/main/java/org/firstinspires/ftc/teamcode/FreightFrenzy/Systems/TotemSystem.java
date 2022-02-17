@@ -17,21 +17,22 @@ public class TotemSystem {
         meter    = opMode.hardwareMap.get(Servo.class, "extend");
     }
 
-    public void setAzimuth(double pos) {
+    public void moveAzimuth(double pos) {
 //        if (pos < 0) {
 //            azimuth.setPosition(0);
 //        } else {
 //            azimuth.setPosition(pos);
 //        }
-        azimuth.setPosition(pos);
+        azimuth.setPosition(azimuth.getPosition() + pos);
+
     }
-    public void setAltitude(double pos) {
+    public void moveAltitude(double pos) {
 //        if (pos < 0) {
 //            altitude.setPosition(0);
 //        } else {
 //            altitude.setPosition(pos);
 //        }
-        altitude.setPosition(pos);
+        altitude.setPosition(altitude.getPosition() + pos);
     }
     public void extend(double pos) {
 //        if (pos < 0) {
@@ -39,6 +40,6 @@ public class TotemSystem {
 //        } else {
 //            meter.setPosition(pos);
 //        }
-        meter.setPosition(pos);
+        meter.setPosition(meter.getPosition() + pos);
     }
 }
