@@ -12,8 +12,8 @@ import java.util.List;
 
 public class DetectionSystem {
 
-    public static final double LEFT_TARGET_DISTANCE_CM  = 20;
-    public static final double RIGHT_TARGET_DISTANCE_CM = 20;
+    public static final double LEFT_TARGET_DISTANCE_CM  = 40;
+    public static final double RIGHT_TARGET_DISTANCE_CM = 40;
     public static final double ERROR_THRESHOLD_CM       = 15;
 
     private final LinearOpMode   opMode;
@@ -106,8 +106,8 @@ public class DetectionSystem {
     }
 
     public ArmSystem.Floors findTargetFloor2(int mirror) {
-        armSystem.moveArm(-300);
-        TimeUtils.sleep(1200);
+//        armSystem.moveArm(-300);
+//        TimeUtils.sleep(1200);
         double[] distanceLeft = new double[5];
         double[] distanceRight = new double[5];
         for (int i = 0; i < 5; i++) {

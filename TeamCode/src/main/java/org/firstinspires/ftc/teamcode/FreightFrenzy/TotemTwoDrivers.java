@@ -113,10 +113,10 @@ public class TotemTwoDrivers extends LinearOpMode {
             }
 
             if (ourGamepad2.dpad_right()) {
-                totemSystem.extend(totemSystem.meter.getPosition() + 0.1);
+                totemSystem.extend(0.1);
             }
             if (ourGamepad2.dpad_left()) {
-                totemSystem.extend(totemSystem.meter.getPosition() - 0.1);
+                totemSystem.extend(-0.1);
             }
 
             if (ourGamepad2.dpad_up()) {

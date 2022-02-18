@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 
 @TeleOp(name = "TotemPlaceFreightTest", group = "LinearOpMode")
-@Disabled
 public class TotemPlaceFreightTest extends LinearOpMode {
     Carousel        car;
     Crater          crater;
