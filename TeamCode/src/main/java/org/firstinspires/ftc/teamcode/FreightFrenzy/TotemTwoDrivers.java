@@ -63,8 +63,8 @@ public class TotemTwoDrivers extends LinearOpMode {
 
                 drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             }
-            totemSystem.setAzimuth(totemSystem.azimuth.getPosition() + gamepad2.right_stick_x / 10);
-            totemSystem.setAltitude(totemSystem.altitude.getPosition() - gamepad2.left_stick_y / 10);
+            totemSystem.moveAzimuth(totemSystem.azimuth.getPosition() + gamepad2.right_stick_x / 10);
+            totemSystem.moveAltitude(totemSystem.altitude.getPosition() - gamepad2.left_stick_y / 10);
 
             if (ourGamepad2.x()) {
                 armSystem.reload();

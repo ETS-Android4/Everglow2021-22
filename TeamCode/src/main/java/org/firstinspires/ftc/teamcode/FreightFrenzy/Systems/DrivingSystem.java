@@ -9,10 +9,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
@@ -88,6 +90,23 @@ public class DrivingSystem {
         resetDistance();
     }
 
+    public Acceleration getAcceleration(){
+        return imu.getLinearAcceleration();
+    }
+
+    public double getAccelerationMagnitude(){
+        Acceleration acceleration = getAcceleration();
+        return Math.sqrt(
+                Math.pow(acceleration.xAccel, 2) +
+                Math.pow(acceleration.yAccel, 2) +
+                Math.pow(acceleration.zAccel, 2)
+        );
+    }
+
+    public Orientation getFullAngle(){
+        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+    }
+
     /**
      * @return The current orientation of the robot around the Z-axis according to the IMU.
      */
@@ -101,7 +120,7 @@ public class DrivingSystem {
      * @return The difference between the robot's current angle and the target angle of the robot.
      * Goes from -180 to 180 degrees.
      */
-    private double getAngleDeviation() {
+    public double getAngleDeviation() {
         return normalizeAngle(getCurrentAngle() - targetAngle);
     }
 
