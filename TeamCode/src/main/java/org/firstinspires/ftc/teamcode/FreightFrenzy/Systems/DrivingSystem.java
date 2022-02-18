@@ -122,7 +122,7 @@ public class DrivingSystem {
      * Goes from -180 to 180 degrees.
      */
     public double getAngleDeviation() {
-        return normalizeAngle(getCurrentAngle() - targetAngle);
+        return normalizeAngle(targetAngle - getCurrentAngle());
     }
 
     /**
