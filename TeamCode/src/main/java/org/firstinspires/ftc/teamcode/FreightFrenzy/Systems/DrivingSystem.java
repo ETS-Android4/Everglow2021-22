@@ -263,7 +263,7 @@ public class DrivingSystem {
             double angleDeviation = getAngleDeviation();
             opMode.telemetry.addData("angleDeviation", angleDeviation);
             opMode.telemetry.update();
-            driveByJoystick(0, -power, angleDeviation / 40);
+            driveByJoystick(0, -power, angleDeviation / 120);
             averageMotors = Math.abs(
                     (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
@@ -298,7 +298,7 @@ public class DrivingSystem {
             double angleDeviation = getAngleDeviation();
             opMode.telemetry.addData("angleDeviation", angleDeviation);
             opMode.telemetry.update();
-            driveByJoystick(power, 0, angleDeviation / 40);
+            driveByJoystick(power, 0, angleDeviation / 120);
             averageMotors = Math.abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
@@ -326,7 +326,7 @@ public class DrivingSystem {
         double averageMotors = 0;
 
         while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
-            driveByJoystick(power, 0, getAngleDeviation() / 40);
+            driveByJoystick(power, 0, getAngleDeviation() / 120);
             averageMotors = Math.abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
@@ -345,7 +345,7 @@ public class DrivingSystem {
         resetDistance();
 
         while (sensorBackUp.getDistance(DistanceUnit.CM) > distance) {
-            driveByJoystick(0, -power, getAngleDeviation() / 40);
+            driveByJoystick(0, -power, getAngleDeviation() / 120);
         }
         stop();
     }
