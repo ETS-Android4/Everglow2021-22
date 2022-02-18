@@ -28,7 +28,9 @@ public class TestAcceleration extends LinearOpMode {
             telemetry.addData("acceleration", acceleration.toString());
             telemetry.addData("acceleration magnitude", drivingSystem.getAccelerationMagnitude());
             telemetry.addData("Current Angle: ", drivingSystem.getCurrentAngle());
+            telemetry.addData("Angle Deviation: ", drivingSystem.getAngleDeviation());
             telemetry.addData("Current Angle zxy: ", drivingSystem.getFullAngle());
+            telemetry.update();
         }
     }
 

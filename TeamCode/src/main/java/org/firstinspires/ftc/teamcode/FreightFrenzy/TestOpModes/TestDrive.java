@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 
-@Autonomous(name = "Test Drive", group = "Test")
+@TeleOp(name = "Test Drive", group = "Test")
 public class TestDrive extends LinearOpMode {
     Crater crater;
 
@@ -17,13 +18,24 @@ public class TestDrive extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            drivingSystem.driveStraight(50, 0.5);
-            drivingSystem.driveStraight(-50, 0.5);
-            drivingSystem.driveSideways(50, 0.5);
-            drivingSystem.driveSideways(-50, 0.5);
-            drivingSystem.turn(90, 150);
-            drivingSystem.turn(-90, 150);
-            stop();
+            if (gamepad2.a) {
+                drivingSystem.driveStraight(50, 0.5);
+            }
+            if (gamepad2.b) {
+                drivingSystem.driveStraight(50, -0.5);
+            }
+            if (gamepad2.x) {
+                drivingSystem.driveSideways(50, 0.5);
+            }
+            if (gamepad2.y) {
+                drivingSystem.driveSideways(50, -0.5);
+            }
+            if (gamepad2.dpad_up) {
+                drivingSystem.turn(90, 150);
+            }
+            if (gamepad2.dpad_down) {
+                drivingSystem.turn(-90, 150);
+            }
         }
     }
 }

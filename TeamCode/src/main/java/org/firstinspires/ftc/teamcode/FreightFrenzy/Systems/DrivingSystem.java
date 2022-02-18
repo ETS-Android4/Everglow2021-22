@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
+import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.relativeAngle;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -90,20 +91,20 @@ public class DrivingSystem {
         resetDistance();
     }
 
-    public Acceleration getAcceleration(){
+    public Acceleration getAcceleration() {
         return imu.getLinearAcceleration();
     }
 
-    public double getAccelerationMagnitude(){
+    public double getAccelerationMagnitude() {
         Acceleration acceleration = getAcceleration();
         return Math.sqrt(
                 Math.pow(acceleration.xAccel, 2) +
-                Math.pow(acceleration.yAccel, 2) +
-                Math.pow(acceleration.zAccel, 2)
+                        Math.pow(acceleration.yAccel, 2) +
+                        Math.pow(acceleration.zAccel, 2)
         );
     }
 
-    public Orientation getFullAngle(){
+    public Orientation getFullAngle() {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
     }
 
@@ -133,10 +134,10 @@ public class DrivingSystem {
      */
     public void driveByJoystick(double x1, double y1,
                                 double x2) {
-        double frontRightPower = -x1 + y1 - 0.7 * x2;
-        double frontLeftPower = -y1 - x1 - 0.7 * x2;
+        double frontRightPower = y1 - x1 - 0.7 * x2;
+        double frontLeftPower = -y1 + x1 - 0.7 * x2;
         double backRightPower = y1 + x1 - 0.7 * x2;
-        double backLeftPower = -y1 + x1 - 0.7 * x2;
+        double backLeftPower = -y1 - x1 - 0.7 * x2;
 
         // Normalization of the driving motors' power
         if (Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1
@@ -226,6 +227,8 @@ public class DrivingSystem {
         // Rotate until the desired angle is met within an error of 0.5 degrees
         while (Math.abs(theta) > 0.5) {
             theta = getAngleDeviation();
+            opMode.telemetry.addData("angleDeviation", theta);
+            opMode.telemetry.update();
             double direction = (theta / Math.abs(theta));
             driveByJoystick(0, 0,
                     Math.max(Math.abs(theta / speedDecrease), 0.07)
@@ -257,7 +260,10 @@ public class DrivingSystem {
         // Go until the desired distance is reached
         while (distance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
-            driveByJoystick(0, -power, getAngleDeviation() / 40);
+            double angleDeviation = getAngleDeviation();
+            opMode.telemetry.addData("angleDeviation", angleDeviation);
+            opMode.telemetry.update();
+            driveByJoystick(0, -power, angleDeviation / 40);
             averageMotors = Math.abs(
                     (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
@@ -289,7 +295,10 @@ public class DrivingSystem {
         // Go until the desired distance is reached
         while ((distance * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
             // x2 is used to fix the natural deviation of the robot from a straight line
-            driveByJoystick(power, 0, getAngleDeviation() / 40);
+            double angleDeviation = getAngleDeviation();
+            opMode.telemetry.addData("angleDeviation", angleDeviation);
+            opMode.telemetry.update();
+            driveByJoystick(power, 0, angleDeviation / 40);
             averageMotors = Math.abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
