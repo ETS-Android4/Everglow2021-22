@@ -15,6 +15,8 @@ public class TotemSystem {
         azimuth = opMode.hardwareMap.get(Servo.class, "azimuth");
         altitude = opMode.hardwareMap.get(Servo.class, "altitude");
         meter    = opMode.hardwareMap.get(Servo.class, "extend");
+        azimuth.setPosition(0.56);
+        altitude.setPosition(0.09);
     }
 
     public void moveAzimuth(double pos) {
