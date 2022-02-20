@@ -164,9 +164,13 @@ public class DrivingSystem {
 
     public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
 
-        driveByJoystick(Math.cos(getCurrentAngle() * Math.PI / 180) * x1 + Math.sin(getCurrentAngle() * Math.PI / 180) * y1,
-                - Math.sin(getCurrentAngle() * Math.PI / 180) * x1 + Math.cos(getCurrentAngle() * Math.PI / 180) * y1,
+        driveByJoystick(Math.sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + Math.sin(getCurrentAngle() * Math.PI / 180) * y1,
+                -Math.cos(getCurrentAngle() * Math.PI / 180) * y1 + Math.cos((90-getCurrentAngle()) * Math.PI / 180) * x1,
                 x2);
+        opMode.telemetry.addData("ang: ",getCurrentAngle());
+        opMode.telemetry.addData("straight", - Math.cos(getCurrentAngle() * Math.PI / 180) * y1 + Math.cos((90-getCurrentAngle()) * Math.PI / 180) * x1);
+        opMode.telemetry.addData("side", Math.sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + Math.sin(getCurrentAngle() * Math.PI / 180) * y1);
+        opMode.telemetry.update();
     }
 
     public void driveToPoint(double targetX, double targetY, double ang) {
@@ -289,9 +293,10 @@ public class DrivingSystem {
          * Basically means how far the robot has travelled.
          */
 
-        while (getAccelerationMagnitude() < 4) {
+        double angleDeviation = getAngleDeviation();
+        while (getAccelerationMagnitude() < 2) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
-            double angleDeviation = getAngleDeviation();
+            angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / 120);
         }
         stop();

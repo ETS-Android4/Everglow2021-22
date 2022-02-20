@@ -17,14 +17,22 @@ public class TestAcceleration extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     DrivingSystem   drivingSystem;
+    EverglowGamepad gamepad;
 
     @Override
     public void runOpMode() {
         drivingSystem = new DrivingSystem(this);
+        gamepad = new EverglowGamepad(gamepad1);
 
         waitForStart();
         while (opModeIsActive()) {
+            gamepad.update();
             drivingSystem.driveByJoystick(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+            if (gamepad.a()) {
+                telemetry.addLine("a");
+                drivingSystem.driveUntilBumping(0.5);
+            }
 
             Acceleration acceleration = drivingSystem.getAcceleration();
             telemetry.addData("acceleration", acceleration.toString());
