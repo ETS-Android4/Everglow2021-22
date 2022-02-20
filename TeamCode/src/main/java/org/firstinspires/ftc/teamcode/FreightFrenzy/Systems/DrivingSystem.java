@@ -278,6 +278,27 @@ public class DrivingSystem {
     }
 
     /**
+     * The method we use to travel a set distance forwards or backwards.
+     *
+     * @param power    The power of the driving motors (positive = forward).
+     */
+    public void driveUntilBumping(double power) {
+        resetDistance();
+        /*
+         * The average distance the motors have travelled (in ticks).
+         * Basically means how far the robot has travelled.
+         */
+
+        while (getAccelerationMagnitude() < 4) {
+            // x2 is used to fix the natural deviation of the robot from a straight line due to friction
+            double angleDeviation = getAngleDeviation();
+            driveByJoystick(0, -power, angleDeviation / 120);
+        }
+        stop();
+    }
+
+
+    /**
      * The method we use to travel a set distance rightwards or leftwards.
      *
      * @param distance The distance to be travelled.

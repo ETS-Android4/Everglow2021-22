@@ -127,6 +127,8 @@ public class GameTeleOp extends LinearOpMode {
             armSystem.slowArm();
 
             telemetry.addData("arm pos: ", armSystem.arm.getTargetPosition());
+            telemetry.addData("touch sensor: ", touch.isPressed());
+            telemetry.update();
         }
     }
 }

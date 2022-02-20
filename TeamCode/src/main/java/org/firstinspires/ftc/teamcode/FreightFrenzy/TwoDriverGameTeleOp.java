@@ -132,6 +132,9 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 armSystem.restOnLoad();
             }
             armSystem.restOnFirstFloor();
+
+            telemetry.addData("touch sensor: ", touch.isPressed());
+            telemetry.update();
         }
     }
 }
