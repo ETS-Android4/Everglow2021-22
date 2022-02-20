@@ -7,6 +7,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -72,6 +73,9 @@ public class DrivingSystem {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
         // Create IMU
         parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -134,10 +138,10 @@ public class DrivingSystem {
      */
     public void driveByJoystick(double x1, double y1,
                                 double x2) {
-        double frontRightPower = y1 - x1 - 0.7 * x2;
-        double frontLeftPower = -y1 + x1 - 0.7 * x2;
-        double backRightPower = y1 + x1 - 0.7 * x2;
-        double backLeftPower = -y1 - x1 - 0.7 * x2;
+        double frontRightPower = -y1 - x1 - 0.7 * x2;
+        double frontLeftPower = -y1 + x1 + 0.7 * x2;
+        double backRightPower = -y1 + x1 - 0.7 * x2;
+        double backLeftPower = -y1 - x1 + 0.7 * x2;
 
         // Normalization of the driving motors' power
         if (Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1
@@ -161,7 +165,7 @@ public class DrivingSystem {
     public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
 
         driveByJoystick(Math.cos(getCurrentAngle() * Math.PI / 180) * x1 + Math.sin(getCurrentAngle() * Math.PI / 180) * y1,
-                Math.sin(getCurrentAngle() * Math.PI / 180) * x1 - Math.cos(getCurrentAngle() * Math.PI / 180) * y1,
+                - Math.sin(getCurrentAngle() * Math.PI / 180) * x1 + Math.cos(getCurrentAngle() * Math.PI / 180) * y1,
                 x2);
     }
 

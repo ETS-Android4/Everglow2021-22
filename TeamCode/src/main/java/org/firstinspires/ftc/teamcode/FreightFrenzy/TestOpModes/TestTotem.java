@@ -10,18 +10,14 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 public class TestTotem  extends LinearOpMode {
 
     private TotemSystem totemSystem;
-    private EverglowGamepad gamepad;
 
     @Override
     public void runOpMode() {
         totemSystem = new TotemSystem(this);
-        gamepad = new EverglowGamepad(gamepad1);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            gamepad.update();
-
             totemSystem.moveAzimuth(gamepad1.right_stick_x / 3000);
             totemSystem.moveAltitude(-gamepad1.left_stick_y / 3000);
 

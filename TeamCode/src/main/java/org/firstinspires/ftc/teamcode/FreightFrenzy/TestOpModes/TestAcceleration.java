@@ -24,6 +24,8 @@ public class TestAcceleration extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
+            drivingSystem.driveByJoystick(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
             Acceleration acceleration = drivingSystem.getAcceleration();
             telemetry.addData("acceleration", acceleration.toString());
             telemetry.addData("acceleration magnitude", drivingSystem.getAccelerationMagnitude());

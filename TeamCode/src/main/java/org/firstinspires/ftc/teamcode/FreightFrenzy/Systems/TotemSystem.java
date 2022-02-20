@@ -11,8 +11,8 @@ public class TotemSystem {
     public Servo   altitude;
     public CRServo meter;
 
-    private final double AZIMUTH_ZERO  = 0.56;
-    private final double ALTITUDE_ZERO = 0.09;
+    private final double AZIMUTH_ZERO  = 0.0;
+    private final double ALTITUDE_ZERO = 0.5;
 
     public TotemSystem(LinearOpMode opMode) {
         this.opMode = opMode;
