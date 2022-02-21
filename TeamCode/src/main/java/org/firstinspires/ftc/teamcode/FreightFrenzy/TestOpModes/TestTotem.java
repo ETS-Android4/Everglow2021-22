@@ -18,8 +18,8 @@ public class TestTotem  extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            totemSystem.moveAzimuth(gamepad1.right_stick_x / 3000);
-            totemSystem.moveAltitude(-gamepad1.left_stick_y / 3000);
+            totemSystem.moveAzimuth(gamepad1.right_stick_x / 5);
+            totemSystem.moveAltitude(-gamepad1.left_stick_y / 5);
 
             if (gamepad1.dpad_right) {
                 totemSystem.extend(-0.5);

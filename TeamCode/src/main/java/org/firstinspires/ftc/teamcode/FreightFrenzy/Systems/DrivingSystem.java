@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DrivingSystem {
+    private static final int ROTATE_SPEED_DECREASE = 40;
     private final DcMotor frontRight;
     private final DcMotor frontLeft;
     private final DcMotor backRight;
@@ -90,6 +91,22 @@ public class DrivingSystem {
         // and named "imu".
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+
+        byte AXIS_MAP_CONFIG_BYTE = 0x6; //This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
+        byte AXIS_MAP_SIGN_BYTE = 0x1; //This is what to write to the AXIS_MAP_SIGN register to negate the z axis
+
+        // copied from https://ftcforum.firstinspires.org/forum/ftc-technology/53812-mounting-the-revhub-vertically
+        //Need to be in CONFIG mode to write to registers
+        imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
+        TimeUtils.sleep(100); //Changing modes requires a delay before doing anything else
+        //Write to the AXIS_MAP_CONFIG register
+        imu.write8(BNO055IMU.Register.AXIS_MAP_CONFIG,AXIS_MAP_CONFIG_BYTE & 0x0F);
+        //Write to the AXIS_MAP_SIGN register
+        imu.write8(BNO055IMU.Register.AXIS_MAP_SIGN,AXIS_MAP_SIGN_BYTE & 0x0F);
+        //Need to change back into the IMU mode to use the gyro
+        imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.IMU.bVal & 0x0F);
+        TimeUtils.sleep(100); //Changing modes again requires a delay
+
 
         stop();
         resetDistance();
@@ -247,12 +264,19 @@ public class DrivingSystem {
     }
 
     /**
+     * Same as drive straight, but has a default stopAfter of true. robot will stop after driving.
+     */
+    public void driveStraight(double distance, double power) {
+        driveStraight(distance, power, true);
+    }
+
+    /**
      * The method we use to travel a set distance forwards or backwards.
      *
      * @param distance The distance to be travelled.
      * @param power    The power of the driving motors (positive = forward).
      */
-    public void driveStraight(double distance, double power) {
+    public void driveStraight(double distance, double power, boolean stopAfter) {
         // The method receives a positive distance.
         if (distance < 0) {
             throw new IllegalArgumentException("Method driveStraight was given a negative distance: " + distance);
@@ -269,16 +293,21 @@ public class DrivingSystem {
         while (distance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
             double angleDeviation = getAngleDeviation();
-            opMode.telemetry.addData("angleDeviation", angleDeviation);
-            opMode.telemetry.update();
-            driveByJoystick(0, -power, angleDeviation / 120);
+            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
             averageMotors = Math.abs(
-                    (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
-                            - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
+                    (this.frontRight.getCurrentPosition() + this.frontLeft.getCurrentPosition()
+                            + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
             );
+            opMode.telemetry.addData("currentDistance", averageMotors/distance/COUNTS_PER_MOTOR_REV*(2.0 * Math.PI * WHEEL_RADIUS_CM));
+            opMode.telemetry.addData("averageMotors", averageMotors);
+            opMode.telemetry.addData("targetAvgMotors", averageMotors);
+            opMode.telemetry.update();
+
         }
-        stop();
+        if(stopAfter) {
+            stop();
+        }
     }
 
     /**
@@ -288,16 +317,11 @@ public class DrivingSystem {
      */
     public void driveUntilBumping(double power) {
         resetDistance();
-        /*
-         * The average distance the motors have travelled (in ticks).
-         * Basically means how far the robot has travelled.
-         */
-
         double angleDeviation = getAngleDeviation();
         while (getAccelerationMagnitude() < 2) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
             angleDeviation = getAngleDeviation();
-            driveByJoystick(0, -power, angleDeviation / 120);
+            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
         }
         stop();
     }
@@ -328,10 +352,10 @@ public class DrivingSystem {
             double angleDeviation = getAngleDeviation();
             opMode.telemetry.addData("angleDeviation", angleDeviation);
             opMode.telemetry.update();
-            driveByJoystick(power, 0, angleDeviation / 120);
+            driveByJoystick(power, 0, angleDeviation / ROTATE_SPEED_DECREASE);
             averageMotors = Math.abs(
-                    (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
-                            + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
+                    (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
+                            + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()
                     ) / 4.0
             );
         }
@@ -356,7 +380,7 @@ public class DrivingSystem {
         double averageMotors = 0;
 
         while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
-            driveByJoystick(power, 0, getAngleDeviation() / 120);
+            driveByJoystick(power, 0, getAngleDeviation() / ROTATE_SPEED_DECREASE);
             averageMotors = Math.abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
@@ -375,7 +399,7 @@ public class DrivingSystem {
         resetDistance();
 
         while (sensorBackUp.getDistance(DistanceUnit.CM) > distance) {
-            driveByJoystick(0, -power, getAngleDeviation() / 120);
+            driveByJoystick(0, -power, getAngleDeviation() / ROTATE_SPEED_DECREASE);
         }
         stop();
     }
