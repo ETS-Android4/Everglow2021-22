@@ -107,29 +107,29 @@ public class Carousel {
 
     public void placeFreightAndCollectTotem(int mirror) {
         drivingSystem.resetDistance();
-        totemSystem.setAltitude(0.073);
+        totemSystem.setAltitude(0.8);
         floor = detectionSystem.findTargetFloor2(mirror);
         this.opMode.telemetry.addData("floor: ", floor);
         this.opMode.telemetry.update();
 
         switch (floor) {
             case FIRST:
-                totemSystem.setAzimuth(0.52);
+                totemSystem.setAzimuth(0.41);
                 totemSystem.extend(-0.5);
                 TimeUtils.sleep(1400);
                 break;
             case SECOND:
-                totemSystem.setAzimuth(0.605);
+                totemSystem.setAzimuth(0.49);
                 totemSystem.extend(-0.5);
                 TimeUtils.sleep(1400);
                 break;
             case THIRD:
-                totemSystem.setAzimuth(0.687);
+                totemSystem.setAzimuth(0.58);
                 totemSystem.extend(-0.5);
                 TimeUtils.sleep(1600);
         }
         totemSystem.stop();
-        totemSystem.setAltitude(0.3);
+        totemSystem.setAltitude(1);
         totemSystem.extend(0.5);
         switch (floor) {
             case FIRST:
@@ -141,11 +141,8 @@ public class Carousel {
         }
         totemSystem.stop();
 
-        drivingSystem.driveStraight(65, -0.6);
-        drivingSystem.turn(-90 * mirror, 200);
         armSystem.autonomousMoveArm(floor);
-        TimeUtils.sleep(500);
-        drivingSystem.driveStraight(20, 0.6);
+        drivingSystem.driveToPoint(20, 65, 20);
         armSystem.spit();
         TimeUtils.sleep(500);
         armSystem.stop();
