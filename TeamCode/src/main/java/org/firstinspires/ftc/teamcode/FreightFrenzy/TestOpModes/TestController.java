@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
@@ -11,35 +12,51 @@ import java.util.List;
 
 @TeleOp(name = "Test Controller", group = "Test")
 public class TestController extends LinearOpMode {
-    EverglowGamepad everglowGamepad1 = new EverglowGamepad(gamepad1);
-    EverglowGamepad everglowGamepad2 = new EverglowGamepad(gamepad2);
-
     @Override
     public void runOpMode() {
+        EverglowGamepad everglowGamepad1 = new EverglowGamepad(gamepad1);
+        EverglowGamepad everglowGamepad2 = new EverglowGamepad(gamepad2);
+
+        TouchSensor touch = hardwareMap.get(TouchSensor.class, "touch");
+
+
         waitForStart();
-        boolean toggleX = false;
-        boolean toggleUp = false;
-        boolean toggleRt = false;
-        boolean toggleLb = false;
+        int xTimesPressed = 0;
+        int upTimesPressed = 0;
+        int rtTimesPressed = 0;
+        int lbTimesPressed = 0;
+        int touchTimesPressed = 0;
+        boolean prevTouchPressed = false;
         while (opModeIsActive()) {
+
+            boolean touchPressed = touch.isPressed();
+            boolean touchPressedNow = !prevTouchPressed && touchPressed;
+            prevTouchPressed = touchPressed;
             everglowGamepad1.update();
             everglowGamepad2.update();
             if (everglowGamepad2.x()){
-                toggleX = !toggleX;
+                xTimesPressed++;
             }
-            if (everglowGamepad2.dpad_left()){
-                toggleUp = !toggleUp;
+            if (everglowGamepad2.dpad_up()){
+                upTimesPressed++;
             }
             if (everglowGamepad2.rt()){
-                toggleRt = !toggleRt;
+                rtTimesPressed++;
             }
             if (everglowGamepad2.lb()){
-                toggleLb = !toggleLb;
+                lbTimesPressed++;
             }
-            telemetry.addData("toggleX: ", toggleX);
-            telemetry.addData("toggleUp: ", toggleUp);
-            telemetry.addData("toggleRt: ", toggleRt);
-            telemetry.addData("toggleLb: ", toggleLb);
+            if (touchPressedNow){
+                touchTimesPressed++;
+            }
+
+            telemetry.addLine("Counting button pressed for gamepad 2");
+            telemetry.addData("xTimesPressed: ", xTimesPressed);
+            telemetry.addData("upTimesPressed: ", upTimesPressed);
+            telemetry.addData("rtTimesPressed: ", rtTimesPressed);
+            telemetry.addData("lbTimesPressed: ", lbTimesPressed);
+            telemetry.addData("Touch Sensor down: ", touchPressed);
+            telemetry.addData("Touch sensor num pressed: ", touchTimesPressed);
             telemetry.addLine("Gamepad1:");
             printGamepadInfo(gamepad1);
             telemetry.addLine("Gamepad2:");

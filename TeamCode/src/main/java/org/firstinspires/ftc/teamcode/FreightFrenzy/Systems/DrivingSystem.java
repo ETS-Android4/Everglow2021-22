@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
-import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.relativeAngle;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+import static java.lang.Math.max;
+import static java.lang.Math.sin;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -26,6 +30,7 @@ import java.util.List;
 
 public class DrivingSystem {
     private static final int ROTATE_SPEED_DECREASE = 40;
+    private static final int ACCELERATION_BUMPING_THRESHOLD = 5;
     private final DcMotor frontRight;
     private final DcMotor frontLeft;
     private final DcMotor backRight;
@@ -92,10 +97,9 @@ public class DrivingSystem {
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
+        // copied from https://ftcforum.firstinspires.org/forum/ftc-technology/53812-mounting-the-revhub-vertically
         byte AXIS_MAP_CONFIG_BYTE = 0x6; //This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
         byte AXIS_MAP_SIGN_BYTE = 0x1; //This is what to write to the AXIS_MAP_SIGN register to negate the z axis
-
-        // copied from https://ftcforum.firstinspires.org/forum/ftc-technology/53812-mounting-the-revhub-vertically
         //Need to be in CONFIG mode to write to registers
         imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
         TimeUtils.sleep(100); //Changing modes requires a delay before doing anything else
@@ -143,7 +147,7 @@ public class DrivingSystem {
      * Goes from -180 to 180 degrees.
      */
     public double getAngleDeviation() {
-        return normalizeAngle(targetAngle - getCurrentAngle());
+        return normalizeAngle(getCurrentAngle() - targetAngle);
     }
 
     /**
@@ -161,11 +165,11 @@ public class DrivingSystem {
         double backLeftPower = -y1 - x1 + 0.7 * x2;
 
         // Normalization of the driving motors' power
-        if (Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1
-                || Math.abs(backRightPower) > 1 || Math.abs(backRightPower) > 1) {
-            double norm = Math.max(
-                    Math.max(Math.abs(frontRightPower), Math.abs(frontLeftPower)),
-                    Math.max(Math.abs(backRightPower), Math.abs(backLeftPower))
+        if (abs(frontRightPower) > 1 || abs(frontLeftPower) > 1
+                || abs(backRightPower) > 1 || abs(backRightPower) > 1) {
+            double norm = max(
+                    max(abs(frontRightPower), abs(frontLeftPower)),
+                    max(abs(backRightPower), abs(backLeftPower))
             );
             frontRightPower /= norm;
             frontLeftPower /= norm;
@@ -181,61 +185,72 @@ public class DrivingSystem {
 
     public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
 
-        driveByJoystick(Math.sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + Math.sin(getCurrentAngle() * Math.PI / 180) * y1,
-                -Math.cos(getCurrentAngle() * Math.PI / 180) * y1 + Math.cos((90-getCurrentAngle()) * Math.PI / 180) * x1,
+        driveByJoystick(sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + sin(getCurrentAngle() * Math.PI / 180) * y1,
+                -cos(getCurrentAngle() * Math.PI / 180) * y1 + cos((90-getCurrentAngle()) * Math.PI / 180) * x1,
                 x2);
-        opMode.telemetry.addData("ang: ",getCurrentAngle());
-        opMode.telemetry.addData("straight", - Math.cos(getCurrentAngle() * Math.PI / 180) * y1 + Math.cos((90-getCurrentAngle()) * Math.PI / 180) * x1);
-        opMode.telemetry.addData("side", Math.sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + Math.sin(getCurrentAngle() * Math.PI / 180) * y1);
-        opMode.telemetry.update();
     }
 
     public void driveToPoint(double targetX, double targetY, double ang) {
         resetDistance();
-        double SPEED = 0.7;
+        double SPEED = 0.5;
 
         double currentX = 0;
         double currentY = 0;
 
         this.targetAngle = ang;
-        double powerX = targetX - currentX;
-        double powerY = targetY - currentY;
-        if (Math.abs(powerX) > 1 || Math.abs(powerY) > 1) {
-            double devider = Math.max(Math.abs(powerX), Math.abs(powerY));
-            powerX = powerX * SPEED / devider;
-            powerY = powerY * SPEED / devider;
-        }
 
-        double lastEncoder = 0;
+        double lastDistanceTravelled = 0;
+        while (true) {
+            double angleDeviation = getAngleDeviation();
+            double xDiff = targetX - currentX;
+            double yDiff = targetY - currentY;
+            boolean xPassed = abs(currentX) >= abs(targetX);
+            boolean yPassed = abs(currentY) >= abs(targetY);
 
-        while (Math.abs(powerX) > 0.05 || Math.abs(powerY) > 0.05 || getAngleDeviation() > 0.1) {
-            driveByJoystickWithRelationToAxis(powerX, powerY, getAngleDeviation() / 100);
-
-            double currEncoder = Math.abs(backLeft.getCurrentPosition())
-                    + Math.abs(backRight.getCurrentPosition())
-                    + Math.abs(frontLeft.getCurrentPosition())
-                    + Math.abs(frontRight.getCurrentPosition());
-
-            currentX += Math.sin(getCurrentAngle()) * (currEncoder - lastEncoder) * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) * powerX / Math.abs(powerX);
-            currentY += Math.cos(getCurrentAngle()) * (currEncoder - lastEncoder) * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) * powerY / Math.abs(powerY);
-            powerX = targetX - currentX;
-            powerY = targetY - currentY;
-
-            if (Math.abs(powerX) > 1 || Math.abs(powerY) > 1) {
-                double devider = Math.max(powerX, powerY);
-                powerX = powerX * SPEED / devider;
-                powerY = powerY * SPEED / devider;
+            double xPower, yPower;
+            double rotatePower = angleDeviation/40;
+            double maxDiff = max(xDiff, yDiff);
+            if (xPassed) {
+                xPower = 0;
+            } else {
+                xPower = xDiff/maxDiff * SPEED;
             }
 
-            lastEncoder = currEncoder;
+            if (yPassed) {
+                yPower = 0;
+            } else {
+                yPower = yDiff/maxDiff * SPEED;
+            }
+
+
+            if (yPassed && xPassed && getAngleDeviation() < 1){
+                break;
+            }
+
+            driveByJoystickWithRelationToAxis(xPower, yPower, rotatePower);
+
+            double currEncoder = (abs(backLeft.getCurrentPosition())
+                    + abs(backRight.getCurrentPosition())
+                    + abs(frontLeft.getCurrentPosition())
+                    + abs(frontRight.getCurrentPosition()))/4.;
+            double currentDistanceTraveled = currEncoder / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM);
+            double distanceTraveledNow = currentDistanceTraveled - lastDistanceTravelled;
+            lastDistanceTravelled = currentDistanceTraveled;
+            currentX += sin(getCurrentAngle()) *  distanceTraveledNow;
+            currentY += cos(getCurrentAngle()) * distanceTraveledNow;
 
             opMode.telemetry.addData("currentX: ", currentX);
             opMode.telemetry.addData("currentY: ", currentY);
-            opMode.telemetry.addData("powerX: ", powerX);
-            opMode.telemetry.addData("powerY: ", powerY);
-            opMode.telemetry.addData("currEncoder: ", currEncoder);
+            opMode.telemetry.addData("xDiff: ", xDiff);
+            opMode.telemetry.addData("yDiff: ", yDiff);
+            opMode.telemetry.addData("powerX: ", xPower);
+            opMode.telemetry.addData("powerY: ", yPower);
+            opMode.telemetry.addData("xPassed: ", xPassed);
+            opMode.telemetry.addData("yPassed: ", yPassed);
+            opMode.telemetry.addData("currentDistance: ", currentDistanceTraveled);
             opMode.telemetry.update();
         }
+        stop();
     }
 
     /**
@@ -250,13 +265,13 @@ public class DrivingSystem {
         double theta = getAngleDeviation();
 
         // Rotate until the desired angle is met within an error of 0.5 degrees
-        while (Math.abs(theta) > 0.5) {
+        while (abs(theta) > 0.5) {
             theta = getAngleDeviation();
             opMode.telemetry.addData("angleDeviation", theta);
             opMode.telemetry.update();
-            double direction = (theta / Math.abs(theta));
+            double direction = (theta / abs(theta));
             driveByJoystick(0, 0,
-                    Math.max(Math.abs(theta / speedDecrease), 0.07)
+                    max(abs(theta / speedDecrease), 0.2)
                             * direction
             );
         }
@@ -294,7 +309,7 @@ public class DrivingSystem {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
             double angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
-            averageMotors = Math.abs(
+            averageMotors = abs(
                     (this.frontRight.getCurrentPosition() + this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
@@ -317,8 +332,8 @@ public class DrivingSystem {
      */
     public void driveUntilBumping(double power) {
         resetDistance();
-        double angleDeviation = getAngleDeviation();
-        while (getAccelerationMagnitude() < 2) {
+        double angleDeviation;
+        while (getAccelerationMagnitude() < ACCELERATION_BUMPING_THRESHOLD) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
             angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
@@ -353,7 +368,7 @@ public class DrivingSystem {
             opMode.telemetry.addData("angleDeviation", angleDeviation);
             opMode.telemetry.update();
             driveByJoystick(power, 0, angleDeviation / ROTATE_SPEED_DECREASE);
-            averageMotors = Math.abs(
+            averageMotors = abs(
                     (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() - this.backRight.getCurrentPosition()
                     ) / 4.0
@@ -379,9 +394,9 @@ public class DrivingSystem {
          */
         double averageMotors = 0;
 
-        while ((Math.abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
+        while ((abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
             driveByJoystick(power, 0, getAngleDeviation() / ROTATE_SPEED_DECREASE);
-            averageMotors = Math.abs(
+            averageMotors = abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
@@ -433,14 +448,14 @@ public class DrivingSystem {
         // Run until the stop condition is met
         while (!stopCondition.shouldStop()) {
             driveByJoystick(power, 0, getAngleDeviation() / 40);
-            averageMotors = Math.abs(
+            averageMotors = abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
             );
         }
         stop();
-        return Math.abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
+        return abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
     }
 
     /**
@@ -461,14 +476,14 @@ public class DrivingSystem {
         // Run until the stop condition is met
         while (!stopCondition.shouldStop()) {
             driveByJoystick(0, -power, getAngleDeviation() / 40);
-            averageMotors = Math.abs(
+            averageMotors = abs(
                     (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
                             - this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
             );
         }
         stop();
-        return Math.abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
+        return abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
     }
 
     /**

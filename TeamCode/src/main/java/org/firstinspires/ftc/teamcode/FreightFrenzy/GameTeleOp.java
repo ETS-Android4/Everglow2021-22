@@ -32,7 +32,7 @@ public class GameTeleOp extends LinearOpMode {
         ourGamepad1 = new EverglowGamepad(gamepad1);
         touch = hardwareMap.get(TouchSensor.class, "touch");
 
-        boolean prevTouchSensorPressed = false;
+        boolean prevTouchPressed = false;
         boolean toggleReload = true;
 
         waitForStart();
@@ -115,14 +115,17 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             // rumble controller if touchSensor was just pressed
-            if (touch.isPressed()) {
-                if (!prevTouchSensorPressed) {
-                    gamepad1.rumble(1000);
-                }
-                prevTouchSensorPressed = true;
-            } else {
-                prevTouchSensorPressed = false;
+            boolean touchPressed = touch.isPressed();
+            if (touchPressed && armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING){
+                armSystem.stop();
             }
+            if (touchPressed && !prevTouchPressed){
+                gamepad1.rumble(1000);
+            }
+            prevTouchPressed = touchPressed;
+
+
+
             if (!passingObstacle) {
                 armSystem.restOnLoad();
             }

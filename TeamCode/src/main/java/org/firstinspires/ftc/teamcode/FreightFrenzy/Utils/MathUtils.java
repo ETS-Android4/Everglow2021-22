@@ -77,4 +77,5 @@ public class MathUtils {
         }
         return sum / values.size();
     }
+
 }

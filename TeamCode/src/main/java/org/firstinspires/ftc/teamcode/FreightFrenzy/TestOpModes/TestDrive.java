@@ -19,16 +19,16 @@ public class TestDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad2.a) {
-                drivingSystem.driveStraight(50, 0.5);
+                drivingSystem.driveStraight(75, 0.5);
             }
             if (gamepad2.b) {
-                drivingSystem.driveStraight(50, -0.5);
+                drivingSystem.driveStraight(75, -0.5);
             }
             if (gamepad2.x) {
-                drivingSystem.driveSideways(50, 0.5);
+                drivingSystem.driveSideways(75, 0.5);
             }
             if (gamepad2.y) {
-                drivingSystem.driveSideways(50, -0.5);
+                drivingSystem.driveSideways(75, -0.5);
             }
             if (gamepad2.dpad_up) {
                 drivingSystem.turn(90, 150);
