@@ -18,7 +18,7 @@ public class ArmSystem {
      * Enum of the different floors the arm should be able reach: FIRST, SECOND, THIRD, TOTEM.
      */
     public enum Floors {
-        FIRST, SECOND, THIRD, TOTEM
+        FIRST, SECOND, THIRD, TOTEM, OBSTACLE
     }
 
     public        DcMotor      flyWheels;
@@ -27,6 +27,7 @@ public class ArmSystem {
     private       boolean      firstFloor     = false;
     private       Integer      targetPosition = null;
     private final LinearOpMode opMode;
+    public int changeHeight =0;
 
     private CollectState collectState = CollectState.STOPPED;
 
@@ -98,7 +99,7 @@ public class ArmSystem {
         firstFloor          = false;
         this.targetPosition = null;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm.setTargetPosition(place);
+        arm.setTargetPosition(place + changeHeight);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(0.5);
     }
@@ -185,6 +186,9 @@ public class ArmSystem {
                 break;
             case TOTEM:
                 moveArm(-1900);
+                break;
+            case OBSTACLE:
+                moveArm(-250);
                 break;
         }
     }

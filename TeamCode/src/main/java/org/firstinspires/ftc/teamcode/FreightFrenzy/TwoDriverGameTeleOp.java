@@ -35,6 +35,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
         touch = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchSensorPressed = false;
+        boolean toggleReload = true;
 
 
         waitForStart();
@@ -44,7 +45,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             ourGamepad2.update();
             {
                 double left_stick_x = gamepad1.left_stick_x;
-                double left_stick_y = -gamepad1.left_stick_y;
+                double left_stick_y = gamepad1.left_stick_y;
                 double right_stick_x = gamepad1.right_stick_x;
                 if (gamepad1.right_stick_button) {
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
@@ -62,7 +63,14 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.x()) {
-                armSystem.reload();
+                if(!toggleReload){
+                    armSystem.reload();
+                    toggleReload = true;
+                }
+                else{
+                    armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
+                    toggleReload = false;
+                }
                 passingObstacle = false;
             }
             if (ourGamepad2.a()) {
@@ -90,10 +98,10 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.rb()) {
-                armSystem.moveArm(armSystem.arm.getTargetPosition() + 50);
+                armSystem.moveArm(armSystem.arm.getCurrentPosition() + 50);
             }
             if (ourGamepad2.lb()) {
-                armSystem.moveArm(armSystem.arm.getTargetPosition() - 50);
+                armSystem.moveArm(armSystem.arm.getCurrentPosition() - 50);
             }
 
             if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && touch.isPressed()) {
@@ -131,6 +139,11 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             if (!passingObstacle) {
                 armSystem.restOnLoad();
             }
+
+            if (gamepad2.options) {
+                drivingSystem.CS(armSystem);
+            }
+
             armSystem.restOnFirstFloor();
 
             telemetry.addData("touch sensor: ", touch.isPressed());

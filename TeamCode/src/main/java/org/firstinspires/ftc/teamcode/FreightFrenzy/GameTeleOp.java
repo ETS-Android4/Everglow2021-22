@@ -33,6 +33,7 @@ public class GameTeleOp extends LinearOpMode {
         touch = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchSensorPressed = false;
+        boolean toggleReload = true;
 
         waitForStart();
 
@@ -54,7 +55,14 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.x()) {
-                armSystem.reload();
+                if(!toggleReload){
+                    armSystem.reload();
+                    toggleReload = true;
+                }
+                else{
+                    armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
+                    toggleReload = false;
+                }
                 passingObstacle = false;
             }
             if (ourGamepad1.a()) {
