@@ -2,15 +2,10 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "Test Acceleration", group = "Test")
 public class TestAcceleration extends LinearOpMode {
@@ -32,7 +27,7 @@ public class TestAcceleration extends LinearOpMode {
             if (gamepad.a()) {
                 telemetry.addLine("a");
                 drivingSystem.driveStraight(50, 0.5, false);
-                drivingSystem.driveUntilBumping(0.5);
+                drivingSystem.driveUntilBumping(0, 0.5);
             }
 
             Acceleration acceleration = drivingSystem.getAcceleration();

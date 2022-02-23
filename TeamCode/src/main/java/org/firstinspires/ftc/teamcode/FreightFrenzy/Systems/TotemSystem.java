@@ -5,15 +5,14 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
+
 public class TotemSystem {
     private final LinearOpMode opMode;
-    public final double AZIMUTH_ZERO  = 0.45;
-    public final double ALTITUDE_ZERO = 0.74;
-    public final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.8;
-    public final double ALTITUDE_MAX = 0.8;
-    private final double TOTEM_DELAY_TIME_MS = 250;
-    private final ElapsedTime lastAzimuthTime  = new ElapsedTime();
-    private final ElapsedTime lastAltitudeTime = new ElapsedTime();
+    public static final double AZIMUTH_ZERO  = 0.45;
+    public static final double ALTITUDE_ZERO = 0.74;
+    public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.8;
+    public static final double ALTITUDE_MAX = 0.8;
     public Servo   azimuth;
     public Servo   altitude;
     public CRServo meter;
@@ -33,20 +32,10 @@ public class TotemSystem {
      * @param pos the number of complete movements from one side to another that the robot should make in 1 second.
      */
     public void moveAzimuth(double pos) {
-//        if (lastAzimuthTime.milliseconds() < TOTEM_DELAY_TIME_MS || Math.abs(pos) < 0.05) {
-//            return;
-//        }
-//        lastAzimuthTime.reset();
-//        azimuth.setPosition(azimuth.getPosition() + pos * TOTEM_DELAY_TIME_MS / 1000.);
         azimuth.setPosition(azimuth.getPosition() + pos);
     }
 
     public void moveAltitude(double pos) {
-//        if (lastAltitudeTime.milliseconds() < TOTEM_DELAY_TIME_MS || Math.abs(pos) < 0.05) {
-//            return;
-//        }
-//        lastAltitudeTime.reset();
-//        altitude.setPosition(altitude.getPosition() + pos * TOTEM_DELAY_TIME_MS / 1000.);
         altitude.setPosition(altitude.getPosition() + pos);
     }
 
@@ -64,5 +53,41 @@ public class TotemSystem {
 
     public void stop() {
         meter.setPower(0);
+    }
+
+    public void collectTotem(ArmSystem.Floors floor){
+        moveAltitude(0.01);
+        switch (floor) {
+            case FIRST:
+                moveAzimuth(-0.04);
+                extend(0.5);
+                TimeUtils.sleep(2000);
+                break;
+            case SECOND:
+                moveAzimuth(0.05);
+                extend(0.5);
+                TimeUtils.sleep(2000);
+                break;
+            case THIRD:
+                moveAzimuth(0.145);
+                extend(0.5);
+                TimeUtils.sleep(2500);
+        }
+        stop();
+        setAltitude(ALTITUDE_MAX);
+        setAzimuth(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+        moveAltitude(0.1);
+        extend(-0.5);
+        switch (floor) {
+            case FIRST:
+            case SECOND:
+                TimeUtils.sleep(2000);
+                break;
+            case THIRD:
+                TimeUtils.sleep(2500);
+        }
+        stop();
+        setAltitude(ALTITUDE_ZERO);
+        setAzimuth(AZIMUTH_ZERO);
     }
 }

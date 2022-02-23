@@ -64,6 +64,20 @@ public class EverglowGamepad {
         return currentY && !previousY;
     }
 
+    // aliases with a ps4 controller
+    public boolean cross(){
+        return a();
+    }
+    public boolean circle(){
+        return b();
+    }
+    public boolean square(){
+        return x();
+    }
+    public boolean triangle(){
+        return y();
+    }
+
     public boolean dpad_left(){
         return currentLeft && !previousLeft;
     }

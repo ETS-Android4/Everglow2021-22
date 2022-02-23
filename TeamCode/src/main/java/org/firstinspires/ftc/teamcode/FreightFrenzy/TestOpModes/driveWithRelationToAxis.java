@@ -25,9 +25,6 @@ public class driveWithRelationToAxis extends LinearOpMode {
         armSystem = new ArmSystem(this);
         duckSystem = new DuckSystem(this);
         ourGamepad1 = new EverglowGamepad(gamepad1);
-        touch = hardwareMap.get(TouchSensor.class, "touch");
-
-        boolean prevTouchSensorPressed = false;
 
         waitForStart();
 
@@ -35,17 +32,8 @@ public class driveWithRelationToAxis extends LinearOpMode {
             ourGamepad1.update();
             drivingSystem.driveByJoystickWithRelationToAxis(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-            if(ourGamepad1.rt()){
-                drivingSystem.driveToPoint(0,50,0);
-            }
-            if(ourGamepad1.rb()){
-                drivingSystem.driveToPoint(0, 50, 180);
-            }
-            if(ourGamepad1.lt()){
-                drivingSystem.driveToPoint(60,30,0);
-            }
-            if(ourGamepad1.lb()){
-                drivingSystem.driveToPoint(60,30,90);
+            if(ourGamepad1.cross()){
+                drivingSystem.driveToPoint(-25,-75,90, 0.7, 1);
             }
         }
     }

@@ -129,8 +129,8 @@ public class Carousel {
                 TimeUtils.sleep(2500);
         }
         totemSystem.stop();
-        totemSystem.setAltitude(totemSystem.ALTITUDE_MAX);
-        totemSystem.setAzimuth(totemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+        totemSystem.setAltitude(TotemSystem.ALTITUDE_MAX);
+        totemSystem.setAzimuth(TotemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
         totemSystem.moveAltitude(0.1);
         totemSystem.extend(-0.5);
         switch (floor) {
@@ -142,8 +142,8 @@ public class Carousel {
                 TimeUtils.sleep(2500);
         }
         totemSystem.stop();
-        totemSystem.setAltitude(totemSystem.ALTITUDE_ZERO);
-        totemSystem.setAzimuth(totemSystem.AZIMUTH_ZERO);
+        totemSystem.setAltitude(TotemSystem.ALTITUDE_ZERO);
+        totemSystem.setAzimuth(TotemSystem.AZIMUTH_ZERO);
 
 //        armSystem.autonomousMoveArm(floor);
 //        drivingSystem.driveStraight(65, 0.6);
@@ -154,6 +154,43 @@ public class Carousel {
 //        armSystem.stop();
 //        drivingSystem.driveStraight(20, -0.6);
 //        armSystem.autonomousReload();
+    }
+    static final boolean IS_TOTEM_CONNECTED = false;
+    static final boolean USE_DETECTION = false;
+    public void newPlaceFreightAndCollectTotem(int mirror){
+        drivingSystem.resetDistance();
+        if (USE_DETECTION) {
+            floor = detectionSystem.findTargetFloor2(mirror);
+        }else {
+            floor = ArmSystem.Floors.FIRST;
+        }
+        opMode.telemetry.addData("Floor: ", floor);
+        opMode.telemetry.update();
+        if (IS_TOTEM_CONNECTED){
+            totemSystem.collectTotem(floor);
+        }else {
+            totemSystem.setAzimuth(TotemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+            TimeUtils.sleep(500);
+        }
+        armSystem.autonomousMoveArm(floor);
+        drivingSystem.driveToPoint(-15,-70,90, 0.7, 1.2);
+        drivingSystem.driveStraight(25, 0.5);
+        armSystem.spit();
+        TimeUtils.sleep(500);
+        armSystem.stop();
+        drivingSystem.driveStraight(20, -0.5);
+        armSystem.autonomousReload();
+    }
+
+    public void newLZYW(int mirror){
+        newPlaceFreightAndCollectTotem(mirror);
+        drivingSystem.turn(-90, 100);
+        drivingSystem.driveSideways(20, 0.5, false);
+        drivingSystem.driveUntilBumping(0.5, 0);
+        drivingSystem.driveSideways(10, -0.5, false);
+        drivingSystem.driveStraight(20, 0.5);
+        drivingSystem.driveUntilBumping(0, 0.5);
+        duckSystem.runFor(5000);
     }
 
     /**

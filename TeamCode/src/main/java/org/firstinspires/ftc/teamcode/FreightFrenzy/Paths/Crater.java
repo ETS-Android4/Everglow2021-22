@@ -169,17 +169,17 @@ public class Crater {
         drivingSystem.driveStraight(10,0.6);
         armSystem.autonomousPlaceFreight(floor);
         drivingSystem.turn(180,100);
-        drivingSystem.driveToPoint(20,-50,-90);
+        drivingSystem.driveToPoint(20,-50,-90, 0.7, 0.2);
         armSystem.collect();
         drivingSystem.driveStraight(20,0.3);
         armSystem.stop();
         drivingSystem.driveStraight(20,-0.3);
-        drivingSystem.driveToPoint(-20,50,45);
+        drivingSystem.driveToPoint(-20,50,45, 0.7, 0.2);
         armSystem.moveArm(ArmSystem.Floors.THIRD);
         armSystem.spit();
         TimeUtils.sleep(300);
         armSystem.stop();
-        drivingSystem.driveToPoint(20,-50,-90);
+        drivingSystem.driveToPoint(20,-50,-90, 0.7, 0.2);
         armSystem.collect();
         drivingSystem.driveStraight(20,0.3);
         armSystem.stop();
@@ -327,5 +327,9 @@ public class Crater {
         drivingSystem.turn(180, 200);
         drivingSystem.driveSideways(25, 0.6 * mirror);
         drivingSystem.driveStraight(150, 1);
+    }
+
+    public void newCrater(int mirror){
+
     }
 }
