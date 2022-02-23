@@ -14,23 +14,23 @@ public class GameTeleOp extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
-    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION = 5;
+    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION  = 5;
 
-    DrivingSystem drivingSystem;
-    ArmSystem armSystem;
-    DuckSystem duckSystem;
+    DrivingSystem   drivingSystem;
+    ArmSystem       armSystem;
+    DuckSystem      duckSystem;
     EverglowGamepad ourGamepad1;
-    TouchSensor touch;
+    TouchSensor     touch;
 
     boolean passingObstacle = false;
 
     @Override
     public void runOpMode() {
         drivingSystem = new DrivingSystem(this);
-        armSystem = new ArmSystem(this);
-        duckSystem = new DuckSystem(this);
-        ourGamepad1 = new EverglowGamepad(gamepad1);
-        touch = hardwareMap.get(TouchSensor.class, "touch");
+        armSystem     = new ArmSystem(this);
+        duckSystem    = new DuckSystem(this);
+        ourGamepad1   = new EverglowGamepad(gamepad1);
+        touch         = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;

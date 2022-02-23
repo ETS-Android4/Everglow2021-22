@@ -107,50 +107,53 @@ public class Carousel {
 
     public void placeFreightAndCollectTotem(int mirror) {
         drivingSystem.resetDistance();
-        totemSystem.setAltitude(0.073);
+        totemSystem.moveAltitude(0.01);
         floor = detectionSystem.findTargetFloor2(mirror);
         this.opMode.telemetry.addData("floor: ", floor);
         this.opMode.telemetry.update();
 
         switch (floor) {
             case FIRST:
-                totemSystem.setAzimuth(0.52);
-                totemSystem.extend(-0.5);
-                TimeUtils.sleep(1400);
+                totemSystem.moveAzimuth(-0.04);
+                totemSystem.extend(0.5);
+                TimeUtils.sleep(2000);
                 break;
             case SECOND:
-                totemSystem.setAzimuth(0.605);
-                totemSystem.extend(-0.5);
-                TimeUtils.sleep(1400);
+                totemSystem.moveAzimuth(0.05);
+                totemSystem.extend(0.5);
+                TimeUtils.sleep(2000);
                 break;
             case THIRD:
-                totemSystem.setAzimuth(0.687);
-                totemSystem.extend(-0.5);
-                TimeUtils.sleep(1600);
+                totemSystem.moveAzimuth(0.145);
+                totemSystem.extend(0.5);
+                TimeUtils.sleep(2500);
         }
         totemSystem.stop();
-        totemSystem.setAltitude(0.3);
-        totemSystem.extend(0.5);
+        totemSystem.setAltitude(totemSystem.ALTITUDE_MAX);
+        totemSystem.setAzimuth(totemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+        totemSystem.moveAltitude(0.1);
+        totemSystem.extend(-0.5);
         switch (floor) {
             case FIRST:
             case SECOND:
-                TimeUtils.sleep(1400);
+                TimeUtils.sleep(2000);
                 break;
             case THIRD:
-                TimeUtils.sleep(1600);
+                TimeUtils.sleep(2500);
         }
         totemSystem.stop();
+        totemSystem.setAltitude(totemSystem.ALTITUDE_ZERO);
+        totemSystem.setAzimuth(totemSystem.AZIMUTH_ZERO);
 
-        drivingSystem.driveStraight(65, -0.6);
-        drivingSystem.turn(-90 * mirror, 200);
-        armSystem.autonomousMoveArm(floor);
-        TimeUtils.sleep(500);
-        drivingSystem.driveStraight(20, 0.6);
-        armSystem.spit();
-        TimeUtils.sleep(500);
-        armSystem.stop();
-        drivingSystem.driveStraight(20, -0.6);
-        armSystem.autonomousReload();
+//        armSystem.autonomousMoveArm(floor);
+//        drivingSystem.driveStraight(65, 0.6);
+//        drivingSystem.turn(-90 * mirror, 200);
+//        drivingSystem.driveStraight(20, 0.6);
+//        armSystem.spit();
+//        TimeUtils.sleep(500);
+//        armSystem.stop();
+//        drivingSystem.driveStraight(20, -0.6);
+//        armSystem.autonomousReload();
     }
 
     /**
@@ -200,11 +203,12 @@ public class Carousel {
         drivingSystem.driveSideways(110, -0.6 * mirror);
     }
 
-    public void newGoToCarousel(int mirror){
+    public void newGoToCarousel(int mirror) {
         drivingSystem.driveStraight(35, 0.6);
         drivingSystem.turn(90, 200);
-        drivingSystem.driveSideways(110, 0.6*mirror);
+        drivingSystem.driveSideways(110, 0.6 * mirror);
     }
+
     /**
      * Goes to Carousel, and then to Storage Unit.
      */
