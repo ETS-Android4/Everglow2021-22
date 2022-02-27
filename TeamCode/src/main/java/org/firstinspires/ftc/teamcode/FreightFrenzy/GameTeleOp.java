@@ -43,9 +43,11 @@ public class GameTeleOp extends LinearOpMode {
                 double left_stick_x = gamepad1.left_stick_x;
                 double left_stick_y = gamepad1.left_stick_y;
                 double right_stick_x = gamepad1.right_stick_x;
+
                 if (gamepad1.right_stick_button) {
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
+
                 if (gamepad1.left_stick_button) {
                     left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
@@ -55,24 +57,26 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.x()) {
-                if(!toggleReload){
+                if (!toggleReload) {
                     armSystem.reload();
                     toggleReload = true;
-                }
-                else{
+                } else {
                     armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
                     toggleReload = false;
                 }
                 passingObstacle = false;
             }
+
             if (ourGamepad1.a()) {
                 armSystem.moveArm(ArmSystem.Floors.FIRST);
                 passingObstacle = false;
             }
+
             if (ourGamepad1.b()) {
                 armSystem.moveArm(ArmSystem.Floors.SECOND);
                 passingObstacle = false;
             }
+
             if (ourGamepad1.y()) {
                 armSystem.moveArm(ArmSystem.Floors.THIRD);
                 passingObstacle = false;
@@ -89,6 +93,7 @@ public class GameTeleOp extends LinearOpMode {
             if (ourGamepad1.rb()) {
                 armSystem.moveArm(armSystem.arm.getTargetPosition() + 50);
             }
+
             if (ourGamepad1.lb()) {
                 armSystem.moveArm(armSystem.arm.getTargetPosition() - 50);
             }
@@ -109,6 +114,7 @@ public class GameTeleOp extends LinearOpMode {
                 armSystem.moveArmWithoutWobble(-300);
                 passingObstacle = true;
             }
+
             if (ourGamepad1.dpad_down() && passingObstacle) {
                 armSystem.reload();
                 passingObstacle = false;
@@ -116,22 +122,19 @@ public class GameTeleOp extends LinearOpMode {
 
             // rumble controller if touchSensor was just pressed
             boolean touchPressed = touch.isPressed();
-            if (touchPressed && armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING){
+
+            if (touchPressed && armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING) {
                 armSystem.stop();
             }
-            if (touchPressed && !prevTouchPressed){
+
+            if (touchPressed && !prevTouchPressed) {
                 gamepad1.rumble(1000);
             }
+
             prevTouchPressed = touchPressed;
-
-
 
             if (!passingObstacle) {
                 armSystem.restOnLoad();
-            }
-
-            if (gamepad1.options) {
-                drivingSystem.CS(armSystem);
             }
 
             armSystem.restOnFirstFloor();

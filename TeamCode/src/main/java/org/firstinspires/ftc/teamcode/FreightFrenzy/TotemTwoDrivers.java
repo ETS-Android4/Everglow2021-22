@@ -108,6 +108,7 @@ public class TotemTwoDrivers extends LinearOpMode {
             if (ourGamepad1.dpad_left()) {
                 duckSystem.toggle();
             }
+
             if(ourGamepad1.dpad_right()) {
                 totemSystem.extend(0);
             }
