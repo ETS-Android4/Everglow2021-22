@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
+import java.sql.Time;
+
 public class Crater {
     DrivingSystem drivingSystem;
     ArmSystem     armSystem;
@@ -162,27 +164,31 @@ public class Crater {
     }
 
     public void RZNCX(int mirror){
-        drivingSystem.driveStraight(25,-0.6);
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
-        drivingSystem.turn(135,100);
-        drivingSystem.driveStraight(10,0.6);
-        armSystem.autonomousPlaceFreight(floor);
-        drivingSystem.turn(180,100);
-        drivingSystem.driveToPoint(20,-50,-90, 0.7, 0.2);
-        armSystem.collect();
-        drivingSystem.driveStraight(20,0.3);
-        armSystem.stop();
-        drivingSystem.driveStraight(20,-0.3);
-        drivingSystem.driveToPoint(-20,50,45, 0.7, 0.2);
-        armSystem.moveArm(ArmSystem.Floors.THIRD);
+        armSystem.moveArm(floor);
+        drivingSystem.driveToPoint(0,-48,50, 0.5, 0.5);
+        TimeUtils.sleep(300);
         armSystem.spit();
         TimeUtils.sleep(300);
-        armSystem.stop();
-        drivingSystem.driveToPoint(20,-50,-90, 0.7, 0.2);
-        armSystem.collect();
-        drivingSystem.driveStraight(20,0.3);
-        armSystem.stop();
+        armSystem.moveArm(0);
+        drivingSystem.driveToPoint(0,63,90, 0.5, 0.5);
+
+        for(int i = 0; i < 3; i++) {
+            armSystem.collect();
+            drivingSystem.driveStraight(120 + i*10, 0.6);
+            armSystem.stop();
+            drivingSystem.driveStraight(120 + i*10, -0.6);
+            armSystem.moveArm(ArmSystem.Floors.THIRD);
+            drivingSystem.driveToPoint(0, -75, 60, 0.5, 0.5);
+            TimeUtils.sleep(300);
+            armSystem.spit();
+            TimeUtils.sleep(300);
+            armSystem.stop();
+            armSystem.moveArm(0);
+            drivingSystem.driveToPoint(0, 80, 90, 0.5, 0.5);
+        }
+        drivingSystem.driveStraight(100,0.8);
     }
 
 
