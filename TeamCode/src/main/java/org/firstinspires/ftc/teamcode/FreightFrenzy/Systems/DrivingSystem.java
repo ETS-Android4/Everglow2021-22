@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.copySign;
@@ -45,9 +46,11 @@ public class DrivingSystem {
     private final DistanceSensor sensorBackDown;
 
     private final LinearOpMode opMode;
+    private final ArmSystem armSystem;
 
     private final BNO055IMU.Parameters parameters;
     private final BNO055IMU imu;
+
 
     /**
      * If the robot is turning, this is the angle it will try to reach relatively to the
@@ -68,6 +71,7 @@ public class DrivingSystem {
      */
     public DrivingSystem(LinearOpMode opMode) {
         // Get the driving motors from the Hardware Map
+        armSystem = new ArmSystem(opMode);
         this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");
         this.frontLeft = opMode.hardwareMap.get(DcMotor.class, "front_left");
         this.backRight = opMode.hardwareMap.get(DcMotor.class, "back_right");
@@ -306,6 +310,35 @@ public class DrivingSystem {
         driveStraight(distance, power, true);
     }
 
+    /**
+    * @param maxDistance max distance until robot stops
+    * @param power driving power
+    * @return distance traveled
+    */
+    public double driveUntilCollect(double maxDistance, double power){
+        armSystem.collect();
+
+        resetDistance();
+        double averageMotors = 0;
+
+        while (maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
+            double angleDeviation = getAngleDeviation();
+            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
+            averageMotors = abs(
+                    (this.frontRight.getCurrentPosition() + this.frontLeft.getCurrentPosition()
+                            + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
+                    ) / 4.0
+            );
+            if(armSystem.touch.isPressed()){
+                stop();
+                armSystem.stop();
+                return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
+            }
+
+        }
+        stop();
+        return maxDistance;
+    }
     /**
      * The method we use to travel a set distance forwards or backwards.
      *

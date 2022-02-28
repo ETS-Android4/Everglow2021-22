@@ -25,7 +25,7 @@ public class TotemPlaceFreightTest extends LinearOpMode {
                 stop();
             }
             if (gamepad1.b) {
-                crater.placeFreightAndCollectTotem(1);
+                crater.DetectAndCollectTotem(1);
                 stop();
             }
             if (gamepad1.x) {
@@ -33,7 +33,7 @@ public class TotemPlaceFreightTest extends LinearOpMode {
                 stop();
             }
             if (gamepad1.y) {
-                crater.placeFreightAndCollectTotem(-1);
+                crater.DetectAndCollectTotem(-1);
                 stop();
             }
         }

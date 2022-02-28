@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -23,6 +24,7 @@ public class ArmSystem {
 
     public        DcMotor      flyWheels;
     public        DcMotor      arm;
+    public        TouchSensor touch;
     private       boolean      loaded         = false;
     private       boolean      firstFloor     = false;
     private       Integer      targetPosition = null;
@@ -34,6 +36,7 @@ public class ArmSystem {
     public ArmSystem(LinearOpMode opMode) {
         this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "flywheels");
         this.arm       = opMode.hardwareMap.get(DcMotor.class, "arm");
+        touch          = opMode.hardwareMap.get(TouchSensor.class, "touch");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.opMode = opMode;
@@ -175,7 +178,7 @@ public class ArmSystem {
     public void moveArm(Floors level) {
         switch (level) {
             case THIRD:
-                moveArm(-2050);
+                moveArm(-1970);
                 break;
             case SECOND:
 //                moveArm(-2300);

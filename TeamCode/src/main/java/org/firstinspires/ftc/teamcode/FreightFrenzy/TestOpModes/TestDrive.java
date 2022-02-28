@@ -19,7 +19,10 @@ public class TestDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad2.a) {
-                drivingSystem.driveStraight(75, 0.5);
+                if(drivingSystem.driveUntilCollect(100,0.4) != -1){
+                    telemetry.addLine("collected");
+                }
+                telemetry.update();
             }
             if (gamepad2.b) {
                 drivingSystem.driveStraight(75, -0.5);

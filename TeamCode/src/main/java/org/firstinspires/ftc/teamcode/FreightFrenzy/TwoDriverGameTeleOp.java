@@ -21,7 +21,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
     DuckSystem      duckSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
-    TouchSensor     touch;
 
     boolean passingObstacle = false;
 
@@ -32,7 +31,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
         duckSystem    = new DuckSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
-        touch         = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;
@@ -103,14 +101,14 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.rb()) {
-                armSystem.moveArm(armSystem.arm.getCurrentPosition() + 50);
+                armSystem.moveArm(armSystem.arm.getTargetPosition() + 50);
             }
 
             if (ourGamepad2.lb()) {
-                armSystem.moveArm(armSystem.arm.getCurrentPosition() - 50);
+                armSystem.moveArm(armSystem.arm.getTargetPosition() - 50);
             }
 
-            if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && touch.isPressed()) {
+            if (armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING && armSystem.touch.isPressed()) {
                 armSystem.stop();
             }
 
@@ -133,7 +131,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             // rumble controller if touchSensor was just pressed
-            boolean touchPressed = touch.isPressed();
+            boolean touchPressed =  armSystem.touch.isPressed();
 
             if (touchPressed && armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING) {
                 armSystem.stop();
@@ -141,6 +139,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
 
             if (touchPressed && !prevTouchPressed) {
                 gamepad1.rumble(1000);
+                gamepad2.rumble(1000);
             }
 
             prevTouchPressed = touchPressed;
@@ -150,8 +149,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             armSystem.restOnFirstFloor();
-
-            telemetry.addData("touch sensor: ", touch.isPressed());
             telemetry.update();
         }
     }

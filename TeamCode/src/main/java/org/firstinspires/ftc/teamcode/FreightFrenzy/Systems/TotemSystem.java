@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class TotemSystem {
     private final LinearOpMode opMode;
-    public static final double AZIMUTH_ZERO  = 0.45;
+    public static final double AZIMUTH_ZERO  = 0.348;
     public static final double ALTITUDE_ZERO = 0.74;
-    public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.8;
+    public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.7;
     public static final double ALTITUDE_MAX = 0.8;
     public Servo   azimuth;
     public Servo   altitude;
@@ -61,30 +61,32 @@ public class TotemSystem {
             case FIRST:
                 moveAzimuth(-0.04);
                 extend(0.5);
-                TimeUtils.sleep(2000);
+                TimeUtils.sleep(3000);
                 break;
             case SECOND:
                 moveAzimuth(0.05);
                 extend(0.5);
-                TimeUtils.sleep(2000);
+                TimeUtils.sleep(2500);
                 break;
             case THIRD:
                 moveAzimuth(0.145);
                 extend(0.5);
-                TimeUtils.sleep(2500);
+                TimeUtils.sleep(3000);
         }
         stop();
-        setAltitude(ALTITUDE_MAX);
         setAzimuth(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+        TimeUtils.sleep(800);
+        setAltitude(ALTITUDE_MAX);
         moveAltitude(0.1);
         extend(-0.5);
         switch (floor) {
-            case FIRST:
             case SECOND:
-                TimeUtils.sleep(2000);
-                break;
-            case THIRD:
                 TimeUtils.sleep(2500);
+                break;
+
+            case FIRST:
+            case THIRD:
+                TimeUtils.sleep(3000);
         }
         stop();
         setAltitude(ALTITUDE_ZERO);
