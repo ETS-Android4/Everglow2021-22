@@ -23,6 +23,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
     EverglowGamepad ourGamepad2;
 
     boolean passingObstacle = false;
+    boolean duckSpin = false;
 
     @Override
     public void runOpMode() {
@@ -89,7 +90,8 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.dpad_right()) {
-                armSystem.moveArm(ArmSystem.Floors.TOTEM);
+                duckSystem.stop();
+                duckSpin = false;
             }
 
             if (ourGamepad2.rt()) {
@@ -112,8 +114,17 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 armSystem.stop();
             }
 
-            if (ourGamepad2.dpad_left() || ourGamepad2.dpad_right()) {
-                duckSystem.toggle();
+            if (ourGamepad2.dpad_left()) {
+                if(!duckSpin){
+                    duckSystem.speed = 0.6;
+                    duckSystem.run();
+                    duckSpin = true;
+                }
+                else{
+                    duckSystem.speed = 0.9;
+                    duckSystem.run();
+                    duckSpin = false;
+                }
             }
 
             if (ourGamepad2.dpad_up()) {
