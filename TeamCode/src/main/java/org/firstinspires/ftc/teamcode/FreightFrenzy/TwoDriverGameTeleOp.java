@@ -14,7 +14,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
-    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION  = 5;
+    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION  = 2;
 
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
@@ -51,7 +51,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
 
-                if (gamepad1.left_stick_button) {
+                if (gamepad1.right_trigger>0.1){
                     left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                 }
@@ -89,7 +89,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 passingObstacle = false;
             }
 
-            if (ourGamepad2.dpad_right()) {
+            if (ourGamepad1.dpad_right()) {
                 duckSystem.stop();
                 duckSpin = false;
             }
@@ -114,32 +114,32 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 armSystem.stop();
             }
 
-            if (ourGamepad2.dpad_left()) {
+            if (ourGamepad1.dpad_left()) {
                 if(!duckSpin){
-                    duckSystem.speed = 0.6;
+                    duckSystem.speed = 0.7;
                     duckSystem.run();
                     duckSpin = true;
                 }
                 else{
-                    duckSystem.speed = 0.9;
+                    duckSystem.speed = 1;
                     duckSystem.run();
                     duckSpin = false;
                 }
             }
 
-            if (ourGamepad2.dpad_up()) {
-                armSystem.moveArm(ArmSystem.Floors.TOTEM);
-            }
-
-            if (ourGamepad2.dpad_down() && !passingObstacle) {
-                armSystem.moveArm(-300);
-                passingObstacle = true;
-            }
-
-            if (ourGamepad2.dpad_down() && passingObstacle) {
-                armSystem.reload();
-                passingObstacle = false;
-            }
+//            if (ourGamepad2.dpad_up()) {
+//                armSystem.moveArm(ArmSystem.Floors.TOTEM);
+//            }
+//
+//            if (ourGamepad2.dpad_down() && !passingObstacle) {
+//                armSystem.moveArm(-300);
+//                passingObstacle = true;
+//            }
+//
+//            if (ourGamepad2.dpad_down() && passingObstacle) {
+//                armSystem.reload();
+//                passingObstacle = false;
+//            }
 
             // rumble controller if touchSensor was just pressed
             boolean touchPressed =  armSystem.touch.isPressed();
