@@ -15,7 +15,7 @@ import java.sql.Time;
 public class Crater {
     DrivingSystem drivingSystem;
     ArmSystem     armSystem;
-//    TotemSystem totemSystem;
+    TotemSystem totemSystem;
     DuckSystem      duckSystem;
     public DetectionSystem detectionSystem;
     LinearOpMode  opMode;
@@ -28,7 +28,7 @@ public class Crater {
         armSystem       = new ArmSystem(opMode);
         detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem      = new DuckSystem(opMode);
-//        this.totemSystem= new TotemSystem(opMode);
+        this.totemSystem= new TotemSystem(opMode);
     }
 
     public Crater(AllSystems systems) {
@@ -122,7 +122,7 @@ public class Crater {
 
     public void DetectAndCollectTotem(int mirror) {
         floor = detectionSystem.findTargetFloor2(mirror);
-//        totemSystem.collectTotem(floor);
+        totemSystem.collectTotem(floor);
     }
 
     /**
@@ -170,20 +170,20 @@ public class Crater {
     public void RZNCX(int mirror){
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
-        armSystem.moveArm(floor);
-        drivingSystem.driveToPoint(0,-50,50, 0.5, 0.5);
+        armSystem.autonomousMoveArm(floor);
+        drivingSystem.driveToPoint(0,-50,-75, 0.5, 0.7);
         TimeUtils.sleep(500);
         armSystem.spit();
         TimeUtils.sleep(300);
         armSystem.moveArm(0);
-        drivingSystem.driveToPoint(0,70,90, 0.5, 0.5);
+        drivingSystem.driveToPoint(0,70,90, 0.5, 0.7);
 
-        for(int i = 0; i < 2; i++) {
-            drivingSystem.driveStraight(70,0.7);
+        for(int i = 0; i < 3; i++) {
+            drivingSystem.driveStraight(70,0.8);
             double distance = drivingSystem.driveUntilCollect(70,0.3);
-            drivingSystem.driveStraight(distance/2,-0.6);
+            drivingSystem.driveStraight(distance/2,-0.8);
             drivingSystem.driveSideways(5,0.6);
-            drivingSystem.driveStraight(70 + distance/2,-0.8);
+            drivingSystem.driveStraight(65 + distance/2,-0.8);
             armSystem.moveArm(ArmSystem.Floors.THIRD);
             drivingSystem.driveToPoint(0, -73, 60, 0.5, 0.5);
             TimeUtils.sleep(300);

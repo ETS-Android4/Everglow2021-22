@@ -9,10 +9,10 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class TotemSystem {
     private final LinearOpMode opMode;
-    public static final double AZIMUTH_ZERO  = 0.348;
-    public static final double ALTITUDE_ZERO = 0.74;
-    public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.7;
-    public static final double ALTITUDE_MAX = 0.8;
+    public static final double AZIMUTH_ZERO  = 0.095;
+    public static final double ALTITUDE_ZERO = 0.765;
+    public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.42;
+    public static final double ALTITUDE_MAX = 0.75;
     public Servo   azimuth;
     public Servo   altitude;
     public CRServo meter;
@@ -59,25 +59,25 @@ public class TotemSystem {
         moveAltitude(0.01);
         switch (floor) {
             case FIRST:
-                moveAzimuth(-0.04);
+                setAzimuth(0.05);
+                setAltitude(0.62);
                 extend(0.5);
                 TimeUtils.sleep(3000);
                 break;
             case SECOND:
-                moveAzimuth(0.05);
+                setAzimuth(0.148);
+                setAltitude(0.618);
                 extend(0.5);
                 TimeUtils.sleep(2500);
                 break;
             case THIRD:
-                moveAzimuth(0.145);
+                setAzimuth(0.223);
+                setAltitude(0.625);
                 extend(0.5);
                 TimeUtils.sleep(3000);
         }
         stop();
-        setAzimuth(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
-        TimeUtils.sleep(800);
         setAltitude(ALTITUDE_MAX);
-        moveAltitude(0.1);
         extend(-0.5);
         switch (floor) {
             case SECOND:
@@ -89,7 +89,7 @@ public class TotemSystem {
                 TimeUtils.sleep(3000);
         }
         stop();
-        setAltitude(ALTITUDE_ZERO);
-        setAzimuth(AZIMUTH_ZERO);
+        setAzimuth(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+        TimeUtils.sleep(800);
     }
 }
