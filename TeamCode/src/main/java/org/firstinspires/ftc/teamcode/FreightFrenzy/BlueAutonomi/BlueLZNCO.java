@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.BlueAutonomi;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 
 @Autonomous(name = "BlueLZNCO", group = "BlueAutonomousL")
+@Disabled
 public class BlueLZNCO extends LinearOpMode {
     Crater crater;
 

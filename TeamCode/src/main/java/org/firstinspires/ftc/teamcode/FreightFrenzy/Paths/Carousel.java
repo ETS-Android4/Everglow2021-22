@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Paths;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.internal.hardware.android.FakeAndroidBoard;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
@@ -156,7 +157,7 @@ public class Carousel {
 //        armSystem.autonomousReload();
     }
     static final boolean IS_TOTEM_CONNECTED = false;
-    static final boolean USE_DETECTION = false;
+    static final boolean USE_DETECTION = true;
     public void newPlaceFreightAndCollectTotem(int mirror){
         drivingSystem.resetDistance();
         if (USE_DETECTION) {
@@ -172,9 +173,12 @@ public class Carousel {
             totemSystem.setAzimuth(TotemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
             TimeUtils.sleep(500);
         }
+        drivingSystem.driveStraight(90, -0.5);
         armSystem.autonomousMoveArm(floor);
-        drivingSystem.driveToPoint(-15,-70,90, 0.7, 1.2);
-        drivingSystem.driveStraight(25, 0.5);
+        drivingSystem.turn(90, 200);
+        TimeUtils.sleep(500);
+        drivingSystem.driveStraight(30, 0.5);
+        TimeUtils.sleep(200);
         armSystem.spit();
         TimeUtils.sleep(500);
         armSystem.stop();
@@ -182,15 +186,21 @@ public class Carousel {
         armSystem.autonomousReload();
     }
 
-    public void newLZYW(int mirror){
+    public void newPlaceFreightAndCaursel(int mirror){
         newPlaceFreightAndCollectTotem(mirror);
         drivingSystem.turn(-90, 100);
-        drivingSystem.driveSideways(20, 0.5, false);
-        drivingSystem.driveUntilBumping(0.5, 0);
-        drivingSystem.driveSideways(10, -0.5, false);
-        drivingSystem.driveStraight(20, 0.5);
-        drivingSystem.driveUntilBumping(0, 0.5);
-        duckSystem.runFor(5000);
+        drivingSystem.driveSidewaysUntilBumping(0.5, 20);
+        drivingSystem.driveStraightUntilBumping(0.3, 20);
+        TimeUtils.sleep(250);
+        duckSystem.runFor(3000);
+    }
+
+    public void newLZYW(int mirror){
+        newPlaceFreightAndCaursel(mirror);
+        drivingSystem.driveSideways(20, -0.5);
+        drivingSystem.driveStraight(40, -0.5);
+        drivingSystem.turn(-90, 200);
+        drivingSystem.driveStraight(25, 0.5);
     }
 
     /**
@@ -330,14 +340,12 @@ public class Carousel {
      * Goes to Carousel, and then to Crater in front of SH. Rams through obstacle.
      */
     public void LFYCO(int mirror) {
-        placeFreight(mirror);
-        goToCarousel(mirror);
-        TimeUtils.sleep(500);
-        duckSystem.runFor(3000);
+        newPlaceFreightAndCaursel(mirror);
 
         // Ram through obstacle
-        drivingSystem.driveSideways(30, 0.6 * mirror);
-        drivingSystem.turn(180, 150);
+        drivingSystem.driveSideways(30, -0.6 * mirror);
+        drivingSystem.driveStraight(20, -0.6 * mirror);
+        drivingSystem.turn(-90, 150);
         armSystem.moveArm(-200);
         drivingSystem.driveStraight(280, 1);
     }

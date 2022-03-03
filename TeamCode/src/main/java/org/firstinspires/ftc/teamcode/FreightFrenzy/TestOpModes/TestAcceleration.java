@@ -27,7 +27,7 @@ public class TestAcceleration extends LinearOpMode {
             if (gamepad.a()) {
                 telemetry.addLine("a");
                 drivingSystem.driveStraight(50, 0.5, false);
-                drivingSystem.driveUntilBumping(0, 0.5);
+                drivingSystem.driveStraightUntilBumping(0.3, 20);
             }
 
             Acceleration acceleration = drivingSystem.getAcceleration();

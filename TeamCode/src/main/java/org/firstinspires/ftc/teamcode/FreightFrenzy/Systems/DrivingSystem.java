@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import static java.lang.Math.abs;
 import static java.lang.Math.copySign;
 import static java.lang.Math.cos;
+import static java.lang.Math.hypot;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.Math.pow;
@@ -36,14 +37,16 @@ import java.util.List;
 public class DrivingSystem {
 
     private static final int ROTATE_SPEED_DECREASE = 40;
-    private static final int ACCELERATION_BUMPING_THRESHOLD = 5;
+    private static final double ACCELERATION_BUMPING_THRESHOLD = 16;
     private final DcMotor frontRight;
     private final DcMotor frontLeft;
     private final DcMotor backRight;
     private final DcMotor backLeft;
 
+    @Deprecated
     private DistanceSensor sensorBackUp;
-    private final DistanceSensor sensorBackDown;
+    @Deprecated
+    private DistanceSensor sensorBackDown;
 
     private final LinearOpMode opMode;
     private final ArmSystem armSystem;
@@ -78,8 +81,6 @@ public class DrivingSystem {
         this.backLeft = opMode.hardwareMap.get(DcMotor.class, "back_left");
 
         // Get sensors from the Hardware Map
-        this.sensorBackDown = opMode.hardwareMap.get(DistanceSensor.class, "distance_sensor_bd");
-
         this.opMode = opMode;
 
         // Set the driving motors' Zero Power Behavior to BRAKE 
@@ -379,19 +380,23 @@ public class DrivingSystem {
         }
     }
 
-    /**
-     * Moves forward until bumping into a wall, using accelerometer. Robot must already be in motion before this method is called.
-     *
-     * @param x1 how strong to go sideways
-     * @param y1 how strong to go forwards/backwards
-     */
-    public void driveUntilBumping(double x1, double y1) {
-        resetDistance();
-        double angleDeviation;
-        while (getAccelerationMagnitude() < ACCELERATION_BUMPING_THRESHOLD) {
+    public void driveStraightUntilBumping(double power, double initialDistance){
+        driveStraight(initialDistance, power, false);
+        final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
+        while (getAccelerationMagnitude() < bumpingThreshold) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
-            angleDeviation = getAngleDeviation();
-            driveByJoystick(x1, y1, angleDeviation / ROTATE_SPEED_DECREASE);
+            double angleDeviation = getAngleDeviation();
+            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
+        }
+        stop();
+    }
+    public void driveSidewaysUntilBumping(double power, double initialDistance){
+        driveSideways(initialDistance, power, false);
+        final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
+        while (getAccelerationMagnitude() < bumpingThreshold) {
+            // x2 is used to fix the natural deviation of the robot from a straight line due to friction
+            double angleDeviation = getAngleDeviation();
+            driveByJoystick(power, 0, angleDeviation / ROTATE_SPEED_DECREASE);
         }
         stop();
     }
