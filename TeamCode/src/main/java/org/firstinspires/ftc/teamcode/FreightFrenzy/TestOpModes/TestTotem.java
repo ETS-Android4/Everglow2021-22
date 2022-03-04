@@ -12,7 +12,7 @@ public class TestTotem extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        totemSystem = new TotemSystem(this);
+        totemSystem = new TotemSystem(this,false);
 
         waitForStart();
 

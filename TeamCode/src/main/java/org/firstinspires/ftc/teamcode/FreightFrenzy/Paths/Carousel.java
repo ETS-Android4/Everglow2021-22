@@ -26,7 +26,7 @@ public class Carousel {
         drivingSystem   = new DrivingSystem(opMode);
         armSystem       = new ArmSystem(opMode);
         duckSystem      = new DuckSystem(opMode);
-        totemSystem     = new TotemSystem(opMode);
+        totemSystem     = new TotemSystem(opMode,false);
         detectionSystem = new DetectionSystem(opMode, armSystem);
         timer           = new ElapsedTime();
     }

@@ -28,7 +28,7 @@ public class Crater {
         armSystem       = new ArmSystem(opMode);
         detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem      = new DuckSystem(opMode);
-        this.totemSystem= new TotemSystem(opMode);
+        this.totemSystem= new TotemSystem(opMode,false);
     }
 
     public Crater(AllSystems systems) {

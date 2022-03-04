@@ -32,9 +32,9 @@ public class TotemTwoDrivers extends LinearOpMode {
         drivingSystem = new DrivingSystem(this);
         armSystem = new ArmSystem(this);
         duckSystem = new DuckSystem(this);
-        totemSystem = new TotemSystem(this);
         ourGamepad1 = new EverglowGamepad(gamepad1);
         ourGamepad2 = new EverglowGamepad(gamepad2);
+        totemSystem = new TotemSystem(this,true);
         touch = hardwareMap.get(TouchSensor.class, "touch");
 
         boolean prevTouchSensorPressed = false;

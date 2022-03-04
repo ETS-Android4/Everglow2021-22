@@ -17,13 +17,19 @@ public class TotemSystem {
     public Servo   altitude;
     public CRServo meter;
 
-    public TotemSystem(LinearOpMode opMode) {
+    public TotemSystem(LinearOpMode opMode, boolean startCollected) {
         this.opMode = opMode;
         azimuth     = opMode.hardwareMap.get(Servo.class, "azimuth");
         altitude    = opMode.hardwareMap.get(Servo.class, "altitude");
         meter       = opMode.hardwareMap.get(CRServo.class, "extend");
-        azimuth.setPosition(AZIMUTH_ZERO);
-        altitude.setPosition(ALTITUDE_ZERO);
+        if(startCollected) {
+            azimuth.setPosition(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+            altitude.setPosition(ALTITUDE_MAX);
+        }
+        else{
+            azimuth.setPosition(AZIMUTH_ZERO);
+            altitude.setPosition(ALTITUDE_ZERO);
+        }
     }
 
     /**
