@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.RedAutonomi;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
@@ -16,7 +17,7 @@ public class RedLZYW extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.LZYW(1);
+            carousel.newLZYW(1);
             stop();
         }
     }

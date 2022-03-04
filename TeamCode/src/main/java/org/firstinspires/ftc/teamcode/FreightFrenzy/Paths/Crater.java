@@ -168,27 +168,28 @@ public class Crater {
     }
 
     public void RZNCX(int mirror){
+        totemSystem.setAzimuth(TotemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+        TimeUtils.sleep(200);
+
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
         armSystem.autonomousMoveArm(floor);
-        drivingSystem.driveToPoint(0,-50,-75, 0.5, 0.7);
+        drivingSystem.driveToPoint(15,-50,-115, 0.5, 0.7);
         TimeUtils.sleep(500);
         armSystem.spit();
-        TimeUtils.sleep(300);
+        TimeUtils.sleep(200);
         armSystem.moveArm(0);
-        drivingSystem.driveToPoint(0,70,90, 0.5, 0.7);
+        drivingSystem.driveToPoint(0,55,90, 0.5, 0.9);
 
         for(int i = 0; i < 3; i++) {
             drivingSystem.driveStraight(70,0.8);
             double distance = drivingSystem.driveUntilCollect(70,0.3);
-            drivingSystem.driveStraight(distance/2,-0.8);
-            drivingSystem.driveSideways(5,0.6);
-            drivingSystem.driveStraight(65 + distance/2,-0.8);
+            drivingSystem.driveToPoint(distance+75,10,90,0.7,0.7);
             armSystem.moveArm(ArmSystem.Floors.THIRD);
             drivingSystem.driveToPoint(0, -73, 60, 0.5, 0.5);
             TimeUtils.sleep(300);
             armSystem.spit();
-            TimeUtils.sleep(300);
+            TimeUtils.sleep(200);
             armSystem.stop();
             armSystem.moveArm(0);
             drivingSystem.driveToPoint(0, 80, 90, 0.5, 0.5);
