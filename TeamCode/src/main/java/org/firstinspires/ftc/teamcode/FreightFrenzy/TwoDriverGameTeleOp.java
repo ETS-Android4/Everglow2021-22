@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "TwoDriverGameTeleOp", group = "Linear Opmode")
@@ -21,6 +22,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
     DuckSystem      duckSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
+    TotemSystem totemSystem;
 
     boolean passingObstacle = false;
     boolean duckSpin = false;
@@ -32,6 +34,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
         duckSystem    = new DuckSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
+        totemSystem = new TotemSystem(this,true);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;
@@ -125,6 +128,17 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                     duckSystem.run();
                     duckSpin = false;
                 }
+            }
+
+            totemSystem.moveAzimuth(gamepad2.right_stick_x / 3000);
+            totemSystem.moveAltitude(-gamepad2.left_stick_y / 6000);
+
+            if (gamepad2.dpad_right) {
+                totemSystem.extend(-0.5);
+            } else if (gamepad2.dpad_left) {
+                totemSystem.extend(0.5);
+            } else {
+                totemSystem.stop();
             }
 
 //            if (ourGamepad2.dpad_up()) {

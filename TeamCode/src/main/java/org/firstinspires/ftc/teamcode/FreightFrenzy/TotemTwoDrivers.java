@@ -52,7 +52,7 @@ public class TotemTwoDrivers extends LinearOpMode {
                 if (gamepad1.right_stick_button) {
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
-                if (gamepad1.left_stick_button) {
+                if (gamepad1.right_trigger > 0.1) {
                     left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                 }
@@ -63,8 +63,8 @@ public class TotemTwoDrivers extends LinearOpMode {
 
                 drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             }
-            totemSystem.moveAzimuth(totemSystem.azimuth.getPosition() + gamepad2.right_stick_x / 10);
-            totemSystem.moveAltitude(totemSystem.altitude.getPosition() - gamepad2.left_stick_y / 10);
+            totemSystem.moveAzimuth(gamepad2.right_stick_x / 3000);
+            totemSystem.moveAltitude(-gamepad2.left_stick_y / 6000);
 
             if (ourGamepad2.x()) {
                 armSystem.reload();
@@ -109,15 +109,12 @@ public class TotemTwoDrivers extends LinearOpMode {
                 duckSystem.toggle();
             }
 
-            if(ourGamepad1.dpad_right()) {
-                totemSystem.extend(0);
-            }
-
-            if (ourGamepad2.dpad_right()) {
-                totemSystem.extend(0.1);
-            }
-            if (ourGamepad2.dpad_left()) {
-                totemSystem.extend(-0.1);
+            if (gamepad1.dpad_right) {
+                totemSystem.extend(-0.5);
+            } else if (gamepad1.dpad_left) {
+                totemSystem.extend(0.5);
+            } else {
+                totemSystem.stop();
             }
 
             if (ourGamepad2.dpad_up()) {

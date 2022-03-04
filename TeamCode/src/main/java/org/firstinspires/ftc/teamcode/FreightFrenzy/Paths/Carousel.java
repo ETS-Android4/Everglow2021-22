@@ -156,7 +156,7 @@ public class Carousel {
 //        drivingSystem.driveStraight(20, -0.6);
 //        armSystem.autonomousReload();
     }
-    static final boolean IS_TOTEM_CONNECTED = false;
+    static final boolean IS_TOTEM_CONNECTED = true;
     static final boolean USE_DETECTION = true;
     public void newPlaceFreightAndCollectTotem(int mirror){
         drivingSystem.resetDistance();
@@ -174,6 +174,9 @@ public class Carousel {
             TimeUtils.sleep(500);
         }
         drivingSystem.driveStraight(90, -0.5);
+        TimeUtils.sleep(1000);
+        totemSystem.RestTotem(floor);
+        TimeUtils.sleep(1000);
         armSystem.autonomousMoveArm(floor);
         drivingSystem.turn(90, 200);
         TimeUtils.sleep(500);

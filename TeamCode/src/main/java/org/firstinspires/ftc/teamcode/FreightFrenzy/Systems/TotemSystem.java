@@ -11,8 +11,8 @@ public class TotemSystem {
     private final LinearOpMode opMode;
     public static final double AZIMUTH_ZERO  = 0.095;
     public static final double ALTITUDE_ZERO = 0.765;
-    public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.42;
-    public static final double ALTITUDE_MAX = 0.75;
+    public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.41;
+    public static final double ALTITUDE_MAX = 0.85;
     public Servo   azimuth;
     public Servo   altitude;
     public CRServo meter;
@@ -67,35 +67,30 @@ public class TotemSystem {
             case FIRST:
                 setAzimuth(0.05);
                 setAltitude(0.62);
-                extend(0.5);
-                TimeUtils.sleep(3000);
-                break;
-            case SECOND:
-                setAzimuth(0.148);
-                setAltitude(0.618);
-                extend(0.5);
-                TimeUtils.sleep(2500);
-                break;
-            case THIRD:
-                setAzimuth(0.223);
-                setAltitude(0.625);
-                extend(0.5);
-                TimeUtils.sleep(3000);
-        }
-        stop();
-        setAltitude(ALTITUDE_MAX);
-        extend(-0.5);
-        switch (floor) {
-            case SECOND:
-                TimeUtils.sleep(2500);
-                break;
 
-            case FIRST:
+                break;
+            case SECOND:
+                setAzimuth(0.22);
+                setAltitude(0.618);
+
+                break;
             case THIRD:
-                TimeUtils.sleep(3000);
+                setAzimuth(0.3);
+                setAltitude(0.625);
+
         }
+        extend(0.2);
+        TimeUtils.sleep(1000);
+        stop();
+
+    }
+    public void RestTotem(ArmSystem.Floors floor){
+        extend(-0.2);
+        TimeUtils.sleep(1000);
         stop();
         setAzimuth(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+        TimeUtils.sleep(800);
+        setAltitude(ALTITUDE_MAX);
         TimeUtils.sleep(800);
     }
 }
