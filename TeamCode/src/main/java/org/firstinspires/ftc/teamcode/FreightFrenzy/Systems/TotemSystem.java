@@ -16,12 +16,14 @@ public class TotemSystem {
     public Servo   azimuth;
     public Servo   altitude;
     public CRServo meter;
+    DrivingSystem drivingSystem;
 
     public TotemSystem(LinearOpMode opMode, boolean startCollected) {
         this.opMode = opMode;
         azimuth     = opMode.hardwareMap.get(Servo.class, "azimuth");
         altitude    = opMode.hardwareMap.get(Servo.class, "altitude");
         meter       = opMode.hardwareMap.get(CRServo.class, "extend");
+        drivingSystem   = new DrivingSystem(opMode);
         if(startCollected) {
             azimuth.setPosition(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
             altitude.setPosition(ALTITUDE_MAX);
@@ -66,7 +68,7 @@ public class TotemSystem {
         switch (floor) {
             case FIRST:
                 setAzimuth(0.05);
-                setAltitude(0.62);
+                setAltitude(0.6);
 
                 break;
             case SECOND:
@@ -75,8 +77,9 @@ public class TotemSystem {
 
                 break;
             case THIRD:
-                setAzimuth(0.3);
-                setAltitude(0.625);
+                drivingSystem.driveSideways(20,-0.5);
+                setAzimuth(0.22);
+                setAltitude(0.618);
 
         }
         extend(0.2);
@@ -85,12 +88,12 @@ public class TotemSystem {
 
     }
     public void RestTotem(ArmSystem.Floors floor){
-        extend(-0.2);
-        TimeUtils.sleep(1000);
-        stop();
         setAzimuth(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
         TimeUtils.sleep(800);
         setAltitude(ALTITUDE_MAX);
         TimeUtils.sleep(800);
+        extend(-0.2);
+        TimeUtils.sleep(1000);
+        stop();
     }
 }
