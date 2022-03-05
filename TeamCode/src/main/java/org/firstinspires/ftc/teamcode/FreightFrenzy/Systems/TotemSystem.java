@@ -87,13 +87,29 @@ public class TotemSystem {
         stop();
 
     }
+
     public void RestTotem(ArmSystem.Floors floor){
-        setAzimuth(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
-        TimeUtils.sleep(800);
-        setAltitude(ALTITUDE_MAX);
-        TimeUtils.sleep(800);
-        extend(-0.2);
-        TimeUtils.sleep(1000);
-        stop();
+        setAzimuthSlow(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE, 600);
+        setAltitudeSlow(ALTITUDE_MAX, 2000);
     }
+
+    public void setAzimuthSlow(double pos, long time){
+        moveServoSlow(azimuth, pos, time);
+    }
+
+    public void setAltitudeSlow(double pos, long time){
+        moveServoSlow(altitude, pos, time);
+    }
+
+    private static void moveServoSlow(Servo servo, double targetPos, long time){
+        final int NUM_STEPS = 100;
+        double startPos = servo.getPosition();
+        for (int i=0; i<NUM_STEPS;i++){
+            double partComplete = ((double) i)/NUM_STEPS;
+            double currentPos = startPos * (1 - partComplete) + targetPos * partComplete;
+            servo.setPosition(currentPos);
+            TimeUtils.sleep(time/NUM_STEPS);
+        }
+    }
+
 }
