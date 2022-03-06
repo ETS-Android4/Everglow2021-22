@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "TestPickupTotem", group = "LinearOpMode")
 public class TestPickupTotem extends LinearOpMode {
@@ -25,8 +23,8 @@ public class TestPickupTotem extends LinearOpMode {
         while (opModeIsActive()) {
             ArmSystem.Floors floor =  detectionSystem.findTargetFloor2(1);
             totemSystem.collectTotem(floor);
-            drivingSystem.driveStraight(40, -0.5);
-            totemSystem.RestTotem(floor);
+            TimeUtils.sleep(200);
+            drivingSystem.driveStraight(100, -0.7);
             stop();
         }
     }

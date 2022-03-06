@@ -42,6 +42,18 @@ public class MathUtils {
         }
         return minValue;
     }
+    public static double min(double[] values) {
+        if (values.length == 0) {
+            return 0;
+        }
+        double minValue = Double.MAX_VALUE;
+        for (double value : values) {
+            if (value < minValue) {
+                minValue = value;
+            }
+        }
+        return minValue;
+    }
 
     @Nullable
     public static Double max(List<Double> values) {

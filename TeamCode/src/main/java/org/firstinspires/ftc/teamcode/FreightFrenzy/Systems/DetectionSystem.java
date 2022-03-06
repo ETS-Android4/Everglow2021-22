@@ -115,8 +115,8 @@ public class DetectionSystem {
             distanceRight[i] = rightSensor.getDistance(DistanceUnit.CM);
         }
         armSystem.autonomousReload();
-        double errorLeft = Math.abs(LEFT_TARGET_DISTANCE_CM - MathUtils.max(distanceLeft));
-        double errorRight = Math.abs(RIGHT_TARGET_DISTANCE_CM - MathUtils.max(distanceRight));
+        double errorLeft = Math.abs(LEFT_TARGET_DISTANCE_CM - MathUtils.min(distanceLeft));
+        double errorRight = Math.abs(RIGHT_TARGET_DISTANCE_CM - MathUtils.min(distanceRight));
 
         ArmSystem.Floors targetFloor;
         if (errorLeft > ERROR_THRESHOLD_CM && errorRight > ERROR_THRESHOLD_CM) {

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Paths;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.internal.hardware.android.FakeAndroidBoard;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
@@ -13,32 +12,32 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Carousel {
-    DrivingSystem    drivingSystem;
-    ArmSystem        armSystem;
-    DuckSystem       duckSystem;
-    TotemSystem      totemSystem;
-    DetectionSystem  detectionSystem;
-    LinearOpMode     opMode;
-    ElapsedTime      timer;
+    DrivingSystem drivingSystem;
+    ArmSystem armSystem;
+    DuckSystem duckSystem;
+    TotemSystem totemSystem;
+    DetectionSystem detectionSystem;
+    LinearOpMode opMode;
+    ElapsedTime timer;
     ArmSystem.Floors floor;
 
     public Carousel(LinearOpMode opMode) {
-        this.opMode     = opMode;
-        drivingSystem   = new DrivingSystem(opMode);
-        armSystem       = new ArmSystem(opMode);
-        duckSystem      = new DuckSystem(opMode);
-        totemSystem     = new TotemSystem(opMode,false);
+        this.opMode = opMode;
+        drivingSystem = new DrivingSystem(opMode);
+        armSystem = new ArmSystem(opMode);
+        duckSystem = new DuckSystem(opMode);
+        totemSystem = new TotemSystem(opMode, false);
         detectionSystem = new DetectionSystem(opMode, armSystem);
-        timer           = new ElapsedTime();
+        timer = new ElapsedTime();
     }
 
     public Carousel(AllSystems systems) {
-        this.opMode          = systems.opMode;
-        this.drivingSystem   = systems.drivingSystem;
-        this.armSystem       = systems.armSystem;
-        this.duckSystem      = systems.duckSystem;
+        this.opMode = systems.opMode;
+        this.drivingSystem = systems.drivingSystem;
+        this.armSystem = systems.armSystem;
+        this.duckSystem = systems.duckSystem;
         this.detectionSystem = systems.detectionSystem;
-        timer                = new ElapsedTime();
+        timer = new ElapsedTime();
     }
 
     /**
@@ -156,31 +155,29 @@ public class Carousel {
 //        drivingSystem.driveStraight(20, -0.6);
 //        armSystem.autonomousReload();
     }
+
     static final boolean IS_TOTEM_CONNECTED = true;
     static final boolean USE_DETECTION = true;
-    public void newPlaceFreightAndCollectTotem(int mirror){
+
+    public void newPlaceFreightAndCollectTotem(int mirror) {
         drivingSystem.resetDistance();
         if (USE_DETECTION) {
             floor = detectionSystem.findTargetFloor2(mirror);
-        }else {
+        } else {
             floor = ArmSystem.Floors.FIRST;
         }
         opMode.telemetry.addData("Floor: ", floor);
         opMode.telemetry.update();
-        if (IS_TOTEM_CONNECTED){
-            totemSystem.collectTotem(floor);
-        }else {
-            totemSystem.setAzimuth(TotemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
-            TimeUtils.sleep(500);
-        }
-        drivingSystem.driveStraight(90, -0.5);
-        TimeUtils.sleep(1000);
-        totemSystem.RestTotem(floor);
-        TimeUtils.sleep(1000);
+        totemSystem.collectTotem(floor);
+
+        drivingSystem.driveStraight(74, -0.5);
         armSystem.autonomousMoveArm(floor);
         drivingSystem.turn(90, 200);
-        TimeUtils.sleep(500);
-        drivingSystem.driveStraight(30, 0.5);
+        if (floor == ArmSystem.Floors.THIRD) {
+            drivingSystem.driveStraight(30 - TotemSystem.THIRD_FLOOR_SIDEWAYS_DISTANCE, 0.5);
+        }else {
+            drivingSystem.driveStraight(30, 0.5);
+        }
         TimeUtils.sleep(200);
         armSystem.spit();
         TimeUtils.sleep(500);
@@ -189,7 +186,7 @@ public class Carousel {
         armSystem.autonomousReload();
     }
 
-    public void newPlaceFreightAndCaursel(int mirror){
+    public void newPlaceFreightAndCaursel(int mirror) {
         newPlaceFreightAndCollectTotem(mirror);
         drivingSystem.turn(-90, 100);
         drivingSystem.driveSidewaysUntilBumping(0.5, 20);
@@ -198,7 +195,7 @@ public class Carousel {
         duckSystem.runFor(3000);
     }
 
-    public void newLZYW(int mirror){
+    public void newLZYW(int mirror) {
         newPlaceFreightAndCaursel(mirror);
         drivingSystem.driveSideways(20, -0.5);
         drivingSystem.driveStraight(40, -0.5);

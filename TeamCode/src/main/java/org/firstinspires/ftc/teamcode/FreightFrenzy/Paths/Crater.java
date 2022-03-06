@@ -170,8 +170,10 @@ public class Crater {
     public void RZNCX(int mirror){
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
+        totemSystem.collectTotem(floor);
         armSystem.moveArm(floor);
-        drivingSystem.driveToPoint(0,-50,50, 0.5, 0.5);
+        drivingSystem.driveToPoint(0,-38,50, 0.5, 0.7);
+//        drivingSystem.driveToPoint(0,-50,50, 0.5, 0.7);
         TimeUtils.sleep(500);
         armSystem.spit();
         TimeUtils.sleep(300);
