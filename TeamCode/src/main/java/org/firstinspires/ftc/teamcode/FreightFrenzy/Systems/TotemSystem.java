@@ -82,7 +82,7 @@ public class TotemSystem {
                 setAltitude(0.628);
                 TimeUtils.sleep(100);
                 drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5);
-                drivingSystem.driveStraight(13, -0.5);
+                drivingSystem.driveStraight(14, -0.5);
                 break;
         }
         new Thread(()->{

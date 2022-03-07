@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Paths;
 
+import static org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem.THIRD_FLOOR_SIDEWAYS_DISTANCE;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
@@ -171,16 +173,31 @@ public class Crater {
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
         totemSystem.collectTotem(floor);
+        switch (floor) {
+            case FIRST:
+                drivingSystem.driveStraight(12, 0.5);
+                break;
+            case SECOND:
+                drivingSystem.driveStraight(13, 0.5);
+                break;
+            case THIRD:
+                drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, 0.5);
+                drivingSystem.driveStraight(14, 0.5);
+                break;
+        }
         armSystem.moveArm(floor);
         drivingSystem.driveToPoint(0,-38,50, 0.5, 0.7);
-//        drivingSystem.driveToPoint(0,-50,50, 0.5, 0.7);
-        TimeUtils.sleep(500);
+        if (floor == ArmSystem.Floors.FIRST) {
+            TimeUtils.sleep(200);
+        } else {
+            TimeUtils.sleep(700);
+        }
         armSystem.spit();
         TimeUtils.sleep(300);
         armSystem.moveArm(0);
         drivingSystem.driveToPoint(0,70,90, 0.5, 0.5);
 
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 3; i++) {
             drivingSystem.driveStraight(70,0.7);
             double distance = drivingSystem.driveUntilCollect(70,0.3);
             drivingSystem.driveStraight(distance/2,-0.6);
@@ -195,6 +212,7 @@ public class Crater {
             armSystem.moveArm(0);
             drivingSystem.driveToPoint(0, 80, 90, 0.5, 0.5);
         }
+        armSystem.collect();
         drivingSystem.driveStraight(100,0.8);
     }
 

@@ -181,10 +181,10 @@ public class ArmSystem {
                 moveArm(-1970);
                 break;
             case SECOND:
-//                moveArm(-2300);
+                moveArm(-2300);
                 break;
             case FIRST:
-//                moveArm(-2400);
+                moveArm(-2400);
                 firstFloor = true;
                 break;
             case TOTEM:
