@@ -69,22 +69,20 @@ public class TotemSystem {
                 setAzimuth(0.04);
                 setAltitude(0.63);
                 TimeUtils.sleep(50);
-                drivingSystem.driveStraight(12, -0.5);
                 break;
             case SECOND:
                 setAzimuth(0.175);
                 setAltitude(0.628);
                 TimeUtils.sleep(50);
-                drivingSystem.driveStraight(13, -0.5);
                 break;
             case THIRD:
                 setAzimuth(0.22);
                 setAltitude(0.628);
                 TimeUtils.sleep(100);
                 drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5);
-                drivingSystem.driveStraight(14, -0.5);
                 break;
         }
+        drivingSystem.driveStraight(14, -0.5);
         new Thread(()->{
             secureTotem(floor);
         }).start();

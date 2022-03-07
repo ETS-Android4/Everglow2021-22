@@ -17,13 +17,23 @@ public class TestTotem extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            totemSystem.moveAzimuth(gamepad1.right_stick_x / 1000);
-            totemSystem.moveAltitude(-gamepad1.left_stick_y / 1000);
+            double aziPower = gamepad1.right_stick_x / 1000;
+            double altPower = -gamepad1.left_stick_y / 1000;
+
+            if (gamepad1.right_stick_button) {
+                aziPower /= 2;
+            }
+            if (gamepad1.left_stick_button) {
+                altPower /= 2;
+            }
+
+            totemSystem.moveAzimuth(aziPower);
+            totemSystem.moveAltitude(altPower);
 
             if (gamepad1.dpad_right) {
-                totemSystem.extend(-0.5);
+                totemSystem.extend(-0.75);
             } else if (gamepad1.dpad_left) {
-                totemSystem.extend(0.5);
+                totemSystem.extend(0.75);
             } else {
                 totemSystem.stop();
             }

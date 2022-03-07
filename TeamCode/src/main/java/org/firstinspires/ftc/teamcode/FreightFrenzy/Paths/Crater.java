@@ -173,18 +173,10 @@ public class Crater {
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
         totemSystem.collectTotem(floor);
-        switch (floor) {
-            case FIRST:
-                drivingSystem.driveStraight(12, 0.5);
-                break;
-            case SECOND:
-                drivingSystem.driveStraight(13, 0.5);
-                break;
-            case THIRD:
-                drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, 0.5);
-                drivingSystem.driveStraight(14, 0.5);
-                break;
+        if (floor == ArmSystem.Floors.THIRD) {
+            drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, 0.5);
         }
+        drivingSystem.driveStraight(14, 0.5);
         armSystem.moveArm(floor);
         drivingSystem.driveToPoint(0,-38,50, 0.5, 0.7);
         if (floor == ArmSystem.Floors.FIRST) {
