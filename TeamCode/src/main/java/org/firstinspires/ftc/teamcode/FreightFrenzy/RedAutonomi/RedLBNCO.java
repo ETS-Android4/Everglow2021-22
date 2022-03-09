@@ -14,7 +14,6 @@ public class RedLBNCO extends LinearOpMode {
     @Override
     public void runOpMode() {
         carousel = new Carousel(this);
-
         waitForStart();
 
         while (opModeIsActive()) {
