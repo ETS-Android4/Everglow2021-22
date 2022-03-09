@@ -31,9 +31,9 @@ public class TestTotem extends LinearOpMode {
             totemSystem.moveAltitude(altPower);
 
             if (gamepad1.dpad_right) {
-                totemSystem.extend(-0.75);
+                totemSystem.extend(-1);
             } else if (gamepad1.dpad_left) {
-                totemSystem.extend(0.75);
+                totemSystem.extend(1);
             } else {
                 totemSystem.stop();
             }

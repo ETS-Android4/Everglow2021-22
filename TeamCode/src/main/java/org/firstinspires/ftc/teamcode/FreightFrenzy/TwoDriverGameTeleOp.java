@@ -144,9 +144,9 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             totemSystem.moveAltitude(altPower);
 
             if (gamepad2.dpad_up) {
-                totemSystem.extend(0.75);
+                totemSystem.extend(1);
             } else if (gamepad2.dpad_down) {
-                totemSystem.extend(-0.75);
+                totemSystem.extend(-1);
             } else {
                 totemSystem.stop();
             }

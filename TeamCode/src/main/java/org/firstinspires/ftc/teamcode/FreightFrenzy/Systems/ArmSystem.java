@@ -58,7 +58,7 @@ public class ArmSystem {
      */
     public void spit() {
         collectState = CollectState.SPITTING;
-        flyWheels.setVelocity(-400);
+        flyWheels.setVelocity(-3000);
     }
 
     /**
@@ -92,7 +92,7 @@ public class ArmSystem {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place + changeHeight);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.5);
+        arm.setPower(0.8);
     }
 
     public void moveArmWithoutWobble(int place) {
