@@ -2,43 +2,30 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class ArmSystem {
 
-    /**
-     * Enum of collection states: STOPPED, COLLECTING, SPITTING.
-     */
-    public enum CollectState {
-        STOPPED, COLLECTING, SPITTING
-    }
-
-    /**
-     * Enum of the different floors the arm should be able reach: FIRST, SECOND, THIRD, TOTEM.
-     */
-    public enum Floors {
-        FIRST, SECOND, THIRD, TOTEM, OBSTACLE
-    }
-
-    public        DcMotor      flyWheels;
+    private final LinearOpMode opMode;
+    public        DcMotorEx    flyWheels;
     public        DcMotor      arm;
-    public        TouchSensor touch;
+    public        TouchSensor  touch;
+    public        int          changeHeight   = 0;
     private       boolean      loaded         = false;
     private       boolean      firstFloor     = false;
     private       Integer      targetPosition = null;
-    private final LinearOpMode opMode;
-    public int changeHeight =0;
-
     private CollectState collectState = CollectState.STOPPED;
 
     public ArmSystem(LinearOpMode opMode) {
-        this.flyWheels = opMode.hardwareMap.get(DcMotor.class, "flywheels");
+        this.flyWheels = opMode.hardwareMap.get(DcMotorEx.class, "flywheels");
         this.arm       = opMode.hardwareMap.get(DcMotor.class, "arm");
         touch          = opMode.hardwareMap.get(TouchSensor.class, "touch");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.opMode = opMode;
     }
 
@@ -71,7 +58,7 @@ public class ArmSystem {
      */
     public void spit() {
         collectState = CollectState.SPITTING;
-        flyWheels.setPower(-0.7);
+        flyWheels.setVelocity(-3000);
     }
 
     /**
@@ -95,6 +82,7 @@ public class ArmSystem {
 
     /**
      * Move the arm to a target position in ticks.
+     *
      * @param place the target position in ticks.
      */
     public void moveArm(int place) {
@@ -104,7 +92,7 @@ public class ArmSystem {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place + changeHeight);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.5);
+        arm.setPower(0.8);
     }
 
     public void moveArmWithoutWobble(int place) {
@@ -173,6 +161,7 @@ public class ArmSystem {
 
     /**
      * Move the arm to a target floor behind the robot.
+     *
      * @param level the target floor.
      */
     public void moveArm(Floors level) {
@@ -198,6 +187,7 @@ public class ArmSystem {
 
     /**
      * Move the arm to a target floor in front of the robot.
+     *
      * @param level the target floor.
      */
     public void autonomousMoveArm(Floors level) {
@@ -217,6 +207,7 @@ public class ArmSystem {
     /**
      * Autonomous freight placement sequence. Moves the arm to the target floor in front of the robot,
      * and deploys the freight.
+     *
      * @param floor the target floor.
      */
     public void autonomousPlaceFreight(Floors floor) {
@@ -239,5 +230,19 @@ public class ArmSystem {
         TimeUtils.sleep(2000);
         spit();
         TimeUtils.sleep(200);
+    }
+
+    /**
+     * Enum of collection states: STOPPED, COLLECTING, SPITTING.
+     */
+    public enum CollectState {
+        STOPPED, COLLECTING, SPITTING
+    }
+
+    /**
+     * Enum of the different floors the arm should be able reach: FIRST, SECOND, THIRD, TOTEM.
+     */
+    public enum Floors {
+        FIRST, SECOND, THIRD, TOTEM, OBSTACLE
     }
 }

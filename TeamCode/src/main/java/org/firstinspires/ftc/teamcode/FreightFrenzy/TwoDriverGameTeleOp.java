@@ -78,7 +78,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.a()) {
-                armSystem.moveArm(ArmSystem.Floors.FIRST);
+                armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
                 passingObstacle = false;
             }
 
@@ -90,11 +90,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             if (ourGamepad2.y()) {
                 armSystem.moveArm(ArmSystem.Floors.THIRD);
                 passingObstacle = false;
-            }
-
-            if (ourGamepad1.dpad_right()) {
-                duckSystem.stop();
-                duckSpin = false;
             }
 
             if (ourGamepad2.rt()) {
@@ -130,30 +125,31 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 }
             }
 
-            totemSystem.moveAzimuth(gamepad2.right_stick_x / 3000);
-            totemSystem.moveAltitude(-gamepad2.left_stick_y / 6000);
+            if (ourGamepad1.dpad_right()) {
+                duckSystem.stop();
+                duckSpin = false;
+            }
 
-            if (gamepad2.dpad_right) {
-                totemSystem.extend(-0.5);
-            } else if (gamepad2.dpad_left) {
-                totemSystem.extend(0.5);
+            double aziPower = gamepad2.right_stick_x / 1000;
+            double altPower = -gamepad2.left_stick_y / 1000;
+
+            if (gamepad2.right_stick_button) {
+                aziPower /= 2;
+            }
+            if (gamepad2.left_stick_button) {
+                altPower /= 2;
+            }
+
+            totemSystem.moveAzimuth(aziPower);
+            totemSystem.moveAltitude(altPower);
+
+            if (gamepad2.dpad_up) {
+                totemSystem.extend(1);
+            } else if (gamepad2.dpad_down) {
+                totemSystem.extend(-1);
             } else {
                 totemSystem.stop();
             }
-
-//            if (ourGamepad2.dpad_up()) {
-//                armSystem.moveArm(ArmSystem.Floors.TOTEM);
-//            }
-//
-//            if (ourGamepad2.dpad_down() && !passingObstacle) {
-//                armSystem.moveArm(-300);
-//                passingObstacle = true;
-//            }
-//
-//            if (ourGamepad2.dpad_down() && passingObstacle) {
-//                armSystem.reload();
-//                passingObstacle = false;
-//            }
 
             // rumble controller if touchSensor was just pressed
             boolean touchPressed =  armSystem.touch.isPressed();

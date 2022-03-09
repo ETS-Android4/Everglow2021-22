@@ -13,7 +13,7 @@ public class TotemSystem {
     public static final double AZIMUTH_ZERO = 0.095;
     public static final double ALTITUDE_ZERO = 0.765;
     public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.43;
-    public static final double ALTITUDE_MAX = 0.85;
+    public static final double ALTITUDE_MAX = 0.75;
     private static final double TOTEM_ALTITUDE_INCREASE = -0.015;
     public Servo azimuth;
     public Servo altitude;
