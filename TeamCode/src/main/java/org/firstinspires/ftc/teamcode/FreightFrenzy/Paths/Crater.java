@@ -195,7 +195,7 @@ public class Crater {
         armSystem.spit();
         TimeUtils.sleep(300);
         armSystem.moveArm(0);
-        drivingSystem.driveToPoint(0,70,90, 0.5, 0.5);
+            drivingSystem.driveToPoint(0,70,90, 0.5, 0.5);
 
         for(int i = 0; i < 3; i++) {
             drivingSystem.driveStraight(70,0.7);

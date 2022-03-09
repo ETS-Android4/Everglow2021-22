@@ -37,7 +37,7 @@ import java.util.List;
 public class DrivingSystem {
 
     private static final int ROTATE_SPEED_DECREASE = 40;
-    private static final double ACCELERATION_BUMPING_THRESHOLD = 16;
+    private static final double ACCELERATION_BUMPING_THRESHOLD = 14;
     private final DcMotor frontRight;
     private final DcMotor frontLeft;
     private final DcMotor backRight;
@@ -297,7 +297,7 @@ public class DrivingSystem {
             opMode.telemetry.update();
             double direction = (theta / abs(theta));
             driveByJoystick(0, 0,
-                    max(abs(theta / speedDecrease), 0.2)
+                    max(abs(theta / speedDecrease), 0.5)
                             * direction
             );
         }
