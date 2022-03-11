@@ -341,7 +341,7 @@ public class DrivingSystem {
             }
             if(getAccelerationMagnitude() >= bumpingThreshold){
                 driveSideways(-10,power);
-                distanceLeft += -10;
+                distanceLeft += 10;
             }
 
         }
