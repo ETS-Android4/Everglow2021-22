@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
@@ -167,6 +168,10 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
 
             if (!passingObstacle) {
                 armSystem.restOnLoad();
+            }
+
+            if(ourGamepad1.squareHold()){
+                armSystem.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
             armSystem.restOnFirstFloor();

@@ -102,7 +102,7 @@ public class ArmSystem {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.8);
+        arm.setPower(0.5);
         this.opMode.telemetry.addLine("fast");
         this.opMode.telemetry.update();
     }
@@ -122,7 +122,7 @@ public class ArmSystem {
      */
     public void reload() {
         firstFloor = false;
-        arm.setTargetPosition(-100);
+        arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(0.35);
         loaded = true;
@@ -132,7 +132,7 @@ public class ArmSystem {
      * Turns the arm motor off when the arm is close to resting position.
      */
     public void restOnLoad() {
-        if (-105 <= arm.getCurrentPosition() && loaded) {
+        if (-50 <= arm.getCurrentPosition() && loaded) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }

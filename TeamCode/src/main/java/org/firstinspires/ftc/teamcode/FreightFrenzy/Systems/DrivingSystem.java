@@ -316,16 +316,20 @@ public class DrivingSystem {
     * @param power driving power
     * @return distance traveled
     */
-    public double driveUntilCollect(double maxDistance, double power){
+    public double[] driveUntilCollect(double maxDistance, double power){
         armSystem.collect();
 
         resetDistance();
         double averageMotors = 0;
+        double distanceLeft = 0;
+
+        final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
 
         while (maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
+            resetDistance();
             double angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
-            averageMotors = abs(
+            averageMotors += abs(
                     (this.frontRight.getCurrentPosition() + this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
@@ -333,12 +337,16 @@ public class DrivingSystem {
             if(armSystem.touch.isPressed()){
                 stop();
                 armSystem.stop();
-                return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
+                return new double[]{(2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV,distanceLeft};
+            }
+            if(getAccelerationMagnitude() >= bumpingThreshold){
+                driveSideways(-10,power);
+                distanceLeft += -10;
             }
 
         }
         stop();
-        return maxDistance;
+        return new double[]{maxDistance, distanceLeft};
     }
     /**
      * The method we use to travel a set distance forwards or backwards.
