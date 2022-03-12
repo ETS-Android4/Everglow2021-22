@@ -20,6 +20,7 @@ public class Carousel {
     LinearOpMode opMode;
     ElapsedTime timer;
     ArmSystem.Floors floor;
+    private final SharedPaths sharedPaths;
 
     public Carousel(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -28,6 +29,7 @@ public class Carousel {
         duckSystem = new DuckSystem(opMode);
         totemSystem = new TotemSystem(opMode, false);
         detectionSystem = new DetectionSystem(opMode, armSystem);
+        sharedPaths = new SharedPaths(new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem));
         timer = new ElapsedTime();
     }
 
@@ -37,6 +39,7 @@ public class Carousel {
         this.armSystem = systems.armSystem;
         this.duckSystem = systems.duckSystem;
         this.detectionSystem = systems.detectionSystem;
+        this.sharedPaths = new SharedPaths(systems);
         timer = new ElapsedTime();
     }
 
@@ -156,7 +159,6 @@ public class Carousel {
 //        armSystem.autonomousReload();
     }
 
-    static final boolean IS_TOTEM_CONNECTED = true;
     static final boolean USE_DETECTION = true;
 
     public void newPlaceFreightAndCollectTotem(int mirror) {
@@ -178,9 +180,10 @@ public class Carousel {
         }else {
             drivingSystem.driveStraight(20, 0.5);
         }
-        TimeUtils.sleep(200);
+        armSystem.awaitArmArrival();
+        TimeUtils.sleep(50);
         armSystem.spit();
-        TimeUtils.sleep(500);
+        TimeUtils.sleep(300);
         armSystem.stop();
         drivingSystem.driveStraight(20, -0.5);
         armSystem.autonomousReload();
@@ -233,7 +236,7 @@ public class Carousel {
      * @param mirror 1 is red side, -1 is blue side.
      */
     public void dodgeOtherTotem(int mirror) {
-        AllSystems systems = new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem);
+        AllSystems systems = new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem);
         Crater Crater = new Crater(systems);
         Crater.floor = floor;
         Crater.dodgeToFront(mirror);
@@ -343,6 +346,18 @@ public class Carousel {
         drivingSystem.turn(90, 150);
         armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
         drivingSystem.driveStraight(300, 1);
+    }
+
+    public void LFYCX(int mirror){
+        newPlaceFreightAndCaursel(mirror);
+        // Go to Crater through path
+        drivingSystem.driveSideways(30, -0.6 * mirror);
+        drivingSystem.driveStraight(20, -0.6 * mirror);
+        drivingSystem.turn(90, 150);
+        drivingSystem.driveStraight(300, 1);
+        sharedPaths.collectAndPlaceFreight(1);
+        armSystem.collect();
+        drivingSystem.driveStraight(100, 0.8);
     }
 
     /**

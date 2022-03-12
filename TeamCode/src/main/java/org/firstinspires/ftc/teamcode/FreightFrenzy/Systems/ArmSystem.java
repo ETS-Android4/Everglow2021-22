@@ -218,6 +218,12 @@ public class ArmSystem {
         stop();
     }
 
+    public void awaitArmArrival(){
+        while (Math.abs(arm.getTargetPosition() - arm.getCurrentPosition()) > 20){
+            TimeUtils.sleep(1);
+        }
+    }
+
     /**
      * Autonomous Shipping Element placement sequence. Moves the arm to the TOTEM level,
      * lowers the arm and spits.

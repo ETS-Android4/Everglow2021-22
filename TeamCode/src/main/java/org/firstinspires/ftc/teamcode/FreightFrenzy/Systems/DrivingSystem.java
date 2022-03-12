@@ -339,15 +339,71 @@ public class DrivingSystem {
                 armSystem.stop();
                 return new double[]{(2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV,distanceLeft};
             }
-            if(getAccelerationMagnitude() >= bumpingThreshold){
-                driveSideways(-10,power);
+            if(getAccelerationMagnitude() >= bumpingThreshold && (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV > 15){
+                driveSideways(10,-power);
                 distanceLeft += 10;
             }
-
         }
         stop();
         return new double[]{maxDistance, distanceLeft};
     }
+
+    public double combinedDriveUntilCollect(double maxDistance, double power){
+        resetDistance();
+        armSystem.collect();
+        double bumpingThreshold = abs(power) * ACCELERATION_BUMPING_THRESHOLD *1;
+        while (true) {
+            double averageMotors = abs(
+                    (frontRight.getCurrentPosition() + frontLeft.getCurrentPosition()
+                            + backLeft.getCurrentPosition() + backRight.getCurrentPosition()
+                    ) / 4.0
+            );
+            double distanceTraveled = (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
+            driveByJoystick(0, -power, getAngleDeviation() / ROTATE_SPEED_DECREASE);
+            if (armSystem.touch.isPressed() || distanceTraveled > maxDistance){
+                stop();
+                armSystem.stop();
+                return distanceTraveled;
+            }else if (getAccelerationMagnitude() > bumpingThreshold && distanceTraveled > 15){
+                opMode.telemetry.addLine("Passed Acceleration bumping Threshold");
+                opMode.telemetry.update();
+                wobbleDriveUntilCollect(100, power);
+                stop();
+                armSystem.stop();
+                return distanceTraveled;
+            }
+
+
+        }
+    }
+
+    public double wobbleDriveUntilCollect(double maxDistance, double power){
+        final double WOBBLE_AMPLITUDE = 20;
+        final double WOBBLE_PERIOD = 0.4;
+        final double WOBBLE_ANG_FREQ = 2*Math.PI/WOBBLE_PERIOD;
+        final double WOBBLE_DISTANCE_FACTOR = 1.3;
+        ElapsedTime elapsedTime = new ElapsedTime();
+        armSystem.collect();
+        resetDistance();
+        while (true){
+            double averageMotors = abs(
+                    (frontRight.getCurrentPosition() + frontLeft.getCurrentPosition()
+                            + backLeft.getCurrentPosition() + backRight.getCurrentPosition()
+                    ) / 4.0
+            );
+            double distanceTraveled = (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV * WOBBLE_DISTANCE_FACTOR;
+            double currentTargetAngle = targetAngle + WOBBLE_AMPLITUDE * Math.sin(elapsedTime.seconds() * WOBBLE_ANG_FREQ);
+            double angleDeviation = normalizeAngle(getCurrentAngle() - currentTargetAngle);
+            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
+
+            if (distanceTraveled > maxDistance || armSystem.touch.isPressed()){
+                stop();
+                armSystem.stop();
+                return distanceTraveled;
+            }
+        }
+    }
+
     /**
      * The method we use to travel a set distance forwards or backwards.
      *
@@ -377,11 +433,6 @@ public class DrivingSystem {
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
             );
-            opMode.telemetry.addData("currentDistance", averageMotors/distance/COUNTS_PER_MOTOR_REV*(2.0 * Math.PI * WHEEL_RADIUS_CM));
-            opMode.telemetry.addData("averageMotors", averageMotors);
-            opMode.telemetry.addData("targetAvgMotors", averageMotors);
-            opMode.telemetry.update();
-
         }
         if(stopAfter) {
             stop();

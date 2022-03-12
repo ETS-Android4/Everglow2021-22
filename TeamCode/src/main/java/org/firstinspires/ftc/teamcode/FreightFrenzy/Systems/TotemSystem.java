@@ -14,7 +14,7 @@ public class TotemSystem {
     public static final double ALTITUDE_ZERO = 0.765;
     public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.43;
     public static final double ALTITUDE_MAX = 0.75;
-    private static final double TOTEM_ALTITUDE_INCREASE = -0.015;
+    private static final double TOTEM_ALTITUDE_INCREASE = -0.045;
     public Servo azimuth;
     public Servo altitude;
     public CRServo meter;
@@ -80,7 +80,7 @@ public class TotemSystem {
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
             case THIRD:
-                setAzimuth(0.22);
+                setAzimuth(0.23);
                 setAltitude(0.628 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(100);
                 drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5);
@@ -93,13 +93,17 @@ public class TotemSystem {
         TimeUtils.sleep(200);
     }
 
+    private static final boolean RETRACT_TOTEM = false;
+
     public void secureTotem(ArmSystem.Floors floor) {
         setAltitudeSlow(0.7 + TOTEM_ALTITUDE_INCREASE, 200);
         setAzimuthSlow(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE, 600);
         setAltitudeSlow(ALTITUDE_MAX + 0.05, 500);
-        extend(-0.7);
-        TimeUtils.sleep(1000);
-        stop();
+        if (RETRACT_TOTEM) {
+            extend(-0.7);
+            TimeUtils.sleep(1000);
+            stop();
+        }
     }
 
     public void setAzimuthSlow(double pos, long time) {
@@ -124,11 +128,11 @@ public class TotemSystem {
     public static double driveStraightDistanceForFloor(ArmSystem.Floors floor){
         switch (floor){
             case FIRST:
-                return 12;
-            case SECOND:
                 return 13;
-            case THIRD:
+            case SECOND:
                 return 14;
+            case THIRD:
+                return 15;
             default:
                 throw new IllegalArgumentException("Floor for driveStraightDistanceForFloor must be FIRST, SECOND, or THIRD.");
         }
