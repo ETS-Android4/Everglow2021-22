@@ -66,24 +66,40 @@ public class TotemSystem {
     }
 
     public void collectTotem(ArmSystem.Floors floor, int mirror) {
+        floor = floor.switchIfMirrored(mirror);
         switch (floor) {
             case FIRST:
-                setAzimuth(0.04);
-                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                if (mirror == 1) {
+                    setAzimuth(0.03);
+                    setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                }else {
+                    setAzimuth(0.18833);
+                    setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                }
                 TimeUtils.sleep(50);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
             case SECOND:
-                setAzimuth(0.175);
-                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                if (mirror == 1) {
+                    setAzimuth(0.175);
+                    setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                }else {
+                    setAzimuth(0.07333);
+                    setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                }
                 TimeUtils.sleep(50);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
             case THIRD:
-                setAzimuth(0.23);
-                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                if (mirror == 1) {
+                    setAzimuth(0.23);
+                    setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                }else {
+                    setAzimuth(0.01832);
+                    setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                }
                 TimeUtils.sleep(100);
-                drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5*mirror);
+                drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5 * mirror);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
         }

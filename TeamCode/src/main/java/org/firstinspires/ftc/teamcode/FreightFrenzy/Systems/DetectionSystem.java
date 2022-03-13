@@ -70,8 +70,6 @@ public class DetectionSystem {
         } else {
             targetFloor = ArmSystem.Floors.SECOND;
         }
-        opMode.telemetry.addData("target Floor:", targetFloor);
-        opMode.telemetry.update();
         return targetFloor;
     }
 
@@ -138,10 +136,9 @@ public class DetectionSystem {
                 targetFloor = ArmSystem.Floors.THIRD;
             }
         }
-//        opMode.telemetry.addData("distanceLeft", distanceLeft);
-//        opMode.telemetry.addData("distanceRight", distanceRight);
-//        opMode.telemetry.addData("targetFloor", targetFloor);
-//        opMode.telemetry.update();
+        opMode.telemetry.addData("Floor: ", targetFloor);
+        opMode.telemetry.addData("Floor switched : ", targetFloor.switchIfMirrored(mirror));
+        opMode.telemetry.update();
         return targetFloor;
     }
 }

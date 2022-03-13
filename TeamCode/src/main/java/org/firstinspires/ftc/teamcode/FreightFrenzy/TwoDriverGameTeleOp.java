@@ -116,12 +116,12 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             if (ourGamepad1.dpad_left()) {
                 if(!duckSpin){
                     duckSystem.speed = 0.7;
-                    duckSystem.run();
+                    duckSystem.runRev();
                     duckSpin = true;
                 }
                 else{
                     duckSystem.speed = 1;
-                    duckSystem.run();
+                    duckSystem.runRev();
                     duckSpin = false;
                 }
             }
