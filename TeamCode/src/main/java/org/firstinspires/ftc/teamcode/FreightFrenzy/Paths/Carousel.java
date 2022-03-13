@@ -192,7 +192,7 @@ public class Carousel {
         duckSystem.runFor(3000);
     }
 
-    public void newLZYW(int mirror) {
+    public void LZYW(int mirror) {
         newPlaceFreightAndCaursel(mirror);
         drivingSystem.driveSideways(20, -0.5 * mirror);
         drivingSystem.driveStraight(40, -0.5);
@@ -251,20 +251,6 @@ public class Carousel {
         drivingSystem.driveStraight(35, 0.6);
         drivingSystem.turn(90 * mirror, 200);
         drivingSystem.driveSideways(110, 0.6 * mirror);
-    }
-
-    /**
-     * Goes to Carousel, and then to Storage Unit.
-     */
-    public void LZYW(int mirror) {
-        placeFreight(mirror);
-        goToCarousel(mirror);
-        drivingSystem.driveStraight(5, 0.5);
-        TimeUtils.sleep(500);
-        duckSystem.runFor(3000);
-
-        drivingSystem.driveSideways(65, 0.6 * mirror);
-        drivingSystem.driveStraight(7, 0.6);
     }
 
     /**

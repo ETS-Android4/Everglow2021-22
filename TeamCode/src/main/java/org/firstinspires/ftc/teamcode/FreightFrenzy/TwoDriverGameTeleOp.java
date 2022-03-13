@@ -84,7 +84,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.b()) {
-                armSystem.moveArm(ArmSystem.Floors.SECOND);
+                armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
                 passingObstacle = false;
             }
 

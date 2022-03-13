@@ -90,4 +90,12 @@ public class MathUtils {
         return sum / values.size();
     }
 
+    public static int isMirrored(int mirror){
+        if (mirror == 1){
+            return 0;
+        }else {
+            return 1;
+        }
+    }
+
 }

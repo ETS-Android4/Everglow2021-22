@@ -17,7 +17,7 @@ public class RedLZYW extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            carousel.newLZYW(1);
+            carousel.LZYW(1);
             stop();
         }
     }

@@ -175,15 +175,15 @@ public class Crater {
         double[] distance = drivingSystem.driveUntilCollect(100, 0.2);
         TimeUtils.sleep(200);
         armSystem.moveArm(ArmSystem.Floors.THIRD);
-        drivingSystem.driveToPoint(distance[0] * mirror, 15+distance[1], 90 * mirror, 0.5, 0.5);
+        drivingSystem.driveToPoint(distance[0] * mirror, 15 + distance[1], 90 * mirror, 0.5, 0.5);
         drivingSystem.driveStraight(initialDistance + extraDistance, -0.5);
-        drivingSystem.driveToPoint(0*mirror, -75, (60 - i * 2)*mirror, 0.5, 0.5);
+        drivingSystem.driveToPoint(0 * mirror, -75, 60 * mirror - i * 2, 0.5, 0.5);
         TimeUtils.sleep(300);
         armSystem.spit();
         TimeUtils.sleep(600);
         armSystem.stop();
         armSystem.moveArm(0);
-        drivingSystem.driveToPoint(0*mirror, 80, 90*mirror, 0.5, 0.5);
+        drivingSystem.driveToPoint(0 * mirror, 80, 90 * mirror, 0.5, 0.5);
         drivingSystem.driveStraight(extraDistance, 0.5);
     }
 
@@ -195,26 +195,26 @@ public class Crater {
         if (floor.switchIfMirrored(mirror) == ArmSystem.Floors.FIRST) {
             // because the the totem system blocks the armSystem, we can't use the autonomousPlaceFreight, so we turn 180 degrees adn use placeFreight instead.
             armSystem.autonomousMoveArm(floor);
-            drivingSystem.driveToPoint(10*mirror, -50, -90*mirror, 0.5, 0.7);
+            drivingSystem.driveToPoint(10 * mirror, -50, -90 * mirror, 0.5, 0.7);
             armSystem.awaitArmArrival();
             TimeUtils.sleep(50);
             armSystem.spit();
             TimeUtils.sleep(300);
             if (toPoint) {
-                drivingSystem.driveToPoint(20*mirror, 65, 90*mirror, 0.5, 1);
+                drivingSystem.driveToPoint(20 * mirror, 65, 90 * mirror, 0.5, 1);
 //                drivingSystem.driveSideways(10, 0.6);
             }
             armSystem.moveArm(0);
         } else {
             armSystem.moveArm(floor);
             TimeUtils.sleep(700);
-            drivingSystem.driveToPoint(2*mirror, -26, 50*mirror, 0.5, 0.7);
+            drivingSystem.driveToPoint(2 * mirror, -26, 50 * mirror, 0.5, 0.7);
             armSystem.awaitArmArrival();
             TimeUtils.sleep(50);
             armSystem.spit();
             TimeUtils.sleep(300);
             if (toPoint) {
-                drivingSystem.driveToPoint(0*mirror, 65, 90*mirror, 0.5, 1);
+                drivingSystem.driveToPoint(0 * mirror, 65, 90 * mirror, 0.5, 1);
 //                drivingSystem.driveSideways(10, 0.6);
             }
             armSystem.moveArm(0);
@@ -246,7 +246,7 @@ public class Crater {
 
         RZNCDeploy(floor, false, mirror);
         if (floor.switchIfMirrored(mirror) == ArmSystem.Floors.FIRST) {
-            drivingSystem.driveToPoint(0*mirror, 30, 90*mirror, 0.5, 0.5);
+            drivingSystem.driveToPoint(0 * mirror, 30, 90 * mirror, 0.5, 0.5);
         } else {
             drivingSystem.turn(40 * mirror, 200);
             drivingSystem.driveSideways(15, 0.6 * mirror);
