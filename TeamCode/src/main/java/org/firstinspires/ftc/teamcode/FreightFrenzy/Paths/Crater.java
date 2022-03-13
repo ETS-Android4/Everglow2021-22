@@ -12,8 +12,6 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-import java.sql.Time;
-
 public class Crater {
     DrivingSystem drivingSystem;
     ArmSystem armSystem;
@@ -22,6 +20,7 @@ public class Crater {
     public DetectionSystem detectionSystem;
     LinearOpMode opMode;
     ArmSystem.Floors floor;
+    private final SharedPaths sharedPaths;
 
 
     public Crater(LinearOpMode opMode) {
@@ -31,6 +30,7 @@ public class Crater {
         detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem = new DuckSystem(opMode);
         this.totemSystem = new TotemSystem(opMode, false);
+        this.sharedPaths = new SharedPaths(new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem));
     }
 
     public Crater(AllSystems systems) {
@@ -39,6 +39,7 @@ public class Crater {
         this.armSystem = systems.armSystem;
         this.detectionSystem = systems.detectionSystem;
         this.duckSystem = systems.duckSystem;
+        this.sharedPaths = new SharedPaths(systems);
     }
 
     /**
@@ -124,7 +125,7 @@ public class Crater {
 
     public void DetectAndCollectTotem(int mirror) {
         floor = detectionSystem.findTargetFloor2(mirror);
-        totemSystem.collectTotem(floor);
+        totemSystem.collectTotem(floor, mirror);
     }
 
     /**
@@ -169,43 +170,71 @@ public class Crater {
         armSystem.autonomousReload();
     }
 
-    public void RZNCX(int mirror) {
-        floor = detectionSystem.findTargetFloor2(mirror);
-        //collect totem
-        totemSystem.collectTotem(floor);
+    private void RZNCXLoop(int i) {
+        double extraDistance = 4;
+        double initialDistance = 65 + 10 * i;
+        drivingSystem.driveStraight(initialDistance, 0.5, false);
+        double[] distance = drivingSystem.driveUntilCollect(100, 0.2);
+        TimeUtils.sleep(200);
+        armSystem.moveArm(ArmSystem.Floors.THIRD);
+        drivingSystem.driveToPoint(distance[0], 15+distance[1], 90, 0.5, 0.5);
+        drivingSystem.driveStraight(initialDistance + extraDistance, -0.5);
+        drivingSystem.driveToPoint(0, -75, 60 - i * 4, 0.5, 0.5);
+        TimeUtils.sleep(300);
+        armSystem.spit();
+        TimeUtils.sleep(600);
+        armSystem.stop();
+        armSystem.moveArm(0);
+        drivingSystem.driveToPoint(0, 80, 90, 0.5, 0.5);
+        drivingSystem.driveStraight(extraDistance, 0.5);
+    }
+
+    public void RZNCDeploy(ArmSystem.Floors floor, boolean toPoint) {
         if (floor == ArmSystem.Floors.THIRD) {
             drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, 0.5);
         }
-        armSystem.moveArm(floor);
-        drivingSystem.driveToPoint(2, -26, 50, 0.5, 0.7);
-        if (floor == ArmSystem.Floors.FIRST) {
-            TimeUtils.sleep(200);
-        } else {
-            TimeUtils.sleep(700);
-        }
-        armSystem.spit();
-        TimeUtils.sleep(300);
-        armSystem.moveArm(0);
-        drivingSystem.driveToPoint(0, 70, 90, 0.5, 0.5);
 
-        for (int i = 0; i < 3; i++) {
-            drivingSystem.driveStraight(70, 0.7);
-            double distance = drivingSystem.driveUntilCollect(70, 0.3);
-            TimeUtils.sleep(200);
-            drivingSystem.driveStraight(distance / 2, -0.6);
-            drivingSystem.driveSideways(5, 0.6);
-            drivingSystem.driveStraight(68 + distance / 2, -0.8);
-            armSystem.moveArm(ArmSystem.Floors.THIRD);
-            drivingSystem.driveToPoint(0, -73, 60 - i * 10, 0.5, 0.5);
-            TimeUtils.sleep(300);
+        if (floor == ArmSystem.Floors.FIRST) {
+            // because the the totem system blocks the armSystem, we can't use the autonomousPlaceFreight, so we turn 180 degrees adn use placeFreight instead.
+            armSystem.autonomousMoveArm(floor);
+            drivingSystem.driveToPoint(10, -50, -90, 0.5, 0.7);
+            armSystem.awaitArmArrival();
+            TimeUtils.sleep(50);
             armSystem.spit();
             TimeUtils.sleep(300);
-            armSystem.stop();
+            if (toPoint) {
+                drivingSystem.driveToPoint(20, 65, 90, 0.5, 1);
+//                drivingSystem.driveSideways(10, 0.6);
+            }
             armSystem.moveArm(0);
-            drivingSystem.driveToPoint(0, 80, 90, 0.5, 0.5);
+        } else {
+            armSystem.moveArm(floor);
+            TimeUtils.sleep(700);
+            drivingSystem.driveToPoint(2, -26, 50, 0.5, 0.7);
+            armSystem.awaitArmArrival();
+            TimeUtils.sleep(50);
+            armSystem.spit();
+            TimeUtils.sleep(300);
+            if (toPoint) {
+                drivingSystem.driveToPoint(0, 65, 90, 0.5, 1);
+//                drivingSystem.driveSideways(10, 0.6);
+            }
+            armSystem.moveArm(0);
+        }
+    }
+
+    public void RZNCX(int mirror) {
+        floor = detectionSystem.findTargetFloor2(mirror);
+        //collect totem
+        totemSystem.collectTotem(floor, mirror);
+
+        RZNCDeploy(floor, true);
+
+        for (int i = 0; i < 2; i++) {
+            RZNCXLoop(i);
         }
         armSystem.collect();
-        drivingSystem.driveStraight(100, 0.8);
+        drivingSystem.driveStraight(100, 0.5);
     }
 
 
@@ -213,24 +242,33 @@ public class Crater {
      * Goes to crater. Rams through obstacle.
      */
     public void RZNCO(int mirror) {
-        placeFreight(mirror);
-        dodgeToFront(mirror);
+        floor = detectionSystem.findTargetFloor2(mirror);
+        //collect totem
+        totemSystem.collectTotem(floor, mirror);
 
-        drivingSystem.turn(180, 200);
-        armSystem.moveArm(-200);
-        drivingSystem.driveStraight(30, -0.6);
-        drivingSystem.driveStraight(80, 1);
+        RZNCDeploy(floor, false);
+        if (floor == ArmSystem.Floors.FIRST) {
+            drivingSystem.driveToPoint(0, 30, 90, 0.5, 0.5);
+        } else {
+            drivingSystem.turn(40, 200);
+            drivingSystem.driveSideways(15, 0.6);
+        }
+
+        armSystem.stop();
+        armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
+        drivingSystem.driveStraight(120, 1);
     }
 
     /**
      * Goes to crater. Enters through path.
      */
     public void RZNCP(int mirror) {
-        placeFreight(mirror);
-        dodgeToFront(mirror);
+        floor = detectionSystem.findTargetFloor2(mirror);
+        //collect totem
+        totemSystem.collectTotem(floor, mirror);
 
-        drivingSystem.turn(180, 200);
-        drivingSystem.driveSideways(60, 0.6 * mirror);
+        RZNCDeploy(floor, true);
+
         drivingSystem.driveStraight(100, 0.6);
     }
 

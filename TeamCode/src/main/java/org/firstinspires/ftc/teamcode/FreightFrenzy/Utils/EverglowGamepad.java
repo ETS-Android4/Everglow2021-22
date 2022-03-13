@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class EverglowGamepad {
     private final Gamepad gamepad;
+    private ElapsedTime squareHoldTimer;
 
     private boolean previousA;
     private boolean previousB;
@@ -31,9 +33,9 @@ public class EverglowGamepad {
     private boolean currentLb;
     private boolean  currentLt;
 
-
     public EverglowGamepad(Gamepad gamepad) {
         this.gamepad = gamepad;
+        this.squareHoldTimer = new ElapsedTime();
     }
 
     /**
@@ -110,6 +112,13 @@ public class EverglowGamepad {
         return currentLb && !previousLb;
     }
 
+    public boolean squareHold(){
+        if(squareHoldTimer.seconds() > 4) {
+            return true;
+        }
+        return false;
+    }
+
     public void update() {
         previousA = currentA;
         previousB = currentB;
@@ -138,6 +147,9 @@ public class EverglowGamepad {
         currentRb = gamepad.right_bumper;
         currentRt = gamepad.right_trigger > 0.1;
 
+        if(!gamepad.x){
+            squareHoldTimer.reset();
+        }
     }
 
 }

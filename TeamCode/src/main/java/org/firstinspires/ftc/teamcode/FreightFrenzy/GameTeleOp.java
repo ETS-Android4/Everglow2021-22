@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "GameTeleOp", group = "Linear Opmode")
 public class GameTeleOp extends LinearOpMode {
@@ -21,6 +24,7 @@ public class GameTeleOp extends LinearOpMode {
     DuckSystem      duckSystem;
     EverglowGamepad ourGamepad1;
     TouchSensor     touch;
+    TotemSystem totemSystem;
 
     boolean passingObstacle = false;
 
@@ -30,6 +34,7 @@ public class GameTeleOp extends LinearOpMode {
         armSystem     = new ArmSystem(this);
         duckSystem    = new DuckSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
+        totemSystem = new TotemSystem(this, true);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;
@@ -134,6 +139,10 @@ public class GameTeleOp extends LinearOpMode {
 
             if (!passingObstacle) {
                 armSystem.restOnLoad();
+            }
+
+            if(ourGamepad1.squareHold()){
+                armSystem.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
             armSystem.restOnFirstFloor();

@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 
 @Autonomous(name = "RedRZNCP", group = "RedAutonomousR")
-@Disabled
 public class RedRZNCP extends LinearOpMode {
     Crater crater;
 

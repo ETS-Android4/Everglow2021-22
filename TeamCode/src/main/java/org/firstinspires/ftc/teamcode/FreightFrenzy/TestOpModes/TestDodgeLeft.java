@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
 
 @Autonomous(name = "TestDodgeLeft", group = "Autonomous")
+@Disabled
 public class TestDodgeLeft extends LinearOpMode {
     Carousel car;
 

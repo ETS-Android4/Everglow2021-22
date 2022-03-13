@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -40,6 +41,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 
 @TeleOp(name = "Duck Speed Test", group = "Test")
+@Disabled
 public class DuckSpeed extends LinearOpMode {
     DuckSystem duckSystem;
     EverglowGamepad ourGamepad1;

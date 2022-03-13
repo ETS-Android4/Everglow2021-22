@@ -13,7 +13,8 @@ public class TotemSystem {
     public static final double AZIMUTH_ZERO = 0.095;
     public static final double ALTITUDE_ZERO = 0.765;
     public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.43;
-    public static final double ALTITUDE_MAX = 0.75;
+    public static final double ALTITUDE_MAX = 0.84;
+    private static final double TOTEM_ALTITUDE_INCREASE = -0.045;
     public Servo azimuth;
     public Servo altitude;
     public CRServo meter;
@@ -29,8 +30,9 @@ public class TotemSystem {
             azimuth.setPosition(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
             altitude.setPosition(ALTITUDE_MAX);
         } else {
-            azimuth.setPosition(AZIMUTH_ZERO);
-            altitude.setPosition(ALTITUDE_ZERO);
+            setAltitude(ALTITUDE_ZERO);
+            TimeUtils.sleep(350);
+            setAzimuth(AZIMUTH_ZERO);
         }
     }
 
@@ -63,39 +65,49 @@ public class TotemSystem {
         meter.setPower(0);
     }
 
-    public void collectTotem(ArmSystem.Floors floor) {
+    public void collectTotem(ArmSystem.Floors floor, int mirror) {
         switch (floor) {
             case FIRST:
                 setAzimuth(0.04);
-                setAltitude(0.63);
+                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(50);
+                drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
             case SECOND:
                 setAzimuth(0.175);
-                setAltitude(0.628);
+                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(50);
+                drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
             case THIRD:
-                setAzimuth(0.22);
-                setAltitude(0.628);
+                setAzimuth(0.23);
+                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(100);
-                drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5);
+                drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5*mirror);
+                drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
         }
-        drivingSystem.driveStraight(14, -0.5);
-        new Thread(()->{
-            secureTotem(floor);
-        }).start();
-        TimeUtils.sleep(200);
+//        new Thread(()->{
+//            secureTotem(floor);
+//        }).start();
+//        TimeUtils.sleep(200);
+        secureTotem(floor);
     }
 
+    private static final boolean RETRACT_TOTEM = false;
+
     public void secureTotem(ArmSystem.Floors floor) {
-        setAltitudeSlow(0.7, 200);
+        setAltitudeSlow(0.7 + TOTEM_ALTITUDE_INCREASE, 200);
         setAzimuthSlow(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE, 600);
-        setAltitudeSlow(ALTITUDE_MAX + 0.05, 500);
-        extend(-0.7);
-        TimeUtils.sleep(1000);
-        stop();
+        setAltitudeSlow(ALTITUDE_MAX, 200);
+
+        if (RETRACT_TOTEM) {
+            new Thread(()-> {
+                extend(-0.7);
+                TimeUtils.sleep(1000);
+                stop();
+            }).start();
+        }
     }
 
     public void setAzimuthSlow(double pos, long time) {
@@ -114,6 +126,19 @@ public class TotemSystem {
             double currentPos = startPos * (1 - partComplete) + targetPos * partComplete;
             servo.setPosition(currentPos);
             TimeUtils.sleep(time / NUM_STEPS);
+        }
+    }
+
+    public static double driveStraightDistanceForFloor(ArmSystem.Floors floor){
+        switch (floor){
+            case FIRST:
+                return 13;
+            case SECOND:
+                return 14;
+            case THIRD:
+                return 15;
+            default:
+                throw new IllegalArgumentException("Floor for driveStraightDistanceForFloor must be FIRST, SECOND, or THIRD.");
         }
     }
 

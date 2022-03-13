@@ -22,9 +22,9 @@ public class TestPickupTotem extends LinearOpMode {
 
         while (opModeIsActive()) {
             ArmSystem.Floors floor =  detectionSystem.findTargetFloor2(1);
-            totemSystem.collectTotem(floor);
-            TimeUtils.sleep(200);
-            drivingSystem.driveStraight(100, -0.7);
+            totemSystem.collectTotem(floor, 1);
+            TimeUtils.sleep(5000);
+//            drivingSystem.driveStraight(100, -0.7);
             stop();
         }
     }

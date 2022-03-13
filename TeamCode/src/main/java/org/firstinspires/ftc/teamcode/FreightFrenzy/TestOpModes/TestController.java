@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp(name = "Test Controller", group = "Test")
+@Disabled
 public class TestController extends LinearOpMode {
     @Override
     public void runOpMode() {

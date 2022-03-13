@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
-@Disabled
+
 @TeleOp(name = "CS", group = "Linear Opmode")
 public class CS extends LinearOpMode {
 

@@ -76,6 +76,11 @@ public class ArmSystem {
      * Stops the flywheels.
      */
     public void stop() {
+//        new Thread(()->{
+//            TimeUtils.sleep(500);
+//            collectState = CollectState.STOPPED;
+//            flyWheels.setPower(0);
+//        }).start();
         collectState = CollectState.STOPPED;
         flyWheels.setPower(0);
     }
@@ -102,7 +107,7 @@ public class ArmSystem {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.8);
+        arm.setPower(0.5);
         this.opMode.telemetry.addLine("fast");
         this.opMode.telemetry.update();
     }
@@ -122,7 +127,7 @@ public class ArmSystem {
      */
     public void reload() {
         firstFloor = false;
-        arm.setTargetPosition(-100);
+        arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(0.35);
         loaded = true;
@@ -132,7 +137,7 @@ public class ArmSystem {
      * Turns the arm motor off when the arm is close to resting position.
      */
     public void restOnLoad() {
-        if (-105 <= arm.getCurrentPosition() && loaded) {
+        if (-50 <= arm.getCurrentPosition() && loaded) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
@@ -199,7 +204,7 @@ public class ArmSystem {
                 moveArm(-580);
                 break;
             case FIRST:
-                moveArm(-280);
+                moveArm(-300);
                 break;
         }
     }
@@ -216,6 +221,12 @@ public class ArmSystem {
         spit();
         TimeUtils.sleep(500);
         stop();
+    }
+
+    public void awaitArmArrival(){
+        while (Math.abs(arm.getTargetPosition() - arm.getCurrentPosition()) > 20){
+            TimeUtils.sleep(1);
+        }
     }
 
     /**
