@@ -76,6 +76,11 @@ public class ArmSystem {
      * Stops the flywheels.
      */
     public void stop() {
+//        new Thread(()->{
+//            TimeUtils.sleep(500);
+//            collectState = CollectState.STOPPED;
+//            flyWheels.setPower(0);
+//        }).start();
         collectState = CollectState.STOPPED;
         flyWheels.setPower(0);
     }
@@ -199,7 +204,7 @@ public class ArmSystem {
                 moveArm(-580);
                 break;
             case FIRST:
-                moveArm(-280);
+                moveArm(-300);
                 break;
         }
     }

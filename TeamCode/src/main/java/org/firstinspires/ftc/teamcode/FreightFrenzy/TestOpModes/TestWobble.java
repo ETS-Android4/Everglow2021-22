@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "TestWobble", group = "Test")
+@Disabled
 public class TestWobble extends LinearOpMode {
 
     DrivingSystem   drivingSystem;

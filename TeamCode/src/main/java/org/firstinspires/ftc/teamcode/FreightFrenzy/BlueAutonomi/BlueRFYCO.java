@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
 
 @Autonomous(name = "BlueRFYCO", group = "BlueAutonomousR")
-@Disabled
 public class BlueRFYCO extends LinearOpMode {
     Carousel carousel;
 

@@ -58,19 +58,19 @@ public class Carousel {
         if (mirror == 1) {
             switch (floor) {
                 case FIRST:
-                    drivingSystem.driveSideways(15, 0.6);
+                    drivingSystem.driveSideways(15, 0.6 * mirror);
                     break;
                 case SECOND:
-                    drivingSystem.driveSideways(25, -0.6);
+                    drivingSystem.driveSideways(25, -0.6 * mirror);
                     break;
             }
         } else {
             switch (floor) {
                 case THIRD:
-                    drivingSystem.driveSideways(15, -0.6);
+                    drivingSystem.driveSideways(15, -0.6 * mirror);
                     break;
                 case SECOND:
-                    drivingSystem.driveSideways(25, 0.6);
+                    drivingSystem.driveSideways(25, 0.6 * mirror);
                     break;
             }
         }
@@ -79,19 +79,19 @@ public class Carousel {
         if (mirror == 1) {
             switch (floor) {
                 case FIRST:
-                    drivingSystem.driveSideways(15, -0.6);
+                    drivingSystem.driveSideways(15, -0.6 * mirror);
                     break;
                 case SECOND:
-                    drivingSystem.driveSideways(25, 0.6);
+                    drivingSystem.driveSideways(25, 0.6 * mirror);
                     break;
             }
         } else {
             switch (floor) {
                 case THIRD:
-                    drivingSystem.driveSideways(15, 0.6);
+                    drivingSystem.driveSideways(15, 0.6 * mirror);
                     break;
                 case SECOND:
-                    drivingSystem.driveSideways(25, -0.6);
+                    drivingSystem.driveSideways(25, -0.6* mirror);
                     break;
             }
         }
@@ -170,11 +170,11 @@ public class Carousel {
         }
         opMode.telemetry.addData("Floor: ", floor);
         opMode.telemetry.update();
-        totemSystem.collectTotem(floor);
+        totemSystem.collectTotem(floor, mirror);
 
         drivingSystem.driveStraight(86-TotemSystem.driveStraightDistanceForFloor(floor), -0.5);
         armSystem.autonomousMoveArm(floor);
-        drivingSystem.turn(90, 200);
+        drivingSystem.turn(90 * mirror, 200);
         if (floor == ArmSystem.Floors.THIRD) {
             drivingSystem.driveStraight(20 - TotemSystem.THIRD_FLOOR_SIDEWAYS_DISTANCE, 0.5);
         }else {
@@ -191,8 +191,8 @@ public class Carousel {
 
     public void newPlaceFreightAndCaursel(int mirror) {
         newPlaceFreightAndCollectTotem(mirror);
-        drivingSystem.turn(-90, 100);
-        drivingSystem.driveSidewaysUntilBumping(0.5, 20);
+        drivingSystem.turn(-90 * mirror, 100);
+        drivingSystem.driveSidewaysUntilBumping(0.5 * mirror, 20);
         drivingSystem.driveStraightUntilBumping(0.3, 20);
         TimeUtils.sleep(250);
         duckSystem.runFor(3000);
@@ -200,9 +200,9 @@ public class Carousel {
 
     public void newLZYW(int mirror) {
         newPlaceFreightAndCaursel(mirror);
-        drivingSystem.driveSideways(20, -0.5);
+        drivingSystem.driveSideways(20, -0.5 * mirror);
         drivingSystem.driveStraight(40, -0.5);
-        drivingSystem.turn(-90, 200);
+        drivingSystem.turn(-90 * mirror, 200);
         drivingSystem.driveStraight(25, 0.5);
     }
 
@@ -255,7 +255,7 @@ public class Carousel {
 
     public void newGoToCarousel(int mirror) {
         drivingSystem.driveStraight(35, 0.6);
-        drivingSystem.turn(90, 200);
+        drivingSystem.turn(90 * mirror, 200);
         drivingSystem.driveSideways(110, 0.6 * mirror);
     }
 
@@ -317,7 +317,6 @@ public class Carousel {
      */
     public void LZNW(int mirror) {
         placeFreight(mirror);
-
         drivingSystem.driveStraight(55, -0.6);
         drivingSystem.driveSideways(30, 0.6 * mirror);
     }
@@ -329,8 +328,8 @@ public class Carousel {
         newPlaceFreightAndCaursel(mirror);
         // Go to Crater through path
         drivingSystem.driveSideways(50, -0.6 * mirror);
-        drivingSystem.turn(90, 150);
-        drivingSystem.driveSidewaysUntilBumping(0.6, 10);
+        drivingSystem.turn(90 * mirror, 150);
+        drivingSystem.driveSidewaysUntilBumping(0.6 * mirror, 10);
         drivingSystem.driveStraight(230, 0.7);
     }
 
@@ -343,7 +342,7 @@ public class Carousel {
         // Ram through obstacle
         drivingSystem.driveSideways(30, -0.6 * mirror);
         drivingSystem.driveStraight(20, -0.6 * mirror);
-        drivingSystem.turn(90, 150);
+        drivingSystem.turn(90 * mirror, 150);
         armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
         drivingSystem.driveStraight(300, 1);
     }
@@ -353,7 +352,7 @@ public class Carousel {
         // Go to Crater through path
         drivingSystem.driveSideways(30, -0.6 * mirror);
         drivingSystem.driveStraight(20, -0.6 * mirror);
-        drivingSystem.turn(90, 150);
+        drivingSystem.turn(90 * mirror, 150);
         drivingSystem.driveStraight(300, 1);
         sharedPaths.collectAndPlaceFreight(1);
         armSystem.collect();
@@ -367,10 +366,10 @@ public class Carousel {
         newPlaceFreightAndCaursel(mirror);
         // Go to Crater through path
         drivingSystem.driveSideways(50, -0.7 * mirror);
-        drivingSystem.turn(90, 150);
-        drivingSystem.driveSideways(147, -0.7);
+        drivingSystem.turn(90 * mirror, 150);
+        drivingSystem.driveSideways(147, -0.7 * mirror);
         drivingSystem.driveStraight(140, 0.7);
-        drivingSystem.driveSidewaysUntilBumping(0.7, 20);
+        drivingSystem.driveSidewaysUntilBumping(0.7 * mirror, 20);
         drivingSystem.driveStraight(80, 0.7);
     }
 
@@ -382,11 +381,11 @@ public class Carousel {
 
         // Ram through obstacle
         drivingSystem.driveSideways(50, -0.7 * mirror);
-        drivingSystem.turn(90, 150);
+        drivingSystem.turn(90 * mirror, 150);
         armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
-        drivingSystem.driveSideways(147, -0.7);
+        drivingSystem.driveSideways(147, -0.7 * mirror);
         drivingSystem.driveStraight(140, 0.7);
-        drivingSystem.driveSideways(120, 0.7);
+        drivingSystem.driveSideways(120, 0.7 * mirror);
         drivingSystem.driveStraight(120, 1);
     }
 }

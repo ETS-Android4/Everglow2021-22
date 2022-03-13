@@ -1,14 +1,12 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.BlueAutonomi;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 
-@Autonomous(name = "TestDodgeRight", group = "Autonomous")
-@Disabled
-public class TestDodgeRight extends LinearOpMode {
+@Autonomous(name = "BlueLZNCX", group = "BlueAutonomousL")
+public class BlueLZNCX extends LinearOpMode {
     Crater crater;
 
     @Override
@@ -18,11 +16,8 @@ public class TestDodgeRight extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            crater.placeFreight(1);
-            crater.dodgeToFront(1);
+            crater.RZNCX(-1);
             stop();
         }
     }
 }
-
-

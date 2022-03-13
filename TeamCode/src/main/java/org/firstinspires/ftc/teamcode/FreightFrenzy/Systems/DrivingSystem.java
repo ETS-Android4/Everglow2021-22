@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -326,24 +327,23 @@ public class DrivingSystem {
         final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
 
         while (maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
-            resetDistance();
-            double angleDeviation = getAngleDeviation();
-            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
-            averageMotors += abs(
+            averageMotors = abs(
                     (this.frontRight.getCurrentPosition() + this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
                     ) / 4.0
             );
+
+            double angleDeviation = getAngleDeviation();
+            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
             if(armSystem.touch.isPressed()){
                 stop();
+                TimeUtils.sleep(100);
                 armSystem.stop();
                 return new double[]{(2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV,distanceLeft};
             }
-            if(getAccelerationMagnitude() >= bumpingThreshold && (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV > 15){
-                driveSideways(10,-power);
-                distanceLeft += 10;
-            }
+
         }
+
         stop();
         return new double[]{maxDistance, distanceLeft};
     }
@@ -351,7 +351,7 @@ public class DrivingSystem {
     public double combinedDriveUntilCollect(double maxDistance, double power){
         resetDistance();
         armSystem.collect();
-        double bumpingThreshold = abs(power) * ACCELERATION_BUMPING_THRESHOLD *1;
+        double bumpingThreshold = abs(power) * ACCELERATION_BUMPING_THRESHOLD;
         while (true) {
             double averageMotors = abs(
                     (frontRight.getCurrentPosition() + frontLeft.getCurrentPosition()
@@ -372,8 +372,6 @@ public class DrivingSystem {
                 armSystem.stop();
                 return distanceTraveled;
             }
-
-
         }
     }
 
