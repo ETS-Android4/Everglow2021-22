@@ -14,7 +14,7 @@ public class TotemSystem {
     public static final double ALTITUDE_START = 0.821;
     public static final double AZIMUTH_ZERO = 0.192;
     public static final double ALTITUDE_ZERO = 0.882;
-    private static final double TOTEM_ALTITUDE_INCREASE = -0.045;
+    private static final double TOTEM_ALTITUDE_INCREASE = 0;
     public Servo azimuth;
     public Servo altitude;
     public CRServo meter;
@@ -70,31 +70,31 @@ public class TotemSystem {
         switch (floor) {
             case FIRST:
                 if (mirror == 1) {
-                    setAzimuth(0.03);
+                    setAzimuth(0.13);
                 } else {
                     setAzimuth(0.18833);
                 }
-                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(50);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
             case SECOND:
                 if (mirror == 1) {
-                    setAzimuth(0.175);
+                    setAzimuth(0.32);
                 } else {
                     setAzimuth(0.0745);
                 }
-                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                setAltitude(0.60 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(50);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
             case THIRD:
                 if (mirror == 1) {
-                    setAzimuth(0.23);
+                    setAzimuth(0.38);
                 } else {
                     setAzimuth(0.01832);
                 }
-                setAltitude(0.65 + TOTEM_ALTITUDE_INCREASE);
+                setAltitude(0.60 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(100);
                 drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5 * mirror);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
