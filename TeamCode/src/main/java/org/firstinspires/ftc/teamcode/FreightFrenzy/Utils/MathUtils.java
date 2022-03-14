@@ -90,6 +90,14 @@ public class MathUtils {
         return sum / values.size();
     }
 
+    public static double sum(double[] values){
+        double sum = 0;
+        for (int i = 0; i<values.length;i++){
+            sum += values[i];
+        }
+        return sum;
+    }
+
     public static int isMirrored(int mirror){
         if (mirror == 1){
             return 0;

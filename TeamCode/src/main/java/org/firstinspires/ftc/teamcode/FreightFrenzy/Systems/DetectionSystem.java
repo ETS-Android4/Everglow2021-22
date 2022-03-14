@@ -108,20 +108,20 @@ public class DetectionSystem {
         return targetFloor;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public ArmSystem.Floors findTargetFloor2(int mirror) {
 //        armSystem.moveArm(-300);
 //        TimeUtils.sleep(1200);
         double[] distanceLeft = new double[5];
         double[] distanceRight = new double[5];
         for (int i = 0; i < 5; i++) {
+            TimeUtils.sleep(100);
             distanceLeft[i]  = leftSensor.getDistance(DistanceUnit.CM);
             distanceRight[i] = rightSensor.getDistance(DistanceUnit.CM);
         }
         armSystem.autonomousReload();
 
-        double distL = Arrays.stream(distanceLeft).sum();
-        double distR = Arrays.stream(distanceRight).sum();
+        double distL = MathUtils.sum(distanceLeft);
+        double distR = MathUtils.sum(distanceRight);
         if (distL < 1700) {
             distL = MathUtils.min(distanceLeft);
         }

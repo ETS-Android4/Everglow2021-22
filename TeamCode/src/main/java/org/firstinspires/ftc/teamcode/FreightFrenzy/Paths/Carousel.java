@@ -127,7 +127,7 @@ public class Carousel {
                 TimeUtils.sleep(2500);
         }
         totemSystem.stop();
-        totemSystem.setAltitude(TotemSystem.ALTITUDE_MAX);
+        totemSystem.setAltitude(TotemSystem.ALTITUDE_ZERO);
         totemSystem.setAzimuth(TotemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
         totemSystem.moveAltitude(0.1);
         totemSystem.extend(-0.5);
@@ -140,8 +140,8 @@ public class Carousel {
                 TimeUtils.sleep(2500);
         }
         totemSystem.stop();
-        totemSystem.setAltitude(TotemSystem.ALTITUDE_ZERO);
-        totemSystem.setAzimuth(TotemSystem.AZIMUTH_ZERO);
+        totemSystem.setAltitude(TotemSystem.ALTITUDE_START);
+        totemSystem.setAzimuth(TotemSystem.AZIMUTH_START);
 
 //        armSystem.autonomousMoveArm(floor);
 //        drivingSystem.driveStraight(65, 0.6);

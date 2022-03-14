@@ -10,29 +10,29 @@ public class TotemSystem {
     public static final double THIRD_FLOOR_SIDEWAYS_DISTANCE = 14;
 
     private final LinearOpMode opMode;
-    public static final double AZIMUTH_ZERO = 0.095;
-    public static final double ALTITUDE_ZERO = 0.765;
-    public static final double AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE = 0.43;
-    public static final double ALTITUDE_MAX = 0.84;
+    public static final double AZIMUTH_START = 0.120;
+    public static final double ALTITUDE_START = 0.821;
+    public static final double AZIMUTH_ZERO = 0.192;
+    public static final double ALTITUDE_ZERO = 0.882;
     private static final double TOTEM_ALTITUDE_INCREASE = -0.045;
     public Servo azimuth;
     public Servo altitude;
     public CRServo meter;
     DrivingSystem drivingSystem;
 
-    public TotemSystem(LinearOpMode opMode, boolean startCollected) {
+    public TotemSystem(LinearOpMode opMode, boolean startOpMode) {
         this.opMode = opMode;
         azimuth = opMode.hardwareMap.get(Servo.class, "azimuth");
         altitude = opMode.hardwareMap.get(Servo.class, "altitude");
         meter = opMode.hardwareMap.get(CRServo.class, "extend");
         drivingSystem = new DrivingSystem(opMode);
-        if (startCollected) {
-            azimuth.setPosition(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
-            altitude.setPosition(ALTITUDE_MAX);
+        if (startOpMode) {
+            azimuth.setPosition(AZIMUTH_ZERO);
+            altitude.setPosition(ALTITUDE_ZERO);
         } else {
-            setAltitude(ALTITUDE_ZERO);
+            setAltitude(ALTITUDE_START);
             TimeUtils.sleep(350);
-            setAzimuth(AZIMUTH_ZERO);
+            setAzimuth(AZIMUTH_START);
         }
     }
 
@@ -107,8 +107,8 @@ public class TotemSystem {
 
     public void secureTotem() {
         setAltitudeSlow(0.7 + TOTEM_ALTITUDE_INCREASE, 200);
-        setAzimuthSlow(AZIMUTH_ZERO, 500);
-        setAltitudeSlow(ALTITUDE_MAX, 200);
+        setAzimuthSlow(AZIMUTH_START, 500);
+        setAltitudeSlow(ALTITUDE_ZERO, 200);
 
         if (RETRACT_TOTEM) {
             new Thread(() -> {
