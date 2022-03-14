@@ -50,8 +50,6 @@ public class Carousel {
         drivingSystem.resetDistance();
         drivingSystem.driveStraight(25, -0.6);
         floor = detectionSystem.findTargetFloor2(mirror);
-        this.opMode.telemetry.addData("floor: ", floor);
-        this.opMode.telemetry.update();
         drivingSystem.turn(180, 300);
 
         //avoid totem
@@ -112,9 +110,6 @@ public class Carousel {
         drivingSystem.resetDistance();
         totemSystem.moveAltitude(0.01);
         floor = detectionSystem.findTargetFloor2(mirror);
-        this.opMode.telemetry.addData("floor: ", floor);
-        this.opMode.telemetry.update();
-
         switch (floor) {
             case FIRST:
                 totemSystem.moveAzimuth(-0.04);
@@ -168,14 +163,13 @@ public class Carousel {
         } else {
             floor = ArmSystem.Floors.FIRST;
         }
-        opMode.telemetry.addData("Floor: ", floor);
         opMode.telemetry.update();
         totemSystem.collectTotem(floor, mirror);
 
         drivingSystem.driveStraight(86-TotemSystem.driveStraightDistanceForFloor(floor), -0.5);
         armSystem.autonomousMoveArm(floor);
         drivingSystem.turn(90 * mirror, 200);
-        if (floor == ArmSystem.Floors.THIRD) {
+        if (floor.switchIfMirrored(mirror) == ArmSystem.Floors.THIRD) {
             drivingSystem.driveStraight(20 - TotemSystem.THIRD_FLOOR_SIDEWAYS_DISTANCE, 0.5);
         }else {
             drivingSystem.driveStraight(20, 0.5);
@@ -198,7 +192,7 @@ public class Carousel {
         duckSystem.runFor(3000);
     }
 
-    public void newLZYW(int mirror) {
+    public void LZYW(int mirror) {
         newPlaceFreightAndCaursel(mirror);
         drivingSystem.driveSideways(20, -0.5 * mirror);
         drivingSystem.driveStraight(40, -0.5);
@@ -257,20 +251,6 @@ public class Carousel {
         drivingSystem.driveStraight(35, 0.6);
         drivingSystem.turn(90 * mirror, 200);
         drivingSystem.driveSideways(110, 0.6 * mirror);
-    }
-
-    /**
-     * Goes to Carousel, and then to Storage Unit.
-     */
-    public void LZYW(int mirror) {
-        placeFreight(mirror);
-        goToCarousel(mirror);
-        drivingSystem.driveStraight(5, 0.5);
-        TimeUtils.sleep(500);
-        duckSystem.runFor(3000);
-
-        drivingSystem.driveSideways(65, 0.6 * mirror);
-        drivingSystem.driveStraight(7, 0.6);
     }
 
     /**
@@ -341,7 +321,7 @@ public class Carousel {
 
         // Ram through obstacle
         drivingSystem.driveSideways(30, -0.6 * mirror);
-        drivingSystem.driveStraight(20, -0.6 * mirror);
+        drivingSystem.driveStraight(20, -0.6);
         drivingSystem.turn(90 * mirror, 150);
         armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
         drivingSystem.driveStraight(300, 1);
@@ -351,7 +331,7 @@ public class Carousel {
         newPlaceFreightAndCaursel(mirror);
         // Go to Crater through path
         drivingSystem.driveSideways(30, -0.6 * mirror);
-        drivingSystem.driveStraight(20, -0.6 * mirror);
+        drivingSystem.driveStraight(20, -0.6);
         drivingSystem.turn(90 * mirror, 150);
         drivingSystem.driveStraight(300, 1);
         sharedPaths.collectAndPlaceFreight(1);

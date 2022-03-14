@@ -39,6 +39,12 @@ public class DuckSystem {
         duck2.setPower(speed);
     }
 
+    public void runRev(){
+        isRunning = true;
+        duck1.setPower(speed);
+        duck2.setPower(-speed);
+    }
+
     public void increaseSpeed() {
         speed += 0.1;
     }

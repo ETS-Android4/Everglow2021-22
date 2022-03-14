@@ -234,6 +234,7 @@ public class ArmSystem {
      * lowers the arm and spits.
      */
     public void placeTotem() {
+
         moveArm(Floors.TOTEM);
         TimeUtils.sleep(2000);
         arm.setTargetPosition(-2000);
@@ -254,6 +255,29 @@ public class ArmSystem {
      * Enum of the different floors the arm should be able reach: FIRST, SECOND, THIRD, TOTEM.
      */
     public enum Floors {
-        FIRST, SECOND, THIRD, TOTEM, OBSTACLE
+        FIRST, SECOND, THIRD, TOTEM, OBSTACLE;
+
+        /**
+         * When on the blue side, the totem pickup needs to be adjusted. This method returns the location the totem system should go to given the detected floor.
+         * @param mirror the mirror value, -1 if in red side or 1 if in blue side.
+         * @return the floor that the armsystem should pick the totem up in.
+         */
+        public Floors switchIfMirrored(int mirror){
+            if (mirror == 1){
+                return this;
+            }else {
+                switch (this){
+                    case FIRST:
+                        return THIRD;
+                    case SECOND:
+                        return SECOND;
+                    case THIRD:
+                        return FIRST;
+                    default:
+                        throw new IllegalArgumentException("switchIfMirrored given illegal arguments. Legal arguments are: FIRST, SECOND, THIRD");
+                }
+            }
+
+        }
     }
 }
