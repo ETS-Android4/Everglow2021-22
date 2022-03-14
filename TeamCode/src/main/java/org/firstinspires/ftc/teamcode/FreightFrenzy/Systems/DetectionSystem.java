@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
@@ -8,6 +12,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DetectionSystem {
@@ -103,6 +108,7 @@ public class DetectionSystem {
         return targetFloor;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public ArmSystem.Floors findTargetFloor2(int mirror) {
 //        armSystem.moveArm(-300);
 //        TimeUtils.sleep(1200);
@@ -113,8 +119,18 @@ public class DetectionSystem {
             distanceRight[i] = rightSensor.getDistance(DistanceUnit.CM);
         }
         armSystem.autonomousReload();
-        double errorLeft = Math.abs(LEFT_TARGET_DISTANCE_CM - MathUtils.min(distanceLeft));
-        double errorRight = Math.abs(RIGHT_TARGET_DISTANCE_CM - MathUtils.min(distanceRight));
+
+        double distL = Arrays.stream(distanceLeft).sum();
+        double distR = Arrays.stream(distanceRight).sum();
+        if (distL < 1700) {
+            distL = MathUtils.min(distanceLeft);
+        }
+        if (distR < 1700) {
+            distR = MathUtils.min(distanceRight);
+        }
+
+        double errorLeft = Math.abs(LEFT_TARGET_DISTANCE_CM - distL);
+        double errorRight = Math.abs(RIGHT_TARGET_DISTANCE_CM - distR);
 
         ArmSystem.Floors targetFloor;
         if (errorLeft > ERROR_THRESHOLD_CM && errorRight > ERROR_THRESHOLD_CM) {

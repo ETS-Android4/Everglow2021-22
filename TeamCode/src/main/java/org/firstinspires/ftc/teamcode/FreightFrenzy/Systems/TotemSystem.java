@@ -82,7 +82,7 @@ public class TotemSystem {
                 if (mirror == 1) {
                     setAzimuth(0.175);
                 } else {
-                    setAzimuth(0.07333);
+                    setAzimuth(0.0745);
                 }
                 setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(50);
@@ -94,16 +94,12 @@ public class TotemSystem {
                 } else {
                     setAzimuth(0.01832);
                 }
-                setAltitude(0.64 + TOTEM_ALTITUDE_INCREASE);
+                setAltitude(0.65 + TOTEM_ALTITUDE_INCREASE);
                 TimeUtils.sleep(100);
                 drivingSystem.driveSideways(THIRD_FLOOR_SIDEWAYS_DISTANCE, -0.5 * mirror);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor), -0.5);
                 break;
         }
-//        new Thread(()->{
-//            secureTotem(floor);
-//        }).start();
-//        TimeUtils.sleep(200);
         secureTotem();
     }
 
@@ -111,13 +107,13 @@ public class TotemSystem {
 
     public void secureTotem() {
         setAltitudeSlow(0.7 + TOTEM_ALTITUDE_INCREASE, 200);
-        setAzimuthSlow(AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE, 600);
+        setAzimuthSlow(AZIMUTH_ZERO, 500);
         setAltitudeSlow(ALTITUDE_MAX, 200);
 
         if (RETRACT_TOTEM) {
             new Thread(() -> {
                 extend(-0.7);
-                TimeUtils.sleep(1000);
+                TimeUtils.sleep(1500);
                 stop();
             }).start();
         }
