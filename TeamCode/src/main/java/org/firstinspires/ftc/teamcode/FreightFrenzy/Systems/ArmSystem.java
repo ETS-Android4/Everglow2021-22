@@ -10,19 +10,19 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 public class ArmSystem {
 
     private final LinearOpMode opMode;
-    public        DcMotorEx    flyWheels;
-    public        DcMotor      arm;
-    public        TouchSensor  touch;
-    public        int          changeHeight   = 0;
-    private       boolean      loaded         = false;
-    private       boolean      firstFloor     = false;
-    private       Integer      targetPosition = null;
+    public DcMotorEx flyWheels;
+    public DcMotor arm;
+    public TouchSensor touch;
+    public int changeHeight = 0;
+    private boolean loaded = false;
+    private boolean firstFloor = false;
+    private Integer targetPosition = null;
     private CollectState collectState = CollectState.STOPPED;
 
     public ArmSystem(LinearOpMode opMode) {
         this.flyWheels = opMode.hardwareMap.get(DcMotorEx.class, "flywheels");
-        this.arm       = opMode.hardwareMap.get(DcMotor.class, "arm");
-        touch          = opMode.hardwareMap.get(TouchSensor.class, "touch");
+        this.arm = opMode.hardwareMap.get(DcMotor.class, "arm");
+        touch = opMode.hardwareMap.get(TouchSensor.class, "touch");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -76,11 +76,6 @@ public class ArmSystem {
      * Stops the flywheels.
      */
     public void stop() {
-//        new Thread(()->{
-//            TimeUtils.sleep(500);
-//            collectState = CollectState.STOPPED;
-//            flyWheels.setPower(0);
-//        }).start();
         collectState = CollectState.STOPPED;
         flyWheels.setPower(0);
     }
@@ -91,8 +86,8 @@ public class ArmSystem {
      * @param place the target position in ticks.
      */
     public void moveArm(int place) {
-        loaded              = false;
-        firstFloor          = false;
+        loaded = false;
+        firstFloor = false;
         this.targetPosition = null;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place + changeHeight);
@@ -101,8 +96,8 @@ public class ArmSystem {
     }
 
     public void moveArmWithoutWobble(int place) {
-        loaded              = false;
-        firstFloor          = false;
+        loaded = false;
+        firstFloor = false;
         this.targetPosition = place;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place);
@@ -223,8 +218,8 @@ public class ArmSystem {
         stop();
     }
 
-    public void awaitArmArrival(){
-        while (Math.abs(arm.getTargetPosition() - arm.getCurrentPosition()) > 20){
+    public void awaitArmArrival() {
+        while (Math.abs(arm.getTargetPosition() - arm.getCurrentPosition()) > 20) {
             TimeUtils.sleep(1);
         }
     }
@@ -259,14 +254,15 @@ public class ArmSystem {
 
         /**
          * When on the blue side, the totem pickup needs to be adjusted. This method returns the location the totem system should go to given the detected floor.
+         *
          * @param mirror the mirror value, -1 if in red side or 1 if in blue side.
          * @return the floor that the armsystem should pick the totem up in.
          */
-        public Floors switchIfMirrored(int mirror){
-            if (mirror == 1){
+        public Floors switchIfMirrored(int mirror) {
+            if (mirror == 1) {
                 return this;
-            }else {
-                switch (this){
+            } else {
+                switch (this) {
                     case FIRST:
                         return THIRD;
                     case SECOND:

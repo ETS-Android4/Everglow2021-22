@@ -204,7 +204,6 @@ public class Crater {
                 drivingSystem.driveToPoint(20 * mirror, 65, 90 * mirror, 0.5, 1);
 //                drivingSystem.driveSideways(10, 0.6);
             }
-            armSystem.moveArm(0);
         } else {
             armSystem.moveArm(floor);
             TimeUtils.sleep(700);
@@ -217,8 +216,8 @@ public class Crater {
                 drivingSystem.driveToPoint(0 * mirror, 65, 90 * mirror, 0.5, 1);
 //                drivingSystem.driveSideways(10, 0.6);
             }
-            armSystem.moveArm(0);
         }
+        armSystem.moveArm(0);
     }
 
     public void RZNCX(int mirror) {
