@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Crater {
@@ -123,6 +124,7 @@ public class Crater {
     }
 
     public void DetectAndCollectTotem(int mirror) {
+        totemSystem.prePickupMove(mirror);
         floor = detectionSystem.findTargetFloor2(mirror);
         totemSystem.collectTotem(floor, mirror);
     }
@@ -170,22 +172,22 @@ public class Crater {
     }
 
     private void RZNCXLoop(int i, int mirror) {
-        double extraDistance = 2;
+        double extraDistanceForBlue = 10;
         double initialDistance = 65 + 10 * i;
         drivingSystem.driveStraight(initialDistance, 0.5, false);
         double[] distance = drivingSystem.driveUntilCollect(100, 0.2);
         TimeUtils.sleep(200);
         armSystem.moveArm(ArmSystem.Floors.THIRD);
         drivingSystem.driveToPoint(distance[0] * mirror, 15 + distance[1], 90 * mirror, 0.5, 0.5);
-        drivingSystem.driveStraight(initialDistance + extraDistance, -0.5);
-        drivingSystem.driveToPoint(0 * mirror, -75, 60 * mirror - i * 2, 0.5, 0.5);
+        drivingSystem.driveStraight(initialDistance + extraDistanceForBlue * MathUtils.isMirrored(mirror), -0.5);
+        drivingSystem.driveToPoint(0 * mirror, -75, 60 * mirror, 0.5, 0.5);
         TimeUtils.sleep(300);
         armSystem.spit();
         TimeUtils.sleep(600);
         armSystem.stop();
         armSystem.moveArm(0);
         drivingSystem.driveToPoint(0 * mirror, 80, 90 * mirror, 0.5, 0.5);
-        drivingSystem.driveStraight(extraDistance, 0.5);
+        drivingSystem.driveStraight(extraDistanceForBlue * MathUtils.isMirrored(mirror), 0.5);
     }
 
     public void RZNCDeploy(ArmSystem.Floors floor, boolean toPoint, int mirror) {
@@ -222,6 +224,7 @@ public class Crater {
     }
 
     public void RZNCX(int mirror) {
+        totemSystem.prePickupMove(mirror);
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
         totemSystem.collectTotem(floor, mirror);
@@ -240,6 +243,7 @@ public class Crater {
      * Goes to crater. Rams through obstacle.
      */
     public void RZNCO(int mirror) {
+        totemSystem.prePickupMove(mirror);
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
         totemSystem.collectTotem(floor, mirror);
@@ -261,6 +265,7 @@ public class Crater {
      * Goes to crater. Enters through path.
      */
     public void RZNCP(int mirror) {
+        totemSystem.prePickupMove(mirror);
         floor = detectionSystem.findTargetFloor2(mirror);
         //collect totem
         totemSystem.collectTotem(floor, mirror);

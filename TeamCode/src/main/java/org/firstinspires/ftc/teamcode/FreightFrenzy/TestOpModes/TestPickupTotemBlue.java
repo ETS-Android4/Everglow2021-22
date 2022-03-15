@@ -22,6 +22,7 @@ public class TestPickupTotemBlue extends LinearOpMode {
 
         while (opModeIsActive()) {
             int mirror = -1;
+            totemSystem.prePickupMove(mirror);
             ArmSystem.Floors floor =  detectionSystem.findTargetFloor2(mirror);
             totemSystem.collectTotem(floor, mirror);
             TimeUtils.sleep(5000);

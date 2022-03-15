@@ -19,9 +19,9 @@ import java.util.List;
 
 public class DetectionSystem {
 
-    public static final double LEFT_TARGET_DISTANCE_CM  = 40;
-    public static final double RIGHT_TARGET_DISTANCE_CM = 40;
-    public static final double ERROR_THRESHOLD_CM       = 15;
+    public static final double LEFT_TARGET_DISTANCE_CM  = 25;
+    public static final double RIGHT_TARGET_DISTANCE_CM = 25;
+    public static final double ERROR_THRESHOLD_CM       = 10;
 
     private final LinearOpMode   opMode;
     public final  DistanceSensor leftSensor;

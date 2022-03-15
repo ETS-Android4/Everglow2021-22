@@ -159,6 +159,7 @@ public class Carousel {
     public void newPlaceFreightAndCollectTotem(int mirror) {
         drivingSystem.resetDistance();
         if (USE_DETECTION) {
+            totemSystem.prePickupMove(mirror);
             floor = detectionSystem.findTargetFloor2(mirror);
         } else {
             floor = ArmSystem.Floors.FIRST;
