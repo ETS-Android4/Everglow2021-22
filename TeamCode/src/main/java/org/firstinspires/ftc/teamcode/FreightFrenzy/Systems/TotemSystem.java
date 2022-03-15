@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class TotemSystem {
-    public static final double DRIVE_STRAIGHT_PRE_DETECT_DISTANCE = 20;
+    public static final double DRIVE_STRAIGHT_PRE_DETECT_DISTANCE = 15;
 
     public static final double THIRD_FLOOR_SIDEWAYS_DISTANCE = 0;
 
@@ -86,48 +86,51 @@ public class TotemSystem {
             case FIRST:
                 if (mirror == 1) {
                     setAzimuth(0.17);
-                    setAltitude(0.59 + TOTEM_ALTITUDE_INCREASE);
+                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
+                    driveSidewaysDistance = 5;
                 } else {
-                    setAzimuth(0.024);
-                    setAltitude(0.59 + TOTEM_ALTITUDE_INCREASE);
+                    setAzimuth(0.17);
+                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
+                    driveSidewaysDistance = 15;
                 }
                 TimeUtils.sleep(200);
-                driveSidewaysDistance = 5;
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.5 * signum(driveSidewaysDistance) * mirror);
+                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.3 * signum(driveSidewaysDistance) * mirror);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor,mirror) - DRIVE_STRAIGHT_PRE_DETECT_DISTANCE, -0.5);
                 secureTotem();
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.5 * signum(driveSidewaysDistance) * mirror);
+                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.3 * signum(driveSidewaysDistance) * mirror);
                 break;
             case SECOND:
                 if (mirror == 1) {
                     setAzimuth(0.17);
-                    setAltitude(0.59 + TOTEM_ALTITUDE_INCREASE);
+                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
+                    driveSidewaysDistance = -15;
                 } else {
                     setAzimuth(0.17);
-                    setAltitude(0.59 + TOTEM_ALTITUDE_INCREASE);
+                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
+                    driveSidewaysDistance = -5;
                 }
                 TimeUtils.sleep(250);
-                driveSidewaysDistance = -15;
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.5 * signum(driveSidewaysDistance) * mirror);
+                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.3 * signum(driveSidewaysDistance) * mirror);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor,mirror) - DRIVE_STRAIGHT_PRE_DETECT_DISTANCE, -0.5);
                 secureTotem();
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.5 * signum(driveSidewaysDistance) * mirror);
+                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.3 * signum(driveSidewaysDistance) * mirror);
                 break;
             case THIRD:
                 if (mirror == 1) {
                     setAzimuth(0.35);
-                    setAltitude(0.59 + TOTEM_ALTITUDE_INCREASE);
+                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
+                    driveSidewaysDistance = -22;
 
                 } else {
-                    setAzimuth(0.17);
-                    setAltitude(0.59 + TOTEM_ALTITUDE_INCREASE);
+                    setAzimuth(0.024);
+                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
+                    driveSidewaysDistance = -22;
                 }
                 TimeUtils.sleep(250);
-                driveSidewaysDistance = -25;
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.5 * signum(driveSidewaysDistance) * mirror);
+                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.3 * signum(driveSidewaysDistance) * mirror);
                 drivingSystem.driveStraight(driveStraightDistanceForFloor(floor,mirror) - DRIVE_STRAIGHT_PRE_DETECT_DISTANCE, -0.5);
                 secureTotem();
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.5 * signum(driveSidewaysDistance) * mirror);
+                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.3 * signum(driveSidewaysDistance) * mirror);
                 break;
         }
 
@@ -139,12 +142,12 @@ public class TotemSystem {
 
     public void secureTotem() {
         setAltitudeSlow(ALTITUDE_ZERO, 200);
-        setAzimuthSlow(AZIMUTH_ZERO, 100);
+        setAzimuth(AZIMUTH_ZERO);
 
         if (RETRACT_TOTEM) {
             new Thread(() -> {
                 extend(-0.7);
-                TimeUtils.sleep(800);
+                TimeUtils.sleep(500);
                 stop();
             }).start();
         }
@@ -172,11 +175,12 @@ public class TotemSystem {
     public static double driveStraightDistanceForFloor(ArmSystem.Floors floor,int mirror) {
         switch (floor) {
             case FIRST:
-                return 35;
+                return 19;
             case SECOND:
-                return 35;
+                return 19;
             case THIRD:
-                return 35;
+
+                return 19 + 6 * MathUtils.isMirrored(mirror);
             default:
                 throw new IllegalArgumentException("Floor for driveStraightDistanceForFloor must be FIRST, SECOND, or THIRD.");
         }

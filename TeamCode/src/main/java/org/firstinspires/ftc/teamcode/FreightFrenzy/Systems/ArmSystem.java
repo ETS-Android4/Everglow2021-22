@@ -193,7 +193,7 @@ public class ArmSystem {
     public void autonomousMoveArm(Floors level) {
         switch (level) {
             case THIRD:
-                moveArm(-800);
+                moveArm(-900);
                 break;
             case SECOND:
                 moveArm(-580);

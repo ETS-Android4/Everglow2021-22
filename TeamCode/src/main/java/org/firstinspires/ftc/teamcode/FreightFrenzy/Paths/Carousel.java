@@ -170,11 +170,7 @@ public class Carousel {
         drivingSystem.driveStraight(86-TotemSystem.driveStraightDistanceForFloor(floor.switchIfMirrored(mirror),mirror), -0.5);
         armSystem.autonomousMoveArm(floor);
         drivingSystem.turn(90 * mirror, 200);
-        if (floor.switchIfMirrored(mirror) == ArmSystem.Floors.THIRD) {
-            drivingSystem.driveStraight(20 - TotemSystem.THIRD_FLOOR_SIDEWAYS_DISTANCE, 0.5);
-        }else {
-            drivingSystem.driveStraight(20, 0.5);
-        }
+        drivingSystem.driveStraight(20, 0.5);
         armSystem.awaitArmArrival();
         TimeUtils.sleep(50);
         armSystem.spit();
