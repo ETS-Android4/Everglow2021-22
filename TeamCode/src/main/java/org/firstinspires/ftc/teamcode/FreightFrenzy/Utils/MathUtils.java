@@ -106,4 +106,14 @@ public class MathUtils {
         }
     }
 
+    public static int numValuesOutOfRange(List<Double> values, double min, double max){
+        int numOutOfRange = 0;
+        for (double val: values){
+            if (val > max || val < min){
+                numOutOfRange++;
+            }
+        }
+        return numOutOfRange;
+    }
+
 }

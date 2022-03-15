@@ -336,8 +336,6 @@ public class DrivingSystem {
             double angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
             if(armSystem.touch.isPressed()){
-                stop();
-                TimeUtils.sleep(100);
                 armSystem.stop();
                 return new double[]{(2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV,distanceLeft};
             }

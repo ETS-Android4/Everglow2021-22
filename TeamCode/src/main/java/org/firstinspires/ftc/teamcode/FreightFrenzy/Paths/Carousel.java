@@ -166,7 +166,7 @@ public class Carousel {
         opMode.telemetry.update();
         totemSystem.collectTotem(floor, mirror);
 
-        drivingSystem.driveStraight(86-TotemSystem.driveStraightDistanceForFloor(floor), -0.5);
+        drivingSystem.driveStraight(86-TotemSystem.driveStraightDistanceForFloor(floor.switchIfMirrored(mirror),mirror), -0.5);
         armSystem.autonomousMoveArm(floor);
         drivingSystem.turn(90 * mirror, 200);
         if (floor.switchIfMirrored(mirror) == ArmSystem.Floors.THIRD) {

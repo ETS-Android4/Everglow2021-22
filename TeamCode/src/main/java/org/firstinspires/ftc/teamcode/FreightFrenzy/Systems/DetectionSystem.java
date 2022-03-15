@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import android.os.Build;
+import android.util.Pair;
 
 import androidx.annotation.RequiresApi;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
@@ -111,35 +113,43 @@ public class DetectionSystem {
     public ArmSystem.Floors findTargetFloor2(int mirror) {
 //        armSystem.moveArm(-300);
 //        TimeUtils.sleep(1200);
-        double[] distanceLeft = new double[5];
-        double[] distanceRight = new double[5];
-        for (int i = 0; i < 5; i++) {
-            TimeUtils.sleep(100);
-            distanceLeft[i]  = leftSensor.getDistance(DistanceUnit.CM);
-            distanceRight[i] = rightSensor.getDistance(DistanceUnit.CM);
-        }
-        armSystem.autonomousReload();
+//        double[] distanceLeft = new double[5];
+//        double[] distanceRight = new double[5];
+//        for (int i = 0; i < 5; i++) {
+//            TimeUtils.sleep(100);
+//            distanceLeft[i]  = leftSensor.getDistance(DistanceUnit.CM);
+//            distanceRight[i] = rightSensor.getDistance(DistanceUnit.CM);
+//        }
+//        armSystem.autonomousReload();
+//
+//        double distL = MathUtils.sum(distanceLeft);
+//        double distR = MathUtils.sum(distanceRight);
+//        if (distL < 1700) {
+//            distL = MathUtils.min(distanceLeft);
+//        }
+//        if (distR < 1700) {
+//            distR = MathUtils.min(distanceRight);
+//        }
+//
+//        double errorLeft = Math.abs(LEFT_TARGET_DISTANCE_CM - distL);
+//        double errorRight = Math.abs(RIGHT_TARGET_DISTANCE_CM - distR);
 
-        double distL = MathUtils.sum(distanceLeft);
-        double distR = MathUtils.sum(distanceRight);
-        if (distL < 1700) {
-            distL = MathUtils.min(distanceLeft);
-        }
-        if (distR < 1700) {
-            distR = MathUtils.min(distanceRight);
-        }
-
-        double errorLeft = Math.abs(LEFT_TARGET_DISTANCE_CM - distL);
-        double errorRight = Math.abs(RIGHT_TARGET_DISTANCE_CM - distR);
+        Pair<List<Double>, List<Double>> distances = sampleFor(500);
+        List<Double> distancesLeft = distances.first;
+        List<Double> distancesRight = distances.second;
+        int numErrorsLeft = MathUtils.numValuesOutOfRange(distancesLeft, LEFT_TARGET_DISTANCE_CM - ERROR_THRESHOLD_CM, LEFT_TARGET_DISTANCE_CM + ERROR_THRESHOLD_CM);
+        int numErrorsRight = MathUtils.numValuesOutOfRange(distancesRight, LEFT_TARGET_DISTANCE_CM - ERROR_THRESHOLD_CM, LEFT_TARGET_DISTANCE_CM + ERROR_THRESHOLD_CM);
 
         ArmSystem.Floors targetFloor;
-        if (errorLeft > ERROR_THRESHOLD_CM && errorRight > ERROR_THRESHOLD_CM) {
+//        if (errorLeft > ERROR_THRESHOLD_CM && errorRight > ERROR_THRESHOLD_CM) {
+        if (numErrorsLeft > 1 && numErrorsRight > 1) {
             if (mirror == 1) {
                 targetFloor = ArmSystem.Floors.THIRD;
             } else {
                 targetFloor = ArmSystem.Floors.FIRST;
             }
-        } else if (errorLeft < errorRight) {
+//        } else if (errorLeft < errorRight) {
+        } else if (numErrorsLeft <= 1) {
             if (mirror == 1) {
                 targetFloor = ArmSystem.Floors.FIRST;
             } else {
@@ -156,5 +166,16 @@ public class DetectionSystem {
         opMode.telemetry.addData("Floor switched : ", targetFloor.switchIfMirrored(mirror));
         opMode.telemetry.update();
         return targetFloor;
+    }
+
+    private Pair<List<Double>, List<Double>> sampleFor(double durationMillis){
+        List<Double> distancesLeft = new ArrayList<>();
+        List<Double> distancesRight = new ArrayList<>();
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while (elapsedTime.milliseconds() < durationMillis){
+            distancesLeft.add(leftSensor.getDistance(DistanceUnit.CM));
+            distancesRight.add(rightSensor.getDistance(DistanceUnit.CM));
+        }
+        return new Pair<>(distancesLeft, distancesRight);
     }
 }
