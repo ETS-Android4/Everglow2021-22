@@ -193,11 +193,33 @@ public class Carousel {
         duckSystem.runFor(3000);
     }
 
+    public void placeFreightAndArmCarousel(int mirror) {
+        newPlaceFreightAndCollectTotem(mirror);
+        drivingSystem.turn(90 * mirror, 100);
+        drivingSystem.driveSidewaysUntilBumping(-0.5 * mirror, 20);
+        armSystem.moveArm(ArmSystem.Floors.SECOND);
+        drivingSystem.driveStraightUntilBumping(-0.3, 20);
+        TimeUtils.sleep(250);
+//        duckSystem.runFor(3000);
+        armSystem.spit();
+        TimeUtils.sleep(3000);
+        armSystem.stop();
+        armSystem.autonomousReload();
+    }
+
     public void LZYW(int mirror) {
         newPlaceFreightAndCaursel(mirror);
         drivingSystem.driveSideways(20, -0.5 * mirror);
         drivingSystem.driveStraight(40, -0.5);
         drivingSystem.turn(-90 * mirror, 200);
+        drivingSystem.driveStraight(25, 0.5);
+    }
+
+    public void LZYWArm(int mirror) {
+        placeFreightAndArmCarousel(mirror);
+        drivingSystem.driveSideways(20, 0.5 * mirror);
+        drivingSystem.driveStraight(40, 0.5);
+        drivingSystem.turn(90 * mirror, 200);
         drivingSystem.driveStraight(25, 0.5);
     }
 
