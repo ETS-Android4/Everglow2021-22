@@ -106,42 +106,42 @@ public class Carousel {
         armSystem.autonomousReload();
     }
 
-    public void placeFreightAndCollectTotem(int mirror) {
-        drivingSystem.resetDistance();
-        totemSystem.moveAltitude(0.01);
-        floor = detectionSystem.findTargetFloor2(mirror);
-        switch (floor) {
-            case FIRST:
-                totemSystem.moveAzimuth(-0.04);
-                totemSystem.extend(0.5);
-                TimeUtils.sleep(2000);
-                break;
-            case SECOND:
-                totemSystem.moveAzimuth(0.05);
-                totemSystem.extend(0.5);
-                TimeUtils.sleep(2000);
-                break;
-            case THIRD:
-                totemSystem.moveAzimuth(0.145);
-                totemSystem.extend(0.5);
-                TimeUtils.sleep(2500);
-        }
-        totemSystem.stop();
-        totemSystem.setAltitude(TotemSystem.ALTITUDE_MAX);
-        totemSystem.setAzimuth(TotemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
-        totemSystem.moveAltitude(0.1);
-        totemSystem.extend(-0.5);
-        switch (floor) {
-            case FIRST:
-            case SECOND:
-                TimeUtils.sleep(2000);
-                break;
-            case THIRD:
-                TimeUtils.sleep(2500);
-        }
-        totemSystem.stop();
-        totemSystem.setAltitude(TotemSystem.ALTITUDE_ZERO);
-        totemSystem.setAzimuth(TotemSystem.AZIMUTH_ZERO);
+//    public void placeFreightAndCollectTotem(int mirror) {
+//        drivingSystem.resetDistance();
+//        totemSystem.moveAltitude(0.01);
+//        floor = detectionSystem.findTargetFloor2(mirror);
+//        switch (floor) {
+//            case FIRST:
+//                totemSystem.moveAzimuth(-0.04);
+//                totemSystem.extend(0.5);
+//                TimeUtils.sleep(2000);
+//                break;
+//            case SECOND:
+//                totemSystem.moveAzimuth(0.05);
+//                totemSystem.extend(0.5);
+//                TimeUtils.sleep(2000);
+//                break;
+//            case THIRD:
+//                totemSystem.moveAzimuth(0.145);
+//                totemSystem.extend(0.5);
+//                TimeUtils.sleep(2500);
+//        }
+//        totemSystem.stop();
+//        totemSystem.setAltitude(TotemSystem.ALTITUDE_ZERO);
+//        totemSystem.setAzimuth(TotemSystem.AZIMUTH_SO_ALTITUDE_CAN_GET_LARGE);
+//        totemSystem.moveAltitude(0.1);
+//        totemSystem.extend(-0.5);
+//        switch (floor) {
+//            case FIRST:
+//            case SECOND:
+//                TimeUtils.sleep(2000);
+//                break;
+//            case THIRD:
+//                TimeUtils.sleep(2500);
+//        }
+//        totemSystem.stop();
+//        totemSystem.setAltitude(TotemSystem.ALTITUDE_START);
+//        totemSystem.setAzimuth(TotemSystem.AZIMUTH_START);
 
 //        armSystem.autonomousMoveArm(floor);
 //        drivingSystem.driveStraight(65, 0.6);
@@ -152,13 +152,14 @@ public class Carousel {
 //        armSystem.stop();
 //        drivingSystem.driveStraight(20, -0.6);
 //        armSystem.autonomousReload();
-    }
+//    }
 
     static final boolean USE_DETECTION = true;
 
     public void newPlaceFreightAndCollectTotem(int mirror) {
         drivingSystem.resetDistance();
         if (USE_DETECTION) {
+            totemSystem.prePickupMove(mirror);
             floor = detectionSystem.findTargetFloor2(mirror);
         } else {
             floor = ArmSystem.Floors.FIRST;
@@ -166,7 +167,7 @@ public class Carousel {
         opMode.telemetry.update();
         totemSystem.collectTotem(floor, mirror);
 
-        drivingSystem.driveStraight(86-TotemSystem.driveStraightDistanceForFloor(floor), -0.5);
+        drivingSystem.driveStraight(86-TotemSystem.driveStraightDistanceForFloor(floor.switchIfMirrored(mirror),mirror), -0.5);
         armSystem.autonomousMoveArm(floor);
         drivingSystem.turn(90 * mirror, 200);
         if (floor.switchIfMirrored(mirror) == ArmSystem.Floors.THIRD) {

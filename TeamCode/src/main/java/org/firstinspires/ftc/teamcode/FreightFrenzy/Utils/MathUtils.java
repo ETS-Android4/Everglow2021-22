@@ -90,12 +90,30 @@ public class MathUtils {
         return sum / values.size();
     }
 
+    public static double sum(double[] values){
+        double sum = 0;
+        for (int i = 0; i<values.length;i++){
+            sum += values[i];
+        }
+        return sum;
+    }
+
     public static int isMirrored(int mirror){
         if (mirror == 1){
             return 0;
         }else {
             return 1;
         }
+    }
+
+    public static int numValuesOutOfRange(List<Double> values, double min, double max){
+        int numOutOfRange = 0;
+        for (double val: values){
+            if (val > max || val < min){
+                numOutOfRange++;
+            }
+        }
+        return numOutOfRange;
     }
 
 }

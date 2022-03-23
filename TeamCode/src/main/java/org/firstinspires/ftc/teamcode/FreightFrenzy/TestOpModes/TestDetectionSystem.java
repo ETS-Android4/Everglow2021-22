@@ -35,18 +35,30 @@ public class TestDetectionSystem extends LinearOpMode {
         touch         = hardwareMap.get(TouchSensor.class, "touch");
 
         waitForStart();
-        telemetry.addLine("Press X to test Advanced Detection System.");
-        telemetry.addLine("Press Y to test Simple Detection System.");
-        telemetry.addLine("Press B to test drive until obstacle.");
-        telemetry.update();
+        int i = 1;
+        int numFirst =0;
+        int numSecond = 0;
+        int numThird = 0;
         while (opModeIsActive()) {
-            if (gamepad2.x){
-                testAdvancedDetection();
-            }else if (gamepad2.y){
-                testSimpleDetection();
-            }else if(gamepad2.b){
-                testDriveUntilObstacle();
+            ArmSystem.Floors floor = detectionSystem.findTargetFloor2(1);
+            switch (floor){
+                case FIRST:
+                    numFirst++;
+                    break;
+                case SECOND:
+                    numSecond++;
+                    break;
+                case THIRD:
+                    numThird++;
+                    break;
             }
+            telemetry.addData("Run: ", i);
+            telemetry.addData("First: ", numFirst);
+            telemetry.addData("Second: ", numSecond);
+            telemetry.addData("Third: ", numThird);
+            telemetry.update();
+            i++;
+            TimeUtils.sleep(50);
         }
     }
 

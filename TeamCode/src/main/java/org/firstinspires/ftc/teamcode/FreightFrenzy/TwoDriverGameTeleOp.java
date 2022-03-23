@@ -51,13 +51,10 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 double left_stick_y = gamepad1.left_stick_y;
                 double right_stick_x = gamepad1.right_stick_x;
 
-                if (gamepad1.right_stick_button) {
-                    right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
-                }
-
                 if (gamepad1.right_trigger>0.1){
                     left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                    right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
 
                 telemetry.addData("left_x", left_stick_x);

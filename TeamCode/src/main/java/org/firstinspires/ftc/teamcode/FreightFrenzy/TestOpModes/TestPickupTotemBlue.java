@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@TeleOp(name = "TestPickupTotem", group = "LinearOpMode")
-public class TestPickupTotem extends LinearOpMode {
+@TeleOp(name = "TestPickupTotemBlue", group = "LinearOpMode")
+public class TestPickupTotemBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -21,8 +21,10 @@ public class TestPickupTotem extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            ArmSystem.Floors floor =  detectionSystem.findTargetFloor2(1);
-            totemSystem.collectTotem(floor, 1);
+            int mirror = -1;
+            totemSystem.prePickupMove(mirror);
+            ArmSystem.Floors floor =  detectionSystem.findTargetFloor2(mirror);
+            totemSystem.collectTotem(floor, mirror);
             TimeUtils.sleep(5000);
 //            drivingSystem.driveStraight(100, -0.7);
             stop();
