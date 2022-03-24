@@ -122,9 +122,9 @@ public class TotemSystem {
                     driveSidewaysDistance = -22;
 
                 } else {
-                    setAzimuth(0.024);
+                    setAzimuth(0.0);
                     setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
-                    driveSidewaysDistance = -22;
+                    driveSidewaysDistance = -13;
                 }
                 TimeUtils.sleep(250);
                 drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.3 * signum(driveSidewaysDistance) * mirror);
@@ -147,7 +147,7 @@ public class TotemSystem {
         if (RETRACT_TOTEM) {
             new Thread(() -> {
                 extend(-0.7);
-                TimeUtils.sleep(500);
+                TimeUtils.sleep(250);
                 stop();
             }).start();
         }

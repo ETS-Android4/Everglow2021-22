@@ -83,16 +83,25 @@ public class ArmSystem {
     /**
      * Move the arm to a target position in ticks.
      *
-     * @param place the target position in ticks.
+ * @param place the target position in ticks.
      */
     public void moveArm(int place) {
+        moveArm(place, 0.8);
+    }
+
+    /**
+     * Move the arm to a target position in ticks.
+     *
+     * @param place the target position in ticks.
+     */
+    public void moveArm(int place, double power) {
         loaded = false;
         firstFloor = false;
         this.targetPosition = null;
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setTargetPosition(place + changeHeight);
+        arm.setPower(power);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(0.8);
     }
 
     public void moveArmWithoutWobble(int place) {
@@ -182,6 +191,9 @@ public class ArmSystem {
             case OBSTACLE:
                 moveArm(-250);
                 break;
+            case CAROUSEL:
+                moveArm(-640, 0.1);
+                break;
         }
     }
 
@@ -250,7 +262,7 @@ public class ArmSystem {
      * Enum of the different floors the arm should be able reach: FIRST, SECOND, THIRD, TOTEM.
      */
     public enum Floors {
-        FIRST, SECOND, THIRD, TOTEM, OBSTACLE;
+        FIRST, SECOND, THIRD, TOTEM, OBSTACLE, CAROUSEL;
 
         /**
          * When on the blue side, the totem pickup needs to be adjusted. This method returns the location the totem system should go to given the detected floor.
