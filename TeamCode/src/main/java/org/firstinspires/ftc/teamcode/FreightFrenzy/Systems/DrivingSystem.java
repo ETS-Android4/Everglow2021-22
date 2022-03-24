@@ -194,12 +194,15 @@ public class DrivingSystem {
         backLeft.setPower(backLeftPower);
     }
 
-
-
     public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
         driveByJoystick(1.16*(sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + sin(getCurrentAngle() * Math.PI / 180) * y1),
                 -cos(getCurrentAngle() * Math.PI / 180) * y1 + cos((90-getCurrentAngle()) * Math.PI / 180) * x1,
                 x2);
+    }
+
+    public void rotateAroundArm(double power) {
+        backLeft.setPower(power / 3);
+        backRight.setPower(-power / 2);
     }
 
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
