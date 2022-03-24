@@ -111,7 +111,7 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.dpad_up()) {
-                armSystem.moveArm(ArmSystem.Floors.TOTEM);
+                armSystem.moveArm(ArmSystem.Floors.CAROUSEL);
             }
 
             if (ourGamepad1.dpad_down() && !passingObstacle) {
