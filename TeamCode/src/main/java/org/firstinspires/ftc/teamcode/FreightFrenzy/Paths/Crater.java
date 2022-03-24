@@ -175,11 +175,13 @@ public class Crater {
         double extraDistanceForBlue = 10;
         double initialDistance = 65 + 10 * i;
         drivingSystem.driveStraight(initialDistance, 0.5, false);
-        double[] distance = drivingSystem.driveUntilCollect(100, 0.2);
+        drivingSystem.driveUntilCollect(100, 0.2);
         TimeUtils.sleep(200);
         armSystem.moveArm(ArmSystem.Floors.THIRD);
-        drivingSystem.driveToPoint(distance[0] * mirror, 15 + distance[1], 90 * mirror, 0.5, 0.5);
-        drivingSystem.driveStraight(initialDistance + extraDistanceForBlue * MathUtils.isMirrored(mirror), -0.5);
+        drivingSystem.driveToPoint(15, 15, 90 * mirror, 0.5, 0.5);
+        drivingSystem.driveUntilWhite(-0.5,false);
+        drivingSystem.driveStraight(55 +extraDistanceForBlue * MathUtils.isMirrored(mirror),-0.6);
+
         drivingSystem.driveToPoint(0 * mirror, -75, 60 * mirror, 0.5, 0.5);
         TimeUtils.sleep(300);
         armSystem.spit();

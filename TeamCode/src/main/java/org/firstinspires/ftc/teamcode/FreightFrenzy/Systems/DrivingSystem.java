@@ -51,6 +51,7 @@ public class DrivingSystem {
 
     private final LinearOpMode opMode;
     private final ArmSystem armSystem;
+    private final ColorSystem colorSystem;
 
     private final BNO055IMU.Parameters parameters;
     private final BNO055IMU imu;
@@ -76,6 +77,7 @@ public class DrivingSystem {
     public DrivingSystem(LinearOpMode opMode) {
         // Get the driving motors from the Hardware Map
         armSystem = new ArmSystem(opMode);
+        colorSystem = new ColorSystem(opMode);
         this.frontRight = opMode.hardwareMap.get(DcMotor.class, "front_right");
         this.frontLeft = opMode.hardwareMap.get(DcMotor.class, "front_left");
         this.backRight = opMode.hardwareMap.get(DcMotor.class, "back_right");
@@ -347,6 +349,14 @@ public class DrivingSystem {
 
         stop();
         return new double[]{maxDistance, distanceLeft};
+    }
+
+    public void driveUntilWhite(double power ,boolean stopAfter){
+        driveByJoystick(0,-power,0);
+        while(!colorSystem.overWhite()){
+        }
+        if(stopAfter)
+            stop();
     }
 
     public double combinedDriveUntilCollect(double maxDistance, double power){
