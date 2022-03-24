@@ -203,7 +203,7 @@ public class DrivingSystem {
     }
 
     public void rotateAroundArm(double power) {
-        backLeft.setPower(power / 3);
+        backLeft.setPower(power / 4);
         backRight.setPower(-power / 2);
     }
 
