@@ -13,6 +13,7 @@ public class ArmSystem {
     public DcMotorEx flyWheels;
     public DcMotor arm;
     public TouchSensor touch;
+    public TouchSensor underHand;
     public int changeHeight = 0;
     private boolean loaded = false;
     private boolean firstFloor = false;
@@ -80,6 +81,14 @@ public class ArmSystem {
         flyWheels.setPower(0);
     }
 
+    /**
+     * Refuse to move arm if bottom touch sensor is pressed
+     */
+    public void slipperUnder(){
+        while(underHand.isPressed()){
+            reload();
+        }
+    }
     /**
      * Move the arm to a target position in ticks.
      *
