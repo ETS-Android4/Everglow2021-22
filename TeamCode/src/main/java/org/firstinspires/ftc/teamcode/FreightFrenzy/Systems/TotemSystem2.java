@@ -32,6 +32,14 @@ public class TotemSystem2 {
         meterRight.setPower(power);
     }
 
+    public void stopLeft() {
+        meterLeft.setPower(0);
+    }
+
+    public void stopRight() {
+        meterRight.setPower(0);
+    }
+
     public void moveAltitude(double delta) {
         altitude1.setPosition(altitude1.getPosition() + delta);
         altitude2.setPosition(altitude2.getPosition() - delta);

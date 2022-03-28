@@ -40,7 +40,6 @@ public class TotemSystem {
             setAzimuth(AZIMUTH_START);
             TimeUtils.sleep(1000);
             setAltitude(ALTITUDE_START);
-
         }
     }
 
