@@ -11,7 +11,7 @@ public class ArmSystem {
 
     private final LinearOpMode opMode;
     public DcMotorEx flyWheels;
-    public DcMotor arm;
+    public DcMotorEx arm;
     public TouchSensor touch;
     public TouchSensor underHand;
     public int changeHeight = 0;
@@ -22,7 +22,7 @@ public class ArmSystem {
 
     public ArmSystem(LinearOpMode opMode) {
         this.flyWheels = opMode.hardwareMap.get(DcMotorEx.class, "flywheels");
-        this.arm = opMode.hardwareMap.get(DcMotor.class, "arm");
+        this.arm = opMode.hardwareMap.get(DcMotorEx.class, "arm");
         touch = opMode.hardwareMap.get(TouchSensor.class, "touch");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
