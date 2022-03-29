@@ -34,7 +34,7 @@ public class GameTeleOp extends LinearOpMode {
         armSystem     = new ArmSystem(this);
         duckSystem    = new DuckSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
-        totemSystem = new TotemSystem(this, true);
+//        totemSystem = new TotemSystem(this, true);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;

@@ -197,7 +197,7 @@ public class DrivingSystem {
     }
 
     public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
-        driveByJoystick(1.16*(sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + sin(getCurrentAngle() * Math.PI / 180) * y1),
+        driveByJoystick(sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + sin(getCurrentAngle() * Math.PI / 180) * y1,
                 -cos(getCurrentAngle() * Math.PI / 180) * y1 + cos((90-getCurrentAngle()) * Math.PI / 180) * x1,
                 x2);
     }
@@ -283,7 +283,81 @@ public class DrivingSystem {
         stop();
     }
 
+    public void driveToPoint2(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
+        resetDistance();
 
+        double currentX = 0;
+        double currentY = 0;
+        this.targetAngle = ang;
+
+        final double ROTATE_SPEED_MIN = 0.2;
+
+        double lastDistanceTravelled = 0;
+        while (true) {
+            double angleDeviation = getAngleDeviation();
+            double xDiff = targetX - currentX;
+            double yDiff = targetY - currentY;
+            boolean xPassed = abs(currentX) >= abs(targetX);
+            boolean yPassed = abs(currentY) >= abs(targetY);
+
+            double xPower, yPower, rotatePower;
+            if (Math.abs(angleDeviation) < 1){
+                rotatePower = 0;
+            }else {
+                rotatePower = copySign(
+                        min(abs(angleDeviation)/180 * (abs(rotateSpeed) - ROTATE_SPEED_MIN) + ROTATE_SPEED_MIN, 1),
+                        angleDeviation);
+            }
+            double maxDiff = max(abs(xDiff), abs(yDiff));
+            if (xPassed || maxDiff == 0) {
+                xPower = 0;
+            } else {
+                xPower = xDiff/maxDiff * driveSpeed;
+            }
+
+            if (yPassed || maxDiff == 0) {
+                yPower = 0;
+            } else {
+                yPower = yDiff/maxDiff * driveSpeed;
+            }
+            // normalize so that xPower^2 + yPower^2 + rotatePower^2 = 1
+            double powerHypot = sqrt(pow(xPower, 2) + pow(yPower, 2) + pow(rotatePower, 2));
+            double xPowerNormalized = xPower/powerHypot;
+            double yPowerNormalized = yPower/powerHypot;
+
+
+
+            if (yPassed && xPassed && Math.abs(angleDeviation) < 1){
+                break;
+            }
+
+            driveByJoystickWithRelationToAxis(xPower, yPower, rotatePower);
+
+            double currEncoder = (abs(backLeft.getCurrentPosition())
+                    + abs(backRight.getCurrentPosition())
+                    + abs(frontLeft.getCurrentPosition())
+                    + abs(frontRight.getCurrentPosition()))/4.;
+            double currentDistanceTraveled = currEncoder / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM);
+            double distanceTraveledNow = currentDistanceTraveled - lastDistanceTravelled;
+            lastDistanceTravelled = currentDistanceTraveled;
+            currentX += xPowerNormalized *  distanceTraveledNow;
+            currentY += yPowerNormalized * distanceTraveledNow;
+
+            opMode.telemetry.addData("angleDeviation: ", angleDeviation);
+            opMode.telemetry.addData("rotatePower: ", rotatePower);
+            opMode.telemetry.addData("currentX: ", currentX);
+            opMode.telemetry.addData("currentY: ", currentY);
+            opMode.telemetry.addData("xDiff: ", xDiff);
+            opMode.telemetry.addData("yDiff: ", yDiff);
+            opMode.telemetry.addData("powerX: ", xPower);
+            opMode.telemetry.addData("powerY: ", yPower);
+            opMode.telemetry.addData("xPassed: ", xPassed);
+            opMode.telemetry.addData("yPassed: ", yPassed);
+            opMode.telemetry.addData("currentDistance: ", currentDistanceTraveled);
+            opMode.telemetry.update();
+        }
+        stop();
+    }
 
     /**
      * The method we use to rotate in place. The robot rotates rapidly if the Angle Deviation is

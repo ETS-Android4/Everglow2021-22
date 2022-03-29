@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 
-@TeleOp(name = "TestNewTotemSystem", group = "Test Opmode")
+@TeleOp(name = "tOtemMMTEESsstttt", group = "Test Opmode")
 public class TestNewTotemSystem extends LinearOpMode {
 
     TotemSystem2 totemSystem;
@@ -19,7 +19,7 @@ public class TestNewTotemSystem extends LinearOpMode {
         while (opModeIsActive()) {
             if (gamepad1.dpad_up) {
                 totemSystem.extendLeft(1);
-                totemSystem.extendRight(1);
+                totemSystem.extendRight(-1);
             }
             if (gamepad1.left_trigger > 0) {
                 totemSystem.extendLeft(gamepad1.left_trigger);
@@ -27,7 +27,7 @@ public class TestNewTotemSystem extends LinearOpMode {
                 totemSystem.stopLeft();
             }
             if (gamepad1.right_trigger > 0) {
-                totemSystem.extendRight(gamepad1.right_trigger);
+                totemSystem.extendRight(-gamepad1.right_trigger);
             } else {
                 totemSystem.stopRight();
             }

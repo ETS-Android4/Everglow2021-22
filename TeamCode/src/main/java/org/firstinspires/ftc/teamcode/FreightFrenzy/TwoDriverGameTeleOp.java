@@ -35,7 +35,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
         duckSystem    = new DuckSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
-        totemSystem = new TotemSystem(this,true);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;
@@ -136,17 +135,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
             if (gamepad2.left_stick_button) {
                 altPower /= 2;
-            }
-
-            totemSystem.moveAzimuth(aziPower);
-            totemSystem.moveAltitude(altPower);
-
-            if (gamepad2.dpad_up) {
-                totemSystem.extend(1);
-            } else if (gamepad2.dpad_down) {
-                totemSystem.extend(-1);
-            } else {
-                totemSystem.stop();
             }
 
             // rumble controller if touchSensor was just pressed
