@@ -59,7 +59,7 @@ public class ArmSystem {
      */
     public void spit() {
         collectState = CollectState.SPITTING;
-        flyWheels.setVelocity(-400);
+        flyWheels.setPower(-0.6);
     }
 
     /**
@@ -73,6 +73,11 @@ public class ArmSystem {
         }
     }
 
+    public void carousel() {
+        collectState = CollectState.CAROUSEL;
+        flyWheels.setVelocity(-1500);
+    }
+
     /**
      * Stops the flywheels.
      */
@@ -84,15 +89,16 @@ public class ArmSystem {
     /**
      * Refuse to move arm if bottom touch sensor is pressed
      */
-    public void slipperUnder(){
-        while(underHand.isPressed()){
+    public void slipperUnder() {
+        while (underHand.isPressed()) {
             reload();
         }
     }
+
     /**
      * Move the arm to a target position in ticks.
      *
- * @param place the target position in ticks.
+     * @param place the target position in ticks.
      */
     public void moveArm(int place) {
         moveArm(place, 0.8);
@@ -201,8 +207,10 @@ public class ArmSystem {
                 moveArm(-250);
                 break;
             case CAROUSEL:
-                moveArm(-640, 0.1);
+                moveArm(-600);
                 break;
+            case CAROUSEL_BACK:
+                moveArm(-2500);
         }
     }
 
@@ -264,14 +272,14 @@ public class ArmSystem {
      * Enum of collection states: STOPPED, COLLECTING, SPITTING.
      */
     public enum CollectState {
-        STOPPED, COLLECTING, SPITTING
+        STOPPED, COLLECTING, SPITTING, CAROUSEL
     }
 
     /**
      * Enum of the different floors the arm should be able reach: FIRST, SECOND, THIRD, TOTEM.
      */
     public enum Floors {
-        FIRST, SECOND, THIRD, TOTEM, OBSTACLE, CAROUSEL;
+        FIRST, SECOND, THIRD, TOTEM, OBSTACLE, CAROUSEL, CAROUSEL_BACK;
 
         /**
          * When on the blue side, the totem pickup needs to be adjusted. This method returns the location the totem system should go to given the detected floor.

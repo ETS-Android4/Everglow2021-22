@@ -6,18 +6,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "TestNewTotemSystem", group = "Test Opmode")
+@TeleOp(name = "Totem System", group = "Test Opmode")
 public class TestNewTotemSystem extends LinearOpMode {
 
-    TotemSystem2    totemSystem;
+    TotemSystem2 totemSystem;
     EverglowGamepad gamepad;
-    int             dirR = 1;
-    int             dirL = 1;
+    int dirR = 1;
+    int dirL = 1;
 
     @Override
     public void runOpMode() {
         totemSystem = new TotemSystem2(this);
-        gamepad     = new EverglowGamepad(gamepad1);
+        gamepad = new EverglowGamepad(gamepad1);
 
         waitForStart();
 

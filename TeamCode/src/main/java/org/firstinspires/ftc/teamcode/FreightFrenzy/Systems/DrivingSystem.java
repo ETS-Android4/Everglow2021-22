@@ -203,8 +203,11 @@ public class DrivingSystem {
     }
 
     public void rotateAroundArm(double power) {
-        backLeft.setPower(power / 4);
-        backRight.setPower(-power / 2);
+        double factor = 3;
+        backLeft.setPower(power / factor / 2);
+        backRight.setPower(-power / factor);
+        frontLeft.setPower(-power / factor / 8.5);
+        frontRight.setPower(power / factor / 8.5);
     }
 
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
