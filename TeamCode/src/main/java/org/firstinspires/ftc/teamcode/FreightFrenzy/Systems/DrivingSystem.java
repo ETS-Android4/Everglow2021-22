@@ -206,6 +206,15 @@ public class DrivingSystem {
         frontRight.setPower(power * (0.1 + 1 / factor / 8.5));
     }
 
+    public void rotateAroundDucks(double power) {
+        double factor = 3;
+        double forward = 0.2;
+        backLeft.setPower(power * (forward + 1 / factor));
+        backRight.setPower(power * (forward - 1 / factor));
+        frontRight.setPower(power * (forward - 1 / factor));
+        frontLeft.setPower(power * forward);
+    }
+
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
         resetDistance();
 

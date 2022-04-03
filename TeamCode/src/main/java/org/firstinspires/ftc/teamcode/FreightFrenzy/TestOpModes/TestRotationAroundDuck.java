@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "TestRotationAroundDuck", group = "Test Opmode")
@@ -12,6 +13,7 @@ public class TestRotationAroundDuck extends LinearOpMode {
 
     DrivingSystem drivingSystem;
     ArmSystem armSystem;
+    DuckSystem duckSystem;
     EverglowGamepad gamepad;
 
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
@@ -21,6 +23,7 @@ public class TestRotationAroundDuck extends LinearOpMode {
     public void runOpMode() {
         drivingSystem = new DrivingSystem(this);
         armSystem = new ArmSystem(this);
+        duckSystem = new DuckSystem(this);
         gamepad = new EverglowGamepad(gamepad1);
 
         waitForStart();
@@ -42,7 +45,8 @@ public class TestRotationAroundDuck extends LinearOpMode {
 
                 drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             } else {
-                drivingSystem.rotateAroundArm(gamepad1.right_stick_x);
+                drivingSystem.rotateAroundDucks(gamepad1.right_stick_x);
+                drivingSystem.driveByJoystick(0, gamepad1.left_stick_y, 0);
             }
 
             if (gamepad.a()) {
@@ -64,10 +68,12 @@ public class TestRotationAroundDuck extends LinearOpMode {
             }
 
             if (gamepad1.right_trigger > 0.1) {
-                armSystem.carousel();
+//                armSystem.carousel();
+                duckSystem.run();
             }
             if (gamepad1.left_trigger > 0.1) {
-                armSystem.stop();
+//                armSystem.stop();
+                duckSystem.stop();
             }
 
             armSystem.restOnLoad();
