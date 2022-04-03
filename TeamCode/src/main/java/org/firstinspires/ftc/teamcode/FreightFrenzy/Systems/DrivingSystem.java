@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
-
 import static java.lang.Math.abs;
 import static java.lang.Math.copySign;
 import static java.lang.Math.cos;
-import static java.lang.Math.hypot;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.Math.pow;
@@ -31,7 +28,6 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,10 +200,10 @@ public class DrivingSystem {
 
     public void rotateAroundArm(double power) {
         double factor = 3;
-        backLeft.setPower(power / factor / 2);
-        backRight.setPower(-power / factor);
-        frontLeft.setPower(-power / factor / 8.5);
-        frontRight.setPower(power / factor / 8.5);
+        backLeft.setPower(power * (0.1 + 1 / factor / 2));
+        backRight.setPower(power * (0.1 - 1 / factor));
+        frontLeft.setPower(power * (0.1 - 1 / factor / 8.5));
+        frontRight.setPower(power * (0.1 + 1 / factor / 8.5));
     }
 
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
