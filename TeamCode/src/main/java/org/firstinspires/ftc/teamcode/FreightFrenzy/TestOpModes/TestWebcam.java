@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem3;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
@@ -20,18 +21,18 @@ public class TestWebcam extends LinearOpMode {
         EverglowGamepad gamepad = new EverglowGamepad(gamepad1);
         CameraSystem3 cameraSystem = new CameraSystem3(this);
         waitForStart();
-        int frameNum = 0;
         while (opModeIsActive()){
-            if(gamepad.square()){
-                Bitmap bmp = cameraSystem.getFrame();
-                telemetry.addLine("Saving Frame: " + frameNum++);
-                if (bmp != null){
-                    telemetry.addLine("Bmp is not null");
-                    cameraSystem.saveBitmap(bmp);
-                }
+            gamepad.update();
+            if (gamepad.square()){
+                cameraSystem.captureImage();
+                telemetry.addLine("Captured Image");
                 telemetry.update();
             }
-            gamepad.update();
+            if (gamepad.circle()){
+                ArmSystem.Floors floor = cameraSystem.detectTotem();
+                telemetry.addData("Floor", floor);
+                telemetry.update();
+            }
 
         }
 
