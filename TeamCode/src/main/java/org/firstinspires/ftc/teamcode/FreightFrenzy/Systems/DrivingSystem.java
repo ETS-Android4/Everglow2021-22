@@ -37,6 +37,7 @@ import java.util.List;
 
 public class DrivingSystem {
 
+    int count = 0;
     private static final int ROTATE_SPEED_DECREASE = 40;
     private static final double ACCELERATION_BUMPING_THRESHOLD = 14;
     private final DcMotor frontRight;
@@ -197,10 +198,19 @@ public class DrivingSystem {
     }
 
     public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
-        driveByJoystick(1.16*(sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + sin(getCurrentAngle() * Math.PI / 180) * y1),
-                -cos(getCurrentAngle() * Math.PI / 180) * y1 + cos((90-getCurrentAngle()) * Math.PI / 180) * x1,
+        double dirVector = Math.sqrt(x1*x1 + y1*y1);
+        double a = Math.atan(x2/dirVector) * 180 / Math.PI;
+        double angle = getCurrentAngle() - 0.3*a;
+
+        opMode.telemetry.addData("a",a);
+        opMode.telemetry.update();
+
+
+        driveByJoystick(1.16 * (sin((90 - angle) * Math.PI / 180) * x1 + sin(angle * Math.PI / 180) * y1),
+                -cos(angle * Math.PI / 180) * y1 + cos((90 - angle) * Math.PI / 180) * x1,
                 x2);
     }
+
 
     public void rotateAroundArm(double power) {
         double factor = 3;
