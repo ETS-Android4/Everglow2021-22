@@ -44,7 +44,7 @@ public class CameraSystem3 {
         private final Mat hsvAll = new Mat();
         private final Mat redMask = new Mat();
         private final Mat blueMask = new Mat();
-        private final Mat colorMask = new Mat();
+        private final Mat coloredMask = new Mat();
 
 
         CameraPipeline(OpMode opMode) {
@@ -59,7 +59,7 @@ public class CameraSystem3 {
             floorResult.clear();
             isDetectingTotem = true;
             try {
-                return floorResult.poll(1000, TimeUnit.SECONDS);
+                return floorResult.poll(Integer.MAX_VALUE, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return null;
@@ -78,21 +78,24 @@ public class CameraSystem3 {
             Imgproc.cvtColor(input, hsvAll, Imgproc.COLOR_RGB2HSV);
             Core.inRange(hsvAll, low_blue, high_blue, redMask);
             Core.inRange(hsvAll, low_red, high_red, blueMask);
-            Core.bitwise_and(redMask, blueMask, );
+            Core.bitwise_or(redMask, blueMask, coloredMask);
+
 
             if (isDetectingTotem) {
                 isDetectingTotem = false;
-                Mat left = input.submat(leftArea);
-                Mat center = input.submat(centerArea);
-                Mat right = input.submat(rightArea);
-                boolean leftTotem = hasTotemHsv(left);
-                boolean centerTotem = hasTotemHsv(center);
-                boolean rightTotem = hasTotemHsv(right);
+                Mat left = coloredMask.submat(leftArea);
+                Mat center = coloredMask.submat(centerArea);
+                Mat right = coloredMask.submat(rightArea);
 
+                int leftPixels = Core.countNonZero(left);
+                int centerPixels = Core.countNonZero(center);
+                int rightPixels = Core.countNonZero(right);
+
+                // find the area with the fewest colored
                 ArmSystem.Floors floor;
-                if(leftTotem){
+                if(leftPixels < rightPixels && leftPixels < centerPixels){
                     floor = ArmSystem.Floors.FIRST;
-                }else if (centerTotem){
+                }else if (centerPixels < leftPixels && centerPixels < rightPixels){
                     floor = ArmSystem.Floors.SECOND;
                 }else {
                     floor = ArmSystem.Floors.THIRD;
@@ -100,11 +103,11 @@ public class CameraSystem3 {
                 floorResult.offer(floor);
             }
 
+            input.setTo(new Scalar(255,255,255), coloredMask);
 
-
-            Imgproc.rectangle(input, leftArea, new Scalar(255,0,0), 7);
-            Imgproc.rectangle(input, centerArea, new Scalar(255,0,0), 7);
-            Imgproc.rectangle(input, rightArea, new Scalar(255,0,0), 7);
+            Imgproc.rectangle(input, leftArea, new Scalar(0,255,0), 7);
+            Imgproc.rectangle(input, centerArea, new Scalar(0,255,0), 7);
+            Imgproc.rectangle(input, rightArea, new Scalar(0,255,0), 7);
 
             return input;
 
@@ -117,13 +120,13 @@ public class CameraSystem3 {
 //            return combinedResized;
         }
 
-        private boolean hasTotemHsv(Mat input){
-            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
-            Core.inRange(hsv, low_blue, high_blue, redMask);
-            Core.inRange(hsv, low_red, high_red, blueMask);
-            int numPixels = Core.countNonZero(redMask) + Core.countNonZero(blueMask);
-            return numPixels < PIXEL_COUNT_THRESHOLD;
-        }
+//        private boolean hasTotemHsv(Mat input){
+//            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+//            Core.inRange(hsv, low_blue, high_blue, redMask);
+//            Core.inRange(hsv, low_red, high_red, blueMask);
+//            int numPixels = Core.countNonZero(redMask) + Core.countNonZero(blueMask);
+//            return numPixels < PIXEL_COUNT_THRESHOLD;
+//        }
 
 //        public boolean hasTotem(Mat input) {
 //            Imgproc.blur(input, blurred, new Size(5, 5));
