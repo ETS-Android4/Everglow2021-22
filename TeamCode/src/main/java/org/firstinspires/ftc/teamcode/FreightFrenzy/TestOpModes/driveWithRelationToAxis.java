@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "driveWithRelationToAxis", group = "Linear Opmode")
-@Disabled
 public class driveWithRelationToAxis extends LinearOpMode {
     DrivingSystem drivingSystem;
     ArmSystem armSystem;

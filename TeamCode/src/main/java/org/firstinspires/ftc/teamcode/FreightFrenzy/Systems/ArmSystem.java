@@ -59,7 +59,7 @@ public class ArmSystem {
      */
     public void spit() {
         collectState = CollectState.SPITTING;
-        flyWheels.setPower(-0.6);
+        flyWheels.setVelocity(-3000);
     }
 
     /**
