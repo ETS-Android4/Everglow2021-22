@@ -197,7 +197,7 @@ public class DrivingSystem {
     }
 
     public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
-        driveByJoystick(sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + sin(getCurrentAngle() * Math.PI / 180) * y1,
+        driveByJoystick(1.16*(sin((90-getCurrentAngle()) * Math.PI / 180) * x1 + sin(getCurrentAngle() * Math.PI / 180) * y1),
                 -cos(getCurrentAngle() * Math.PI / 180) * y1 + cos((90-getCurrentAngle()) * Math.PI / 180) * x1,
                 x2);
     }
