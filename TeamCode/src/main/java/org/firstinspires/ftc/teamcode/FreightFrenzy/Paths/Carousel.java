@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem3;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
@@ -21,6 +22,7 @@ public class Carousel {
     ElapsedTime timer;
     ArmSystem.Floors floor;
     private final SharedPaths sharedPaths;
+    private final CameraSystem3 cameraSystem;
 
     public Carousel(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -29,7 +31,8 @@ public class Carousel {
         duckSystem = new DuckSystem(opMode);
         totemSystem = new TotemSystem(opMode, false);
         detectionSystem = new DetectionSystem(opMode, armSystem);
-        sharedPaths = new SharedPaths(new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem));
+        cameraSystem = new CameraSystem3(opMode);
+        sharedPaths = new SharedPaths(new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem, cameraSystem));
         timer = new ElapsedTime();
     }
 
@@ -39,6 +42,7 @@ public class Carousel {
         this.armSystem = systems.armSystem;
         this.duckSystem = systems.duckSystem;
         this.detectionSystem = systems.detectionSystem;
+        this.cameraSystem = systems.cameraSystem;
         this.sharedPaths = new SharedPaths(systems);
         timer = new ElapsedTime();
     }
@@ -249,7 +253,7 @@ public class Carousel {
      * @param mirror 1 is red side, -1 is blue side.
      */
     public void dodgeOtherTotem(int mirror) {
-        AllSystems systems = new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem);
+        AllSystems systems = new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem, cameraSystem);
         Crater Crater = new Crater(systems);
         Crater.floor = floor;
         Crater.dodgeToFront(mirror);

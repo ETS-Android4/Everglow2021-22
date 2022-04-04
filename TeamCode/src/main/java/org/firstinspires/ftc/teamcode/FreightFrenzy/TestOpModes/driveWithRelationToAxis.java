@@ -34,16 +34,17 @@ public class driveWithRelationToAxis extends LinearOpMode {
             drivingSystem.driveByJoystickWithRelationToAxis(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             if(ourGamepad1.cross()){
-                drivingSystem.driveToPoint(70,70,90, 0.7, 1);
+                drivingSystem.driveToPoint(0,70,0, 0.7, 1);
             }
             if(ourGamepad1.circle()){
                 drivingSystem.driveToPoint(0,70,90,0.7,1);
             }
             if(ourGamepad1.square()){
-                drivingSystem.driveStraight(30,0.5);
+                drivingSystem.driveToPoint(70,0,-90,0.7,1);
+
             }
             if(ourGamepad1.triangle()){
-                drivingSystem.driveSideways(30,0.5);
+                drivingSystem.driveToPoint(70,70,180,0.7,1);
             }
 
         }

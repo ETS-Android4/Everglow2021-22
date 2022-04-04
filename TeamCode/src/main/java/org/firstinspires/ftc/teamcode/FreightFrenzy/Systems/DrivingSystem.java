@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
 import static java.lang.Math.abs;
+import static java.lang.Math.atan2;
 import static java.lang.Math.copySign;
 import static java.lang.Math.cos;
 import static java.lang.Math.max;
@@ -9,6 +10,7 @@ import static java.lang.Math.min;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
+import static java.lang.Math.toDegrees;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -194,11 +196,11 @@ public class DrivingSystem {
     }
 
     public void driveByJoystickWithRelationToAxis(double x1, double y1, double x2) {
-        double dirVector = Math.sqrt(x1*x1 + y1*y1);
-        double a = Math.atan(x2/dirVector) * 180 / Math.PI;
-        double angle = getCurrentAngle() - 0.3*a;
+        double drivePower = Math.hypot(x1, y1);
+        double angleAdjustment = toDegrees(atan2(x2, drivePower));
+        double angle = getCurrentAngle() - 0.3 * angleAdjustment;
 
-        opMode.telemetry.addData("a",a);
+        opMode.telemetry.addData("angleAdjustment", angleAdjustment);
         opMode.telemetry.update();
 
 

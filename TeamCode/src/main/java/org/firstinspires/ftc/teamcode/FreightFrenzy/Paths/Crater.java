@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem3;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
@@ -23,7 +24,9 @@ public class Crater {
     public DetectionSystem detectionSystem;
     LinearOpMode opMode;
     ArmSystem.Floors floor;
+    private final CameraSystem3 cameraSystem;
     private final SharedPaths sharedPaths;
+
 
 
     public Crater(LinearOpMode opMode) {
@@ -33,7 +36,8 @@ public class Crater {
         detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem = new DuckSystem(opMode);
         this.totemSystem = new TotemSystem(opMode, false);
-        this.sharedPaths = new SharedPaths(new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem));
+        cameraSystem = new CameraSystem3(opMode);
+        this.sharedPaths = new SharedPaths(new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem, cameraSystem));
     }
 
     public Crater(AllSystems systems) {
@@ -43,6 +47,7 @@ public class Crater {
         this.detectionSystem = systems.detectionSystem;
         this.duckSystem = systems.duckSystem;
         this.sharedPaths = new SharedPaths(systems);
+        this.cameraSystem = systems.cameraSystem;
     }
 
     /**
@@ -225,7 +230,7 @@ public class Crater {
 
     public void RZNCX(int mirror) {
         totemSystem.prePickupMove(mirror);
-        floor = detectionSystem.findTargetFloor2(mirror);
+        floor = cameraSystem.detectTotem();
         //collect totem
         totemSystem.collectTotem(floor, mirror);
 
