@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ColorSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
@@ -22,9 +23,8 @@ public class GameTeleOp extends LinearOpMode {
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
     DuckSystem      duckSystem;
+    ColorSystem colorSystem;
     EverglowGamepad ourGamepad1;
-    TouchSensor     touch;
-    TotemSystem totemSystem;
 
     boolean passingObstacle = false;
 
@@ -33,8 +33,8 @@ public class GameTeleOp extends LinearOpMode {
         drivingSystem = new DrivingSystem(this);
         armSystem     = new ArmSystem(this);
         duckSystem    = new DuckSystem(this);
+        colorSystem = new ColorSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
-//        totemSystem = new TotemSystem(this, true);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;
@@ -91,7 +91,7 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.lt()) {
-                armSystem.toggleSpitting();
+                armSystem.toggleSpitting(colorSystem.isCargo());
             }
 
             if (ourGamepad1.rb()) {
@@ -149,6 +149,7 @@ public class GameTeleOp extends LinearOpMode {
             armSystem.slowArm();
 
             telemetry.addData("arm pos: ", armSystem.arm.getTargetPosition());
+            telemetry.addData("is cargo sensor: ", colorSystem.isCargo());
             telemetry.update();
         }
     }
