@@ -110,7 +110,7 @@ public class ArmSystem {
      * Refuse to move arm if bottom touch sensor is pressed
      */
     public void slipperUnder() {
-        while (underHand.isPressed()) {
+        while (underHand.isPressed() && opMode.opModeIsActive()) {
             reload();
         }
     }
@@ -268,7 +268,7 @@ public class ArmSystem {
     }
 
     public void awaitArmArrival() {
-        while (Math.abs(arm.getTargetPosition() - arm.getCurrentPosition()) > 20) {
+        while (Math.abs(arm.getTargetPosition() - arm.getCurrentPosition()) > 20 && opMode.opModeIsActive()) {
             TimeUtils.sleep(1);
         }
     }

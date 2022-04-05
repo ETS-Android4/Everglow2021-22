@@ -237,7 +237,7 @@ public class DrivingSystem {
         final double ROTATE_SPEED_MIN = 0.2;
 
         double lastDistanceTravelled = 0;
-        while (true) {
+        while (opMode.opModeIsActive()) {
             double angleDeviation = getAngleDeviation();
             double xDiff = targetX - currentX;
             double yDiff = targetY - currentY;
@@ -313,7 +313,7 @@ public class DrivingSystem {
         final double ROTATE_SPEED_MIN = 0.2;
 
         double lastDistanceTravelled = 0;
-        while (true) {
+        while (opMode.opModeIsActive()) {
             double angleDeviation = getAngleDeviation();
             double xDiff = targetX - currentX;
             double yDiff = targetY - currentY;
@@ -391,7 +391,7 @@ public class DrivingSystem {
         double theta = getAngleDeviation();
 
         // Rotate until the desired angle is met within an error of 0.5 degrees
-        while (abs(theta) > 0.5) {
+        while (abs(theta) > 0.5 && opMode.opModeIsActive()) {
             theta = getAngleDeviation();
             opMode.telemetry.addData("angleDeviation", theta);
             opMode.telemetry.update();
@@ -425,7 +425,7 @@ public class DrivingSystem {
 
         final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
 
-        while (maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
+        while (maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors && opMode.opModeIsActive()) {
             averageMotors = abs(
                     (this.frontRight.getCurrentPosition() + this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
@@ -447,7 +447,7 @@ public class DrivingSystem {
 
     public void driveUntilWhite(double power ,boolean stopAfter){
         driveByJoystick(0,-power,0);
-        while(!colorSystem.overWhite()){
+        while(!colorSystem.overWhite() && opMode.opModeIsActive()){
         }
         if(stopAfter)
             stop();
@@ -457,7 +457,7 @@ public class DrivingSystem {
         resetDistance();
         armSystem.collect();
         double bumpingThreshold = abs(power) * ACCELERATION_BUMPING_THRESHOLD;
-        while (true) {
+        while (opMode.opModeIsActive()) {
             double averageMotors = abs(
                     (frontRight.getCurrentPosition() + frontLeft.getCurrentPosition()
                             + backLeft.getCurrentPosition() + backRight.getCurrentPosition()
@@ -478,6 +478,8 @@ public class DrivingSystem {
                 return distanceTraveled;
             }
         }
+        // only returned when the opMode stops.
+        return 0;
     }
 
     public double wobbleDriveUntilCollect(double maxDistance, double power){
@@ -488,7 +490,7 @@ public class DrivingSystem {
         ElapsedTime elapsedTime = new ElapsedTime();
         armSystem.collect();
         resetDistance();
-        while (true){
+        while (opMode.opModeIsActive()){
             double averageMotors = abs(
                     (frontRight.getCurrentPosition() + frontLeft.getCurrentPosition()
                             + backLeft.getCurrentPosition() + backRight.getCurrentPosition()
@@ -505,6 +507,8 @@ public class DrivingSystem {
                 return distanceTraveled;
             }
         }
+        // only returned when the opMode stops.
+        return 0;
     }
 
     /**
@@ -527,7 +531,7 @@ public class DrivingSystem {
         double averageMotors = 0;
 
         // Go until the desired distance is reached
-        while (distance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
+        while (distance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors && opMode.opModeIsActive()) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
             double angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
@@ -545,7 +549,7 @@ public class DrivingSystem {
     public void driveStraightUntilBumping(double power, double initialDistance){
         driveStraight(initialDistance, power, false);
         final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
-        while (getAccelerationMagnitude() < bumpingThreshold) {
+        while (getAccelerationMagnitude() < bumpingThreshold && opMode.opModeIsActive()) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
             double angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
@@ -555,7 +559,7 @@ public class DrivingSystem {
     public void driveSidewaysUntilBumping(double power, double initialDistance){
         driveSideways(initialDistance, power, false);
         final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
-        while (getAccelerationMagnitude() < bumpingThreshold) {
+        while (getAccelerationMagnitude() < bumpingThreshold && opMode.opModeIsActive()) {
             // x2 is used to fix the natural deviation of the robot from a straight line due to friction
             double angleDeviation = getAngleDeviation();
             driveByJoystick(power, 0, angleDeviation / ROTATE_SPEED_DECREASE);
@@ -594,7 +598,7 @@ public class DrivingSystem {
         double averageMotors = 0;
 
         // Go until the desired distance is reached
-        while ((distance * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
+        while ((distance * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors && opMode.opModeIsActive()) {
             // x2 is used to fix the natural deviation of the robot from a straight line
             double angleDeviation = getAngleDeviation();
             opMode.telemetry.addData("angleDeviation", angleDeviation);
@@ -628,7 +632,7 @@ public class DrivingSystem {
          */
         double averageMotors = 0;
 
-        while ((abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) {
+        while ((abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors && opMode.opModeIsActive()) {
             driveByJoystick(power, 0, getAngleDeviation() / ROTATE_SPEED_DECREASE);
             averageMotors = abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
@@ -647,7 +651,7 @@ public class DrivingSystem {
         this.targetAngle = getCurrentAngle();
         resetDistance();
 
-        while (sensorBackUp.getDistance(DistanceUnit.CM) > distance) {
+        while (sensorBackUp.getDistance(DistanceUnit.CM) > distance && opMode.opModeIsActive()) {
             driveByJoystick(0, -power, getAngleDeviation() / ROTATE_SPEED_DECREASE);
         }
         stop();
@@ -680,7 +684,7 @@ public class DrivingSystem {
         double averageMotors = 0;
 
         // Run until the stop condition is met
-        while (!stopCondition.shouldStop()) {
+        while (!stopCondition.shouldStop() && opMode.opModeIsActive()) {
             driveByJoystick(power, 0, getAngleDeviation() / 40);
             averageMotors = abs(
                     (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
@@ -708,7 +712,7 @@ public class DrivingSystem {
         double averageMotors = 0;
 
         // Run until the stop condition is met
-        while (!stopCondition.shouldStop()) {
+        while (!stopCondition.shouldStop() && opMode.opModeIsActive()) {
             driveByJoystick(0, -power, getAngleDeviation() / 40);
             averageMotors = abs(
                     (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
@@ -733,7 +737,7 @@ public class DrivingSystem {
         elapsedTime.startTime();
 
         // Run for [duration] seconds
-        while (elapsedTime.seconds() < duration) {
+        while (elapsedTime.seconds() < duration && opMode.opModeIsActive()) {
             double distance = distanceSensor.getDistance(DistanceUnit.CM);
             if (distance < 50) {
                 distances.add(distance);
@@ -766,7 +770,7 @@ public class DrivingSystem {
      */
     public void CS(ArmSystem armSystem) {
         // Go right until the Shipping Hubs' stem is detected
-        while (sensorBackUp.getDistance(DistanceUnit.CM) > 50 || sensorBackDown.getDistance(DistanceUnit.CM) > 50) {
+        while ((sensorBackUp.getDistance(DistanceUnit.CM) > 50 || sensorBackDown.getDistance(DistanceUnit.CM) > 50) && opMode.opModeIsActive()) {
             driveByJoystick(-0.4, 0, 0);
         }
         stop();
@@ -774,7 +778,7 @@ public class DrivingSystem {
         double avgDistance = distanceSensorAverage(2, sensorBackDown);
         driveToFixedDistance(avgDistance, 35, 0.3);
 
-        while (sensorBackDown.getDistance(DistanceUnit.CM) < 40) {
+        while (sensorBackDown.getDistance(DistanceUnit.CM) < 40 && opMode.opModeIsActive()) {
             driveByJoystick(0, 0, 0.2);
         }
 

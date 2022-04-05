@@ -22,10 +22,14 @@ import java.util.concurrent.TimeUnit;
 
 public class CameraSystem3 {
     static class CameraPipeline extends OpenCvPipeline {
-
-        private static final Rect leftArea = new Rect(503, 491, 229, 234);
-        private static final Rect centerArea = new Rect(903, 484, 300, 218);
-        private static final Rect rightArea = new Rect(1376, 463, 249, 232);
+        private static final int rectXIncrease = 20;
+        private static final int rectYIncrease = 100;
+        private static Rect createRect(int x, int y, int width, int height){
+            return new Rect(x - rectXIncrease / 2, y - rectYIncrease, width + rectXIncrease, height + rectYIncrease);
+        }
+        private static final Rect leftArea = createRect(503, 491, 229, 234);
+        private static final Rect centerArea = createRect(903, 484, 300, 218);
+        private static final Rect rightArea = createRect(1376, 463, 249, 232);
 
         private static final Scalar low_blue = new Scalar(94, 80, 2);
         private static final Scalar high_blue = new Scalar(126, 255, 255);
@@ -103,7 +107,7 @@ public class CameraSystem3 {
                 floorResult.offer(floor);
             }
 
-            input.setTo(new Scalar(255,255,255), coloredMask);
+            input.setTo(new Scalar(251, 72, 196), coloredMask);
 
             Imgproc.rectangle(input, leftArea, new Scalar(0,255,0), 7);
             Imgproc.rectangle(input, centerArea, new Scalar(0,255,0), 7);

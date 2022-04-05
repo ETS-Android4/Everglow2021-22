@@ -54,9 +54,9 @@ public class Routes {
     private void pickupTotem(){
         floor = systems.cameraSystem.detectTotem();
         double driveStaightDistanceForTotem = driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror);
-        systems.drivingSystem.driveStraight(driveStaightDistanceForTotem, 0.6);
+        systems.drivingSystem.driveStraight(driveStaightDistanceForTotem, -0.6);
         // pick up totem
-        systems.drivingSystem.driveStraight(INITIAL_DRIVE_STAIGHT_DISTANCE - driveStaightDistanceForTotem, 0.6);
+        systems.drivingSystem.driveStraight(INITIAL_DRIVE_STAIGHT_DISTANCE - driveStaightDistanceForTotem, -0.6);
     }
 
     private void craterPlaceFreight(boolean toPoint){

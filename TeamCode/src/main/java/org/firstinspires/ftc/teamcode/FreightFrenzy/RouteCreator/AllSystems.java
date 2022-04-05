@@ -34,7 +34,7 @@ public class AllSystems {
         this.detectionSystem = new DetectionSystem(opMode, armSystem);
         this.drivingSystem = new DrivingSystem(opMode);
         this.duckSystem = new DuckSystem(opMode);
-        this.totemSystem = new TotemSystem(opMode, false);
+        this.totemSystem = null;
         this.cameraSystem = new CameraSystem3(opMode);
     }
 
