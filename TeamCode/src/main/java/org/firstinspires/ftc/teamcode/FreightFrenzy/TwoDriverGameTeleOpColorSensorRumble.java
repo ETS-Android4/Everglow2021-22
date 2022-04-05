@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "TwoDriverGameTeleOp", group = "Linear Opmode")
-public class TwoDriverGameTeleOp extends LinearOpMode {
+@TeleOp(name = "TwoDriverGameTeleOpColorSensorRumble", group = "Linear Opmode")
+public class TwoDriverGameTeleOpColorSensorRumble extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
@@ -144,13 +144,11 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 armSystem.stop();
             }
 
-            if (touchPressed && !prevTouchPressed) {
+            if (colorSystem.isCargo()) {
                 gamepad1.rumble(1000);
                 gamepad2.rumble(1000);
             }
-
-            prevTouchPressed = touchPressed;
-
+            
             if (!passingObstacle) {
                 armSystem.restOnLoad();
             }
