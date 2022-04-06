@@ -46,7 +46,6 @@ public class driveWithRelationToAxis extends LinearOpMode {
             if(ourGamepad1.triangle()){
                 drivingSystem.driveToPoint(70,70,180,0.7,1);
             }
-
         }
     }
 }

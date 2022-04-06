@@ -242,7 +242,7 @@ public class DrivingSystem {
         this.targetAngle = ang;
 
         final double ROTATE_SPEED_MIN = 0.2;
-
+        final double MIN_MOVE_SPEED = 0.2;
         double lastDistanceTravelled = 0;
         while (opMode.opModeIsActive()) {
             double angleDeviation = getAngleDeviation();
@@ -262,21 +262,24 @@ public class DrivingSystem {
             double maxDiff = max(abs(xDiff), abs(yDiff));
             if (xPassed || maxDiff == 0) {
                 xPower = 0;
-            } else {
-                xPower = xDiff/maxDiff * driveSpeed;
+            } else if(xDiff/targetX < 0.1) {
+                xPower = Math.max((xDiff/targetX)*10*driveSpeed,MIN_MOVE_SPEED);
+            }else{
+                xPower = driveSpeed;
             }
 
             if (yPassed || maxDiff == 0) {
                 yPower = 0;
-            } else {
-                yPower = yDiff/maxDiff * driveSpeed;
+            } else if(yDiff/targetY < 0.1) {
+                yPower = Math.max((yDiff/targetY)*10*driveSpeed,MIN_MOVE_SPEED);
+            }
+            else{
+                yPower = driveSpeed;
             }
             // normalize so that xPower^2 + yPower^2 + rotatePower^2 = 1
             double powerHypot = sqrt(pow(xPower, 2) + pow(yPower, 2) + pow(rotatePower, 2));
             double xPowerNormalized = xPower/powerHypot;
             double yPowerNormalized = yPower/powerHypot;
-
-
 
             if (yPassed && xPassed && Math.abs(angleDeviation) < 1){
                 break;
@@ -289,10 +292,10 @@ public class DrivingSystem {
                     + abs(frontLeft.getCurrentPosition())
                     + abs(frontRight.getCurrentPosition()))/4.;
             double currentDistanceTraveled = currEncoder / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM);
-            double distanceTraveledNow = currentDistanceTraveled - lastDistanceTravelled;
+            double distanceTraveledNow = (currentDistanceTraveled - lastDistanceTravelled);
             lastDistanceTravelled = currentDistanceTraveled;
-            currentX += xPowerNormalized *  distanceTraveledNow;
-            currentY += yPowerNormalized * distanceTraveledNow;
+            currentX += xPowerNormalized *  distanceTraveledNow *  (yPower + xPower) / (rotatePower + yPower + xPower);
+            currentY += yPowerNormalized * distanceTraveledNow *  (yPower + xPower) / (rotatePower + yPower + xPower);
 
             opMode.telemetry.addData("angleDeviation: ", angleDeviation);
             opMode.telemetry.addData("rotatePower: ", rotatePower);
