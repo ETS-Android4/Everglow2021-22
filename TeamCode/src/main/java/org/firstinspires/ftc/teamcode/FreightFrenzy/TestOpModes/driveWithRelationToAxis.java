@@ -45,7 +45,6 @@ public class driveWithRelationToAxis extends LinearOpMode {
             if(ourGamepad1.triangle()){
                 drivingSystem.driveSideways(30,0.5);
             }
-
         }
     }
 }
