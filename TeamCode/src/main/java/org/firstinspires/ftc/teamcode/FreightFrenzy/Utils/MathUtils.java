@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 import androidx.annotation.Nullable;
+
+import org.ejml.simple.SimpleMatrix;
 
 import java.util.List;
 
@@ -114,6 +119,46 @@ public class MathUtils {
             }
         }
         return numOutOfRange;
+    }
+
+    public static class Vector2{
+        public double x;
+        public double y;
+
+        public Vector2(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public String toString(){
+            return "x = " + x + ", y = " + y;
+        }
+    }
+
+
+    public static Vector2 driveImpacts(double x1, double y1, double x2, double fr, double fl, double br, double bl, double theta){
+        SimpleMatrix actualMotors = new SimpleMatrix( new double[][] {{fr}, {fl}, {br}, {bl}} );
+        SimpleMatrix driveToMotorsLinear = new SimpleMatrix(new double[][] {
+                {-1, -1, -0.7},
+                {-1, 1, 0.7},
+                {-1, 1, -0.7},
+                {-1, -1, 0.7},
+        });
+        SimpleMatrix rotate = new SimpleMatrix(new double[][]{
+                {cos(theta), sin(theta), 0},
+                {-sin(theta), cos(theta), 0},
+                {0, 0, 1}
+        });
+        SimpleMatrix driveToMotors = driveToMotorsLinear.mult(rotate);
+        System.out.println(actualMotors);
+
+        SimpleMatrix drive = driveToMotors.solve(actualMotors); // todo: catch singularMatrixException
+
+        System.out.println(drive);
+
+        return new Vector2(drive.get(0, 0),drive.get(1, 0));
+
+
     }
 
 }

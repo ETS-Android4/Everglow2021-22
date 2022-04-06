@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -14,6 +15,7 @@ public class ArmSystem {
     public DcMotorEx arm;
     public TouchSensor touch;
     public TouchSensor underHand;
+    private ColorSystem colorSystem;
     public int changeHeight = 0;
     private boolean loaded = false;
     private boolean firstFloor = false;
@@ -21,9 +23,10 @@ public class ArmSystem {
     private CollectState collectState = CollectState.STOPPED;
 
     public ArmSystem(LinearOpMode opMode) {
-        this.flyWheels = opMode.hardwareMap.get(DcMotorEx.class, "flywheels");
-        this.arm = opMode.hardwareMap.get(DcMotorEx.class, "arm");
+        flyWheels = opMode.hardwareMap.get(DcMotorEx.class, "flywheels");
+        arm = opMode.hardwareMap.get(DcMotorEx.class, "arm");
         touch = opMode.hardwareMap.get(TouchSensor.class, "touch");
+        colorSystem = new ColorSystem(opMode);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flyWheels.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -62,6 +65,15 @@ public class ArmSystem {
         flyWheels.setVelocity(-3000);
     }
 
+    public void spit(boolean isCargo) {
+        collectState = CollectState.SPITTING;
+        if (colorSystem.isCargo()) {
+            flyWheels.setVelocity(-2000);
+        } else {
+            flyWheels.setVelocity(-3000);
+        }
+    }
+
     /**
      * Toggle the deployment on and off
      */
@@ -70,6 +82,14 @@ public class ArmSystem {
             stop();
         } else {
             spit();
+        }
+    }
+
+    public void toggleSpitting(boolean isCargo) {
+        if (collectState == CollectState.SPITTING) {
+            stop();
+        } else {
+            spit(isCargo);
         }
     }
 
@@ -90,7 +110,7 @@ public class ArmSystem {
      * Refuse to move arm if bottom touch sensor is pressed
      */
     public void slipperUnder() {
-        while (underHand.isPressed()) {
+        while (underHand.isPressed() && opMode.opModeIsActive()) {
             reload();
         }
     }
@@ -248,7 +268,7 @@ public class ArmSystem {
     }
 
     public void awaitArmArrival() {
-        while (Math.abs(arm.getTargetPosition() - arm.getCurrentPosition()) > 20) {
+        while (Math.abs(arm.getTargetPosition() - arm.getCurrentPosition()) > 20 && opMode.opModeIsActive()) {
             TimeUtils.sleep(1);
         }
     }

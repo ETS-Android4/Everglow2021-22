@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ColorSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "TwoDriverGameTeleOp", group = "Linear Opmode")
@@ -21,9 +20,9 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
     DrivingSystem   drivingSystem;
     ArmSystem       armSystem;
     DuckSystem      duckSystem;
+    ColorSystem colorSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
-    TotemSystem totemSystem;
 
     boolean passingObstacle = false;
     boolean duckSpin = false;
@@ -33,6 +32,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
         drivingSystem = new DrivingSystem(this);
         armSystem     = new ArmSystem(this);
         duckSystem    = new DuckSystem(this);
+        colorSystem = new ColorSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
 
@@ -94,7 +94,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.lt()) {
-                armSystem.toggleSpitting();
+                armSystem.toggleSpitting(colorSystem.isCargo());
             }
 
             if (ourGamepad2.rb()) {
@@ -127,15 +127,15 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 duckSpin = false;
             }
 
-            double aziPower = gamepad2.right_stick_x / 1000;
-            double altPower = -gamepad2.left_stick_y / 1000;
-
-            if (gamepad2.right_stick_button) {
-                aziPower /= 2;
-            }
-            if (gamepad2.left_stick_button) {
-                altPower /= 2;
-            }
+//            double aziPower = gamepad2.right_stick_x / 1000;
+//            double altPower = -gamepad2.left_stick_y / 1000;
+//
+//            if (gamepad2.right_stick_button) {
+//                aziPower /= 2;
+//            }
+//            if (gamepad2.left_stick_button) {
+//                altPower /= 2;
+//            }
 
             // rumble controller if touchSensor was just pressed
             boolean touchPressed =  armSystem.touch.isPressed();
@@ -160,6 +160,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             armSystem.restOnFirstFloor();
+            telemetry.addData("is cargo sensor: ", colorSystem.isCargo());
             telemetry.update();
         }
     }

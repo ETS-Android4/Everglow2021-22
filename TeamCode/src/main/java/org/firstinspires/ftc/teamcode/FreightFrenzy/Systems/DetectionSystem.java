@@ -172,7 +172,7 @@ public class DetectionSystem {
         List<Double> distancesLeft = new ArrayList<>();
         List<Double> distancesRight = new ArrayList<>();
         ElapsedTime elapsedTime = new ElapsedTime();
-        while (elapsedTime.milliseconds() < durationMillis){
+        while (elapsedTime.milliseconds() < durationMillis && opMode.opModeIsActive()){
             distancesLeft.add(leftSensor.getDistance(DistanceUnit.CM));
             distancesRight.add(rightSensor.getDistance(DistanceUnit.CM));
         }
