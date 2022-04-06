@@ -39,6 +39,15 @@ public class DuckSystem {
         duck2.setPower(speed);
     }
 
+    /**
+     * Turns the duck motors the other way round.
+     */
+    public void runReverse() {
+        isRunning = true;
+        duck1.setPower(speed);
+        duck2.setPower(-speed);
+    }
+
     public void runRev(){
         isRunning = true;
         duck1.setPower(speed);
