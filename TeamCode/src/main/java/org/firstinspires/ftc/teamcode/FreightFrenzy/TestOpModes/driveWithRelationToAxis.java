@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "driveWithRelationToAxis", group = "Linear Opmode")
 public class driveWithRelationToAxis extends LinearOpMode {
@@ -35,12 +37,13 @@ public class driveWithRelationToAxis extends LinearOpMode {
 
             if(ourGamepad1.cross()){
                 drivingSystem.driveToPoint(0,70,0, 0.7, 1);
+
             }
             if(ourGamepad1.circle()){
-                drivingSystem.driveToPoint(0,70,90,0.7,1);
+                drivingSystem.driveToPoint(-50,-20,-115,0.7,1);
             }
             if(ourGamepad1.square()){
-                drivingSystem.driveToPoint(70,0,-90,0.7,1);
+                drivingSystem.driveToPoint(0,100,0,0.7,1);
 
             }
             if(ourGamepad1.triangle()){

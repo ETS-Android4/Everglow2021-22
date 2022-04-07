@@ -230,6 +230,8 @@ public class DrivingSystem {
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
         resetDistance();
 
+        final double slowDownArea = 0.4;
+
         double currentX = 0;
         double currentY = 0;
         this.targetAngle = ang;
@@ -255,19 +257,19 @@ public class DrivingSystem {
             double maxDiff = max(abs(xDiff), abs(yDiff));
             if (xPassed || maxDiff == 0) {
                 xPower = 0;
-            } else if(xDiff/targetX < 0.1) {
-                xPower = Math.max((xDiff/targetX)*10*driveSpeed,MIN_MOVE_SPEED);
+            } else if(Math.abs(xDiff/targetX) < slowDownArea) {
+                xPower = Math.max(Math.abs(xDiff/targetX)/slowDownArea*driveSpeed,MIN_MOVE_SPEED)*xDiff/Math.abs(xDiff);
             }else{
-                xPower = driveSpeed;
+                xPower = driveSpeed*xDiff/Math.abs(xDiff);
             }
 
             if (yPassed || maxDiff == 0) {
                 yPower = 0;
-            } else if(yDiff/targetY < 0.1) {
-                yPower = Math.max((yDiff/targetY)*10*driveSpeed,MIN_MOVE_SPEED);
+            } else if(Math.abs(yDiff/targetY) < slowDownArea) {
+                yPower = Math.max(Math.abs(yDiff/targetY)/slowDownArea*driveSpeed,MIN_MOVE_SPEED)*yDiff/Math.abs(yDiff);
             }
             else{
-                yPower = driveSpeed;
+                yPower = driveSpeed*yDiff/Math.abs(yDiff);
             }
             // normalize so that xPower^2 + yPower^2 + rotatePower^2 = 1
             double powerHypot = sqrt(pow(xPower, 2) + pow(yPower, 2) + pow(rotatePower, 2));
@@ -287,8 +289,8 @@ public class DrivingSystem {
             double currentDistanceTraveled = currEncoder / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM);
             double distanceTraveledNow = (currentDistanceTraveled - lastDistanceTravelled);
             lastDistanceTravelled = currentDistanceTraveled;
-            currentX += xPowerNormalized *  distanceTraveledNow *  (yPower + xPower) / (rotatePower + yPower + xPower);
-            currentY += yPowerNormalized * distanceTraveledNow *  (yPower + xPower) / (rotatePower + yPower + xPower);
+            currentX += xPowerNormalized *  distanceTraveledNow;
+            currentY += yPowerNormalized * distanceTraveledNow;
 
             opMode.telemetry.addData("angleDeviation: ", angleDeviation);
             opMode.telemetry.addData("rotatePower: ", rotatePower);
