@@ -218,13 +218,20 @@ public class DrivingSystem {
         frontRight.setPower(power * (0.1 + 1 / factor / 8.5));
     }
 
-    public void rotateAroundDucks(double power) {
+    public void rotateAroundDucks(double power, boolean red) {
         double factor = 3;
-        double forward = 0.2;
-        backLeft.setPower(power * (forward + 1 / factor));
-        backRight.setPower(power * (forward - 1 / factor));
-        frontRight.setPower(power * (forward - 1 / factor));
-        frontLeft.setPower(power * forward);
+        double forward = 0.2 * Math.abs(power);
+        if (red) {
+            backRight.setPower(forward + power * (1.5 / factor));
+            backLeft.setPower(forward - power * (1 / factor));
+            frontLeft.setPower(forward - power * (0.5 / factor));
+            frontRight.setPower(forward);
+        } else {
+            backLeft.setPower(forward + power * (1.5 / factor));
+            backRight.setPower(forward - power * (1 / factor));
+            frontRight.setPower(forward - power * (0.5 / factor));
+            frontLeft.setPower(forward);
+        }
     }
 
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
