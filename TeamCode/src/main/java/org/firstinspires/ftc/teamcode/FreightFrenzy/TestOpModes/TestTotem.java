@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "Totem Test", group = "Linear Opmode")
 @Disabled
@@ -14,6 +15,7 @@ public class TestTotem extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        TimeUtils.opMode = this;
         totemSystem = new TotemSystem(this,false);
 
         waitForStart();

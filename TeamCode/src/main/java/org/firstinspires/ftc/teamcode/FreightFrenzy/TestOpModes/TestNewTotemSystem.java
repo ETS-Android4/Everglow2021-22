@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "Totem System", group = "Test Opmode")
 public class TestNewTotemSystem extends LinearOpMode {
@@ -16,6 +17,7 @@ public class TestNewTotemSystem extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        TimeUtils.opMode = this;
         totemSystem = new TotemSystem2(this);
         gamepad = new EverglowGamepad(gamepad1);
 
@@ -43,19 +45,23 @@ public class TestNewTotemSystem extends LinearOpMode {
                 totemSystem.extendLeft(dirL * Math.sqrt(
                         1 - (gamepad1.left_trigger - 1) * (gamepad1.left_trigger - 1)
                 ));
-            } else {
-                totemSystem.stopLeft();
             }
-
+            
             if (gamepad1.right_trigger > 0) {
                 totemSystem.extendRight(dirR * Math.sqrt(
                         1 - (gamepad1.right_trigger - 1) * (gamepad1.right_trigger - 1)
                 ));
-            } else {
+            }
+
+            if(gamepad1.right_trigger == 0 && !gamepad1.dpad_down && !gamepad1.dpad_up){
                 totemSystem.stopRight();
+            }
+            if(gamepad1.left_trigger == 0 && !gamepad1.dpad_down && !gamepad1.dpad_up){
+                totemSystem.stopLeft();
             }
 
             totemSystem.moveAltitude(gamepad1.right_stick_y / 100);
+
         }
     }
 }

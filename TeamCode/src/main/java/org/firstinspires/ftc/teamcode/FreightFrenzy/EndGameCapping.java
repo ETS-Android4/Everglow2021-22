@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "EndGameCapping", group = "Linear Opmode")
 public class EndGameCapping extends LinearOpMode {
@@ -36,6 +37,7 @@ public class EndGameCapping extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        TimeUtils.opMode = this;
         drivingSystem = new DrivingSystem(this);
         armSystem = new ArmSystem(this);
         duckSystem = new DuckSystem(this);

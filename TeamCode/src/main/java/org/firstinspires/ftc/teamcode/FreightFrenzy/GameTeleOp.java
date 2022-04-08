@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
+import java.sql.Time;
+
 @TeleOp(name = "GameTeleOp", group = "Linear Opmode")
 public class GameTeleOp extends LinearOpMode {
 
@@ -30,6 +32,7 @@ public class GameTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        TimeUtils.opMode = this;
         drivingSystem = new DrivingSystem(this);
         armSystem     = new ArmSystem(this);
         duckSystem    = new DuckSystem(this);
