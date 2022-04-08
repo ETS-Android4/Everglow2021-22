@@ -1,28 +1,23 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@TeleOp(name = "TestDriveStraight", group = "LinearOpMode")
-@Disabled
+@Autonomous(name = "TestInterupt", group = "Test")
 public class TestDriveStraight extends LinearOpMode {
-    Carousel        car;
-    Crater          crater;
-
     @Override
     public void runOpMode() {
-        DrivingSystem drivingSystem = new DrivingSystem(this);
+        AllSystems systems = AllSystems.init(this);
 
         waitForStart();
 
-        while (opModeIsActive()) {
-            drivingSystem.driveStraightUntilBumping(0.5, 20);
-            stop();
-        }
+        systems.duckSystem.run();
+        TimeUtils.sleep(10000);
+        systems.duckSystem.stop();
+        stop();
+        systems.cleanup();
     }
 }

@@ -17,7 +17,7 @@ public class TestWebcam extends LinearOpMode {
     public void runOpMode() {
         TimeUtils.opMode = this;
         EverglowGamepad gamepad = new EverglowGamepad(gamepad1);
-        CameraSystem3 cameraSystem = new CameraSystem3(this, MathUtils.Side.RED);
+        CameraSystem3 cameraSystem = new CameraSystem3(this, MathUtils.Side.RED, null);
         int frameNum = 1;
         waitForStart();
         while (opModeIsActive()){

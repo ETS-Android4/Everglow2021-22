@@ -235,7 +235,7 @@ public class DrivingSystem {
         }
     }
 
-    public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed, boolean stopOnHit) {
+    public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
         resetDistance();
 
         final double slowDownArea = 0.4;
@@ -287,14 +287,6 @@ public class DrivingSystem {
             if (yPassed && xPassed && Math.abs(angleDeviation) < 1){
                 break;
             }
-            if (stopOnHit) {
-                // stop when getting to acceleration is too high
-                final double bumpingThreshold = abs(powerHypot * ACCELERATION_BUMPING_THRESHOLD);
-                if (getAccelerationMagnitude() > bumpingThreshold){
-                    return;
-                }
-            }
-
 
             driveByJoystickWithRelationToAxis(xPower, yPower, rotatePower);
 
@@ -322,10 +314,6 @@ public class DrivingSystem {
             opMode.telemetry.update();
         }
         stop();
-    }
-
-    public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed){
-        driveToPoint(targetX, targetY, ang, driveSpeed, rotateSpeed, false);
     }
 
     public void driveToPoint2(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
@@ -458,7 +446,7 @@ public class DrivingSystem {
 
         final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
 
-        while (maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors && opMode.opModeIsActive()) {
+        while ((maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) && opMode.opModeIsActive()) {
             averageMotors = abs(
                     (this.frontRight.getCurrentPosition() + this.frontLeft.getCurrentPosition()
                             + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
@@ -845,4 +833,6 @@ public class DrivingSystem {
         backRight.setPower(0);
         backLeft.setPower(0);
     }
+
+
 }

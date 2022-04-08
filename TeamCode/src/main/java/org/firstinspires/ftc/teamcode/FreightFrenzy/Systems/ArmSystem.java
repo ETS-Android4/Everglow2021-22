@@ -115,6 +115,11 @@ public class ArmSystem {
         flyWheels.setPower(0);
     }
 
+    public void fullStop(){
+        stop();
+        arm.setPower(0);
+    }
+
     /**
      * Refuse to move arm if bottom touch sensor is pressed
      */

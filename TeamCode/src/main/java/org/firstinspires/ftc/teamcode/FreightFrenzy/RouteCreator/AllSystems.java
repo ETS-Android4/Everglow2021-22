@@ -4,11 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem3;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -40,9 +38,9 @@ public class AllSystems {
         this.drivingSystem = new DrivingSystem(opMode);
         this.duckSystem = new DuckSystem(opMode);
         this.totemSystem = null;
-        this.cameraSystem = new CameraSystem3(opMode, side);
+//        this.cameraSystem = null;
+        this.cameraSystem = new CameraSystem3(opMode, side, this);
         this.side = side;
-
     }
 
     public static AllSystems init(LinearOpMode opMode) {
@@ -51,6 +49,13 @@ public class AllSystems {
 
     public static AllSystems init(LinearOpMode opMode, Side side){
         return new AllSystems(opMode, side);
+    }
+
+    public void cleanup(){
+        cameraSystem.cleanup();
+        armSystem.fullStop();
+        duckSystem.stop();
+        drivingSystem.stop();
     }
 
 
