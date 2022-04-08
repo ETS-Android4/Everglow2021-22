@@ -60,12 +60,12 @@ public class ArmSystem {
     /**
      * Activate the flywheels outwards, in order to deploy a freight.
      */
-    public void spit() {
+    public void defaultSpit() {
         collectState = CollectState.SPITTING;
         flyWheels.setVelocity(-3000);
     }
 
-    public void spit(boolean isCargo) {
+    public void spit() {
         collectState = CollectState.SPITTING;
         if (colorSystem.isCargo()) {
             flyWheels.setVelocity(-2000);
@@ -89,7 +89,7 @@ public class ArmSystem {
         if (collectState == CollectState.SPITTING) {
             stop();
         } else {
-            spit(isCargo);
+            spit();
         }
     }
 

@@ -241,7 +241,7 @@ public class DrivingSystem {
 
         double currentX = 0;
         double currentY = 0;
-        this.targetAngle = ang;
+        this.targetAngle = -ang;
 
         final double ROTATE_SPEED_MIN = 0.2;
         final double MIN_MOVE_SPEED = 0.2;

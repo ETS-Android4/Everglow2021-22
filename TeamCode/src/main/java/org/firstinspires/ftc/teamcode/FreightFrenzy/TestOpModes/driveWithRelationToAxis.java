@@ -35,20 +35,27 @@ public class driveWithRelationToAxis extends LinearOpMode {
             ourGamepad1.update();
             drivingSystem.driveByJoystickWithRelationToAxis(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-            if(ourGamepad1.cross()){
-                drivingSystem.driveToPoint(0,70,0, 0.7, 1);
 
+
+            if(ourGamepad1.cross()){
+                RZNCX(-1);
             }
             if(ourGamepad1.circle()){
-                drivingSystem.driveToPoint(-50,-20,-115,0.7,1);
+                RZNCX(1);
             }
             if(ourGamepad1.square()){
-                drivingSystem.driveToPoint(0,100,0,0.7,1);
+                drivingSystem.driveToPoint(0,50,0,0.3,1);
 
             }
             if(ourGamepad1.triangle()){
-                drivingSystem.driveToPoint(70,70,180,0.7,1);
+                drivingSystem.driveToPoint(50,0,180,0.5,1);
             }
         }
+    }
+
+    void RZNCX(int mirror){
+        drivingSystem.driveToPoint(-55*mirror,-25,-135 * mirror,0.7,1);
+        TimeUtils.sleep(1000);
+        drivingSystem.driveToPoint(55*mirror,25,0*mirror,0.7,1);
     }
 }

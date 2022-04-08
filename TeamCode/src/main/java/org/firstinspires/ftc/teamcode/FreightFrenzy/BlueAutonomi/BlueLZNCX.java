@@ -4,19 +4,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Routes;
 
 @Autonomous(name = "BlueLZNCX", group = "BlueAutonomousL")
 public class BlueLZNCX extends LinearOpMode {
-    Crater crater;
+    Routes routes;
 
     @Override
     public void runOpMode() {
-        crater = new Crater(this);
+        routes = new Routes(this,-1);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            crater.RZNCX(-1);
+            routes.RZNCX();
             stop();
         }
     }

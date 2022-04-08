@@ -93,33 +93,30 @@ public class Routes {
         }
     }
 
-    private void RZNCXLoop(int i, int mirror) {
-        double extraDistanceForBlue = 10;
-        double initialDistance = 65 + 10 * i;
-        systems.drivingSystem.driveStraight(initialDistance, 0.5, false);
-        systems.drivingSystem.driveUntilCollect(100, 0.2);
-        TimeUtils.sleep(200);
+    private void RZNCXLoop(int i) {
+        systems.drivingSystem.driveUntilWhite(0.7,false);
+        systems.drivingSystem.driveUntilCollect(200,0.3);
+        systems.drivingSystem.driveSideways(15,0.5);
+        systems.drivingSystem.driveUntilWhite(-0.7,false);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
-        systems.drivingSystem.driveToPoint(15, 15, 90 * mirror, 0.5, 0.5);
-        systems.drivingSystem.driveUntilWhite(-0.5,false);
-        systems.drivingSystem.driveStraight(55 +extraDistanceForBlue * MathUtils.isMirrored(mirror),-0.6);
-        systems.drivingSystem.driveToPoint(0 * mirror, -75, 60 * mirror, 0.5, 0.5);
-        TimeUtils.sleep(300);
+        systems.drivingSystem.driveToPoint(25*mirror,-55,-135 * mirror,0.7,1);
         systems.armSystem.spit();
-        TimeUtils.sleep(600);
-        systems.armSystem.stop();
-        systems.armSystem.moveArm(0);
-        systems.drivingSystem.driveToPoint(0 * mirror, 80, 90 * mirror, 0.5, 0.5);
+        TimeUtils.sleep(200);
+        systems.drivingSystem.driveToPoint(-25*mirror,70,-90*mirror,0.7,1);
     }
 
 
     public void RZNCX(){
-        craterPlaceFreight(true);
+//        craterPlaceFreight(true);
+        systems.drivingSystem.driveToPoint(0*mirror,-55,-135 * mirror,0.7,1);
+        systems.armSystem.spit();
+        TimeUtils.sleep(200);
+        systems.drivingSystem.driveToPoint(-25*mirror,70,-90*mirror,0.7,1);
         for (int i = 0; i < 2; i++) {
-            RZNCXLoop(i, mirror);
+            RZNCXLoop(i);
         }
-        systems.armSystem.collect();
-        systems.drivingSystem.driveStraight(100, 0.7);
+        systems.drivingSystem.driveUntilWhite(0.7,false);
+        systems.drivingSystem.driveStraight(50, 0.7);
 
     }
 }
