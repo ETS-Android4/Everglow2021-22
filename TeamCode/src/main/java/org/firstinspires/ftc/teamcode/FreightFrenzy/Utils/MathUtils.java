@@ -121,6 +121,14 @@ public class MathUtils {
         return numOutOfRange;
     }
 
+    public static double reduceValue(double value, double reducer, double reduceStart, double reduceMinMultipler){
+        if (reducer > reduceStart){
+            return value;
+        }else {
+            return value * reduceMinMultipler + (1 - reduceMinMultipler) * reducer / reduceStart * value;
+        }
+    }
+
     public static class Vector2{
         public double x;
         public double y;
@@ -157,8 +165,21 @@ public class MathUtils {
         System.out.println(drive);
 
         return new Vector2(drive.get(0, 0),drive.get(1, 0));
-
-
     }
 
+    public enum Side{
+        RED(1), BLUE(-1);
+        Side(int mirror) {
+            this.mirror = mirror;
+        }
+        public final int mirror;
+
+        public static Side fromMirror(int mirror){
+            if (mirror == 1){
+                return RED;
+            }else {
+                return BLUE;
+            }
+        }
+    }
 }

@@ -21,16 +21,15 @@ public class TotemSystem {
     public static final double AZIMUTH_ZERO = 0.2;
     public static final double ALTITUDE_ZERO = 0.9;
     private static final double TOTEM_ALTITUDE_INCREASE = 0;
+    // these servos are not initialized now, this entire class will be deleted.
     public Servo azimuth;
     public Servo altitude;
     public CRServo meter;
+
     DrivingSystem drivingSystem;
 
     public TotemSystem(LinearOpMode opMode, boolean startOpMode) {
         this.opMode = opMode;
-        azimuth = opMode.hardwareMap.get(Servo.class, "azimuth");
-        altitude = opMode.hardwareMap.get(Servo.class, "altitude");
-        meter = opMode.hardwareMap.get(CRServo.class, "extend");
         drivingSystem = new DrivingSystem(opMode);
         if (startOpMode) {
             setAzimuth(AZIMUTH_ZERO);

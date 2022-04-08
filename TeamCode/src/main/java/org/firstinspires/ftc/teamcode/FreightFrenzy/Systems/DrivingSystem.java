@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
+import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.reduceValue;
 import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.copySign;
@@ -234,7 +235,7 @@ public class DrivingSystem {
         }
     }
 
-    public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
+    public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed, boolean stopOnHit) {
         resetDistance();
 
         final double slowDownArea = 0.4;
@@ -286,6 +287,14 @@ public class DrivingSystem {
             if (yPassed && xPassed && Math.abs(angleDeviation) < 1){
                 break;
             }
+            if (stopOnHit) {
+                // stop when getting to acceleration is too high
+                final double bumpingThreshold = abs(powerHypot * ACCELERATION_BUMPING_THRESHOLD);
+                if (getAccelerationMagnitude() > bumpingThreshold){
+                    return;
+                }
+            }
+
 
             driveByJoystickWithRelationToAxis(xPower, yPower, rotatePower);
 
@@ -315,14 +324,20 @@ public class DrivingSystem {
         stop();
     }
 
+    public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed){
+        driveToPoint(targetX, targetY, ang, driveSpeed, rotateSpeed, false);
+    }
+
     public void driveToPoint2(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
         resetDistance();
-
         double currentX = 0;
         double currentY = 0;
         this.targetAngle = ang;
 
         final double ROTATE_SPEED_MIN = 0.2;
+
+        final double SLOWDOWN_START_DISTANCE = 30.;
+        final double SLOWDOWN_MIN_MULTIPLIER = 0.1;
 
         double lastDistanceTravelled = 0;
         while (opMode.opModeIsActive()) {
@@ -344,13 +359,19 @@ public class DrivingSystem {
             if (xPassed || maxDiff == 0) {
                 xPower = 0;
             } else {
-                xPower = xDiff/maxDiff * driveSpeed;
+                xPower = reduceValue(xDiff/maxDiff * driveSpeed,
+                        abs(xDiff),
+                        SLOWDOWN_START_DISTANCE,
+                        SLOWDOWN_MIN_MULTIPLIER);
             }
 
             if (yPassed || maxDiff == 0) {
                 yPower = 0;
             } else {
-                yPower = yDiff/maxDiff * driveSpeed;
+                yPower = reduceValue(yDiff/maxDiff * driveSpeed,
+                        abs(yDiff),
+                        SLOWDOWN_START_DISTANCE,
+                        SLOWDOWN_MIN_MULTIPLIER);
             }
             // normalize so that xPower^2 + yPower^2 + rotatePower^2 = 1
             double powerHypot = sqrt(pow(xPower, 2) + pow(yPower, 2) + pow(rotatePower, 2));
@@ -358,7 +379,7 @@ public class DrivingSystem {
             double yPowerNormalized = yPower/powerHypot;
 
 
-
+            // stop if got to destination
             if (yPassed && xPassed && Math.abs(angleDeviation) < 1){
                 break;
             }

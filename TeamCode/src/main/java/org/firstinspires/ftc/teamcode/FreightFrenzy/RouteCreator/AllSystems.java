@@ -8,37 +8,50 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class AllSystems {
     public final LinearOpMode opMode;
     public final ArmSystem armSystem;
-    public final DetectionSystem detectionSystem;
     public final DrivingSystem drivingSystem;
     public final DuckSystem duckSystem;
     public final TotemSystem totemSystem;
     public final CameraSystem3 cameraSystem;
+    public final Side side;
 
-    public AllSystems(LinearOpMode opMode, ArmSystem armSystem, DetectionSystem detectionSystem, DrivingSystem drivingSystem, DuckSystem duckSystem, TotemSystem totemSystem, CameraSystem3 cameraSystem) {
+    public AllSystems(LinearOpMode opMode, ArmSystem armSystem, DrivingSystem drivingSystem, DuckSystem duckSystem, TotemSystem totemSystem, CameraSystem3 cameraSystem, Side side) {
         this.opMode = opMode;
         this.armSystem = armSystem;
-        this.detectionSystem = detectionSystem;
         this.drivingSystem = drivingSystem;
         this.duckSystem = duckSystem;
         this.totemSystem = totemSystem;
         this.cameraSystem = cameraSystem;
+        this.side = side;
+
+        TimeUtils.opMode = opMode;
     }
 
-    private AllSystems(LinearOpMode opMode) {
+    private AllSystems(LinearOpMode opMode, Side side) {
         this.opMode = opMode;
         this.armSystem = new ArmSystem(opMode);
-        this.detectionSystem = new DetectionSystem(opMode, armSystem);
         this.drivingSystem = new DrivingSystem(opMode);
         this.duckSystem = new DuckSystem(opMode);
         this.totemSystem = null;
-        this.cameraSystem = new CameraSystem3(opMode);
+        this.cameraSystem = new CameraSystem3(opMode, side);
+        this.side = side;
+
+        TimeUtils.opMode = opMode;
     }
 
-    public static AllSystems init(LinearOpMode opMode){
-        return new AllSystems(opMode);
+    public static AllSystems init(LinearOpMode opMode) {
+        return init(opMode, Side.RED);
     }
+
+    public static AllSystems init(LinearOpMode opMode, Side side){
+        return new AllSystems(opMode, side);
+    }
+
+
 }
