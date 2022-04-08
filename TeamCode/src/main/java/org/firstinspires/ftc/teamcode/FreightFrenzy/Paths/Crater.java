@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Paths;
 
-import static org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem.THIRD_FLOOR_SIDEWAYS_DISTANCE;
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem.driveStraightDistanceForFloor;
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.isMirrored;
 
@@ -36,7 +35,7 @@ public class Crater {
         detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem = new DuckSystem(opMode);
         this.totemSystem = new TotemSystem(opMode, false);
-        cameraSystem = new CameraSystem3(opMode, Side.RED);
+        cameraSystem = new CameraSystem3(opMode, Side.RED, null);
     }
 
     public Crater(AllSystems systems) {

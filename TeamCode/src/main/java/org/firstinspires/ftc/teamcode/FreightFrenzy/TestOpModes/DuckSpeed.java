@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
-
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @Autonomous(name = "Duck Test", group = "Test")
 public class DuckSpeed extends LinearOpMode {
@@ -49,21 +49,13 @@ public class DuckSpeed extends LinearOpMode {
     @Override
     public void runOpMode() {
         duckSystem = new DuckSystem(this);
-        ourGamepad1 = new EverglowGamepad(gamepad1);
         waitForStart();
         while(opModeIsActive()) {
-            ourGamepad1.update();
-            if (ourGamepad1.rb()) {
-                duckSystem.increaseSpeed();
-            }
-            if (ourGamepad1.lb()) {
-                duckSystem.decreaseSpeed();
-            }
-            if(ourGamepad1.dpad_left()){
-                duckSystem.runFor(3000);
-            }
-            telemetry.addData("CurrentSpeed", duckSystem.GetSpeed());
-            telemetry.update();
+            TimeUtils.opMode = this;
+            duckSystem.run();
+            TimeUtils.sleep(10000);
+            duckSystem.stop();
+            stop();
         }
     }
 

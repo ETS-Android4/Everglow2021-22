@@ -18,12 +18,14 @@ public class RedRZNCX extends LinearOpMode {
     @Override
     public void runOpMode() {
         TimeUtils.opMode = this;
-        routes = new Routes(AllSystems.init(this, MathUtils.Side.RED));
+        AllSystems systems = AllSystems.init(this, MathUtils.Side.RED);
+        routes = new Routes(systems);
 
         waitForStart();
 
         while (opModeIsActive()) {
             routes.RZNCX();
+            systems.cleanup();
             stop();
         }
     }
