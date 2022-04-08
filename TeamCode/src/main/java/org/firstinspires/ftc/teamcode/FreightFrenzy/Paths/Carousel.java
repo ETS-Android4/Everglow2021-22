@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Carousel {
@@ -21,7 +22,6 @@ public class Carousel {
     LinearOpMode opMode;
     ElapsedTime timer;
     ArmSystem.Floors floor;
-    private final SharedPaths sharedPaths;
     private final CameraSystem3 cameraSystem;
 
     public Carousel(LinearOpMode opMode) {
@@ -31,8 +31,7 @@ public class Carousel {
         duckSystem = new DuckSystem(opMode);
         totemSystem = new TotemSystem(opMode, false);
         detectionSystem = new DetectionSystem(opMode, armSystem);
-        cameraSystem = new CameraSystem3(opMode);
-        sharedPaths = new SharedPaths(new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem, cameraSystem));
+        cameraSystem = new CameraSystem3(opMode, MathUtils.Side.RED);
         timer = new ElapsedTime();
     }
 
@@ -41,9 +40,8 @@ public class Carousel {
         this.drivingSystem = systems.drivingSystem;
         this.armSystem = systems.armSystem;
         this.duckSystem = systems.duckSystem;
-        this.detectionSystem = systems.detectionSystem;
+        this.detectionSystem = null; // todo: remove completely
         this.cameraSystem = systems.cameraSystem;
-        this.sharedPaths = new SharedPaths(systems);
         timer = new ElapsedTime();
     }
 
@@ -253,10 +251,7 @@ public class Carousel {
      * @param mirror 1 is red side, -1 is blue side.
      */
     public void dodgeOtherTotem(int mirror) {
-        AllSystems systems = new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem, cameraSystem);
-        Crater Crater = new Crater(systems);
-        Crater.floor = floor;
-        Crater.dodgeToFront(mirror);
+        // kept to not break old code that needs to be deleted.
     }
 
     /**
@@ -357,7 +352,6 @@ public class Carousel {
         drivingSystem.driveStraight(20, -0.6);
         drivingSystem.turn(90 * mirror, 150);
         drivingSystem.driveStraight(300, 1);
-        sharedPaths.collectAndPlaceFreight(1);
         armSystem.collect();
         drivingSystem.driveStraight(100, 0.8);
     }

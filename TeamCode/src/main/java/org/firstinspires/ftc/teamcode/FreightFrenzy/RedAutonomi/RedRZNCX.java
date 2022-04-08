@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Carousel;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Routes;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @Autonomous(name = "RedRZNCX", group = "RedAutonomousR")
 public class RedRZNCX extends LinearOpMode {
@@ -14,7 +17,8 @@ public class RedRZNCX extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        routes = new Routes(this, 1);
+        TimeUtils.opMode = this;
+        routes = new Routes(AllSystems.init(this, MathUtils.Side.RED));
 
         waitForStart();
 

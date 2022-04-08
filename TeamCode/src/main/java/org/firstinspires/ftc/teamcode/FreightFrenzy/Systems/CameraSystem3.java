@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.Utils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -24,9 +27,11 @@ public class CameraSystem3 {
     static class CameraPipeline extends OpenCvPipeline {
         private static final int rectXIncrease = 20;
         private static final int rectYIncrease = 100;
-        private static Rect createRect(int x, int y, int width, int height){
+
+        private static Rect createRect(int x, int y, int width, int height) {
             return new Rect(x - rectXIncrease / 2, y - rectYIncrease, width + rectXIncrease, height + rectYIncrease);
         }
+
         private static final Rect leftArea = createRect(503, 491, 229, 234);
         private static final Rect centerArea = createRect(903, 484, 300, 218);
         private static final Rect rightArea = createRect(1376, 463, 249, 232);
@@ -34,10 +39,11 @@ public class CameraSystem3 {
         private static final Scalar low_blue = new Scalar(94, 80, 2);
         private static final Scalar high_blue = new Scalar(126, 255, 255);
 
-        private static final Scalar low_red = new Scalar(161, 155, 84);
-        private static final Scalar high_red = new Scalar(179, 255, 255);
+        private static final Scalar low_red1 = new Scalar(151, 80, 2);
+        private static final Scalar high_red1 = new Scalar(180, 255, 255);
+        private static final Scalar low_red2 = new Scalar(0, 80, 2);
+        private static final Scalar high_red2 = new Scalar(15, 255, 255);
 
-        private static final int PIXEL_COUNT_THRESHOLD = 2000;
 
         private boolean isCapturingImage = false;
         private boolean isDetectingTotem = false;
@@ -45,21 +51,24 @@ public class CameraSystem3 {
 
         private final EvictingBlockingQueue<ArmSystem.Floors> floorResult = new EvictingBlockingQueue<ArmSystem.Floors>(new ArrayBlockingQueue<ArmSystem.Floors>(1));
 
-        private final Mat hsvAll = new Mat();
-        private final Mat redMask = new Mat();
-        private final Mat blueMask = new Mat();
-        private final Mat coloredMask = new Mat();
+        private Mat hsvAll;
+        private Mat mask1;
+        private Mat mask2;
+        private Mat coloredMask;
 
+        private final Side side;
 
-        CameraPipeline(OpMode opMode) {
+        CameraPipeline(OpMode opMode, Side side) {
             this.opMode = opMode;
+            this.side = side;
+
         }
 
         public void captureImage() {
             isCapturingImage = true;
         }
 
-        public ArmSystem.Floors detectTotem(){
+        public ArmSystem.Floors detectTotem() {
             floorResult.clear();
             isDetectingTotem = true;
             try {
@@ -71,6 +80,14 @@ public class CameraSystem3 {
         }
 
         @Override
+        public void init(Mat mat) {
+            hsvAll = new Mat(mat.rows(), mat.cols(), mat.type());
+            mask1 = new Mat(mat.rows(), mat.cols(), mat.type());
+            mask2 = new Mat(mat.rows(), mat.cols(), mat.type());
+            coloredMask = new Mat(mat.rows(), mat.cols(), mat.type());
+        }
+
+        @Override
         public Mat processFrame(Mat input) {
             if (isCapturingImage) {
                 isCapturingImage = false;
@@ -78,11 +95,19 @@ public class CameraSystem3 {
                 String filepath = new File(AppUtil.ROBOT_DATA_DIR, String.format("img_%s.png", timeStamp)).getAbsolutePath();
                 saveMatToDiskFullPath(input, filepath);
             }
-
+            ElapsedTime elapsedTime = new ElapsedTime();
             Imgproc.cvtColor(input, hsvAll, Imgproc.COLOR_RGB2HSV);
-            Core.inRange(hsvAll, low_blue, high_blue, redMask);
-            Core.inRange(hsvAll, low_red, high_red, blueMask);
-            Core.bitwise_or(redMask, blueMask, coloredMask);
+            double cvtColorTime = elapsedTime.seconds();
+            elapsedTime.reset();
+            if (side == Side.RED) {
+                Core.inRange(hsvAll, low_red1, high_red1, mask1);
+                Core.inRange(hsvAll, low_red2, high_red2, mask2);
+                Core.bitwise_or(mask1, mask2, coloredMask);
+            } else {
+                Core.inRange(hsvAll, low_blue, high_blue, coloredMask);
+            }
+            double inRangeTime = elapsedTime.seconds();
+            elapsedTime.reset();
 
 
             if (isDetectingTotem) {
@@ -97,68 +122,45 @@ public class CameraSystem3 {
 
                 // find the area with the fewest colored
                 ArmSystem.Floors floor;
-                if(leftPixels < rightPixels && leftPixels < centerPixels){
+                if (leftPixels < rightPixels && leftPixels < centerPixels) {
                     floor = ArmSystem.Floors.FIRST;
-                }else if (centerPixels < leftPixels && centerPixels < rightPixels){
+                } else if (centerPixels < leftPixels && centerPixels < rightPixels) {
                     floor = ArmSystem.Floors.SECOND;
-                }else {
+                } else {
                     floor = ArmSystem.Floors.THIRD;
                 }
                 floorResult.offer(floor);
             }
+            double chooseLocationTime = elapsedTime.seconds();
+            elapsedTime.reset();
 
-            input.setTo(new Scalar(251, 72, 196), coloredMask);
+            if (side == Side.RED) {
+                input.setTo(new Scalar(72, 224, 251), coloredMask);
+            } else {
+                input.setTo(new Scalar(251, 72, 196), coloredMask);
+            }
 
-            Imgproc.rectangle(input, leftArea, new Scalar(0,255,0), 7);
-            Imgproc.rectangle(input, centerArea, new Scalar(0,255,0), 7);
-            Imgproc.rectangle(input, rightArea, new Scalar(0,255,0), 7);
+            Imgproc.rectangle(input, leftArea, new Scalar(0, 255, 0), 7);
+            Imgproc.rectangle(input, centerArea, new Scalar(0, 255, 0), 7);
+            Imgproc.rectangle(input, rightArea, new Scalar(0, 255, 0), 7);
 
+            double drawTime = elapsedTime.seconds();
+            opMode.telemetry.addData("cvtColorTime", cvtColorTime);
+            opMode.telemetry.addData("inRangeTime", inRangeTime);
+            opMode.telemetry.addData("chooseLocationTime", chooseLocationTime);
+            opMode.telemetry.addData("drawTime", drawTime);
+            opMode.telemetry.update();
+            TimeUtils.sleep(5000);
             return input;
-
-
-//            Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGB2GRAY);
-//            Imgproc.blur(grey, blurred, new Size(5, 5));
-//            Imgproc.Canny(blurred, edges, 25, 50);
-//            Core.hconcat(Arrays.asList(grey, edges), combined);
-//            Imgproc.resize(combined, combinedResized, input.size(), 0, 0, Imgproc.INTER_CUBIC);
-//            return combinedResized;
         }
-
-//        private boolean hasTotemHsv(Mat input){
-//            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
-//            Core.inRange(hsv, low_blue, high_blue, redMask);
-//            Core.inRange(hsv, low_red, high_red, blueMask);
-//            int numPixels = Core.countNonZero(redMask) + Core.countNonZero(blueMask);
-//            return numPixels < PIXEL_COUNT_THRESHOLD;
-//        }
-
-//        public boolean hasTotem(Mat input) {
-//            Imgproc.blur(input, blurred, new Size(5, 5));
-//            Imgproc.Canny(blurred, edges, 50, 100);
-//            Imgproc.blur(edges, edgesBlurred, new Size(5, 5));
-//            Imgproc.findContours(edgesBlurred, countours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-//            for (MatOfPoint contour: countours){
-//                MatOfPoint2f contour2f = new MatOfPoint2f(contour);
-//                MatOfPoint2f aproxCurve = new MatOfPoint2f();
-//                double perimeter = Imgproc.arcLength(contour2f, true);
-//                Imgproc.approxPolyDP(contour2f, aproxCurve, 0.075 * perimeter, true);
-//                double contourArea = Imgproc.contourArea(aproxCurve);
-//                if (contourArea > 4000){
-//                    return true;
-//                }
-//            }
-//            return false;
-//        }
-
-
     }
 
     private final OpMode opMode;
     private final CameraPipeline cameraPipeline;
 
-    public CameraSystem3(OpMode opMode) {
+    public CameraSystem3(OpMode opMode, Side side) {
         this.opMode = opMode;
-        cameraPipeline = new CameraPipeline(opMode);
+        cameraPipeline = new CameraPipeline(opMode, side);
         startCamera();
     }
 
@@ -184,7 +186,8 @@ public class CameraSystem3 {
         cameraPipeline.captureImage();
     }
 
-    public ArmSystem.Floors detectTotem(){
-        return cameraPipeline.detectTotem();
+    public ArmSystem.Floors detectTotem() {
+        ArmSystem.Floors floor = cameraPipeline.detectTotem();
+        return floor;
     }
 }

@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem.d
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.isMirrored;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
@@ -39,20 +40,23 @@ public class Routes {
     }
 
 
-    public Routes(AllSystems systems, int mirror) {
+    public Routes(AllSystems systems) {
         this.systems = systems;
-        this.mirror = mirror;
+        this.mirror = systems.side.mirror;
     }
-
-    public Routes(LinearOpMode opMode, int mirror){
-        this(AllSystems.init(opMode), mirror);
-    }
-
+    
     /**
      * Picks up the totem and drives INITIAL_DRIVE_STAIGHT_DISTANCE centimeters forward.
      */
     private void pickupTotem(){
+        systems.opMode.telemetry.addLine("Detecting Totem...");
+        systems.opMode.telemetry.update();
+        ElapsedTime elapsedTime = new ElapsedTime();
         floor = systems.cameraSystem.detectTotem();
+        systems.opMode.telemetry.addData("Floor: ", floor);
+        systems.opMode.telemetry.addData("Camera Time: ", elapsedTime.seconds());
+        systems.opMode.telemetry.update();
+
         double driveStaightDistanceForTotem = driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror);
         systems.drivingSystem.driveStraight(driveStaightDistanceForTotem, -0.6);
         // pick up totem

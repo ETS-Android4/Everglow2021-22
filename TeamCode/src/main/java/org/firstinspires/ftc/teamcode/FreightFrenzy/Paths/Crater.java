@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Crater {
@@ -25,7 +26,6 @@ public class Crater {
     LinearOpMode opMode;
     ArmSystem.Floors floor;
     private final CameraSystem3 cameraSystem;
-    private final SharedPaths sharedPaths;
 
 
 
@@ -36,17 +36,15 @@ public class Crater {
         detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem = new DuckSystem(opMode);
         this.totemSystem = new TotemSystem(opMode, false);
-        cameraSystem = new CameraSystem3(opMode);
-        this.sharedPaths = new SharedPaths(new AllSystems(opMode, armSystem, detectionSystem, drivingSystem, duckSystem, totemSystem, cameraSystem));
+        cameraSystem = new CameraSystem3(opMode, Side.RED);
     }
 
     public Crater(AllSystems systems) {
         this.opMode = systems.opMode;
         this.drivingSystem = systems.drivingSystem;
         this.armSystem = systems.armSystem;
-        this.detectionSystem = systems.detectionSystem;
+        this.detectionSystem = null; // todo: remove completely
         this.duckSystem = systems.duckSystem;
-        this.sharedPaths = new SharedPaths(systems);
         this.cameraSystem = systems.cameraSystem;
     }
 
