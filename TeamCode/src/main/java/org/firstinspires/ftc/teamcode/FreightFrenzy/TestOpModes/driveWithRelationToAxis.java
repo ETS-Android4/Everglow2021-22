@@ -35,8 +35,6 @@ public class driveWithRelationToAxis extends LinearOpMode {
             ourGamepad1.update();
             drivingSystem.driveByJoystickWithRelationToAxis(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-
-
             if(ourGamepad1.cross()){
                 RZNCX(-1);
             }

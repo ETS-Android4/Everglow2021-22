@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Routes;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @Autonomous(name = "BlueLZNCX", group = "BlueAutonomousL")
 public class BlueLZNCX extends LinearOpMode {
@@ -12,7 +15,9 @@ public class BlueLZNCX extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        routes = new Routes(this,-1);
+        TimeUtils.opMode = this;
+        routes = new Routes(AllSystems.init(this, MathUtils.Side.BLUE));
+
 
         waitForStart();
 

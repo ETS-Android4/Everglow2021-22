@@ -34,6 +34,7 @@ public class AllSystems {
     }
 
     private AllSystems(LinearOpMode opMode, Side side) {
+        TimeUtils.opMode = opMode;
         this.opMode = opMode;
         this.armSystem = new ArmSystem(opMode);
         this.drivingSystem = new DrivingSystem(opMode);
@@ -42,7 +43,6 @@ public class AllSystems {
         this.cameraSystem = new CameraSystem3(opMode, side);
         this.side = side;
 
-        TimeUtils.opMode = opMode;
     }
 
     public static AllSystems init(LinearOpMode opMode) {

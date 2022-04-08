@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import android.graphics.Color;
 
+import androidx.core.graphics.ColorUtils;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -18,22 +20,29 @@ public class ColorSystem {
         this.opMode = opMode;
     }
 
+    public float bottomSensorLightness(){
+        float[] hsl = {0, 0, 0};
+        ColorUtils.RGBToHSL(color.red(), color.green(), color.blue(), hsl);
+        return hsl[2];
+    }
+
+    public float cargoSensorLightness(){
+        float[] hsl = {0, 0, 0};
+        ColorUtils.RGBToHSL(arm.red(), color.green(), color.blue(), hsl);
+        return hsl[2];
+    }
+
     public boolean overWhite() {
-        float[] hsv = {0, 0, 0};
-        Color.RGBToHSV(color.red(), color.green(), color.blue(), hsv);
-        if (hsv[1] < 0.25) {
-            this.opMode.telemetry.addLine("WHITE!");
-//            this.opMode.telemetry.update();
-            return true;
-        }
-        return false;
+
+        float lightness = bottomSensorLightness();
+
+        return lightness > 0.25;
     }
 
     public boolean isCargo() {
         float[] hsv = {0, 0, 0};
         Color.RGBToHSV(arm.red(), arm.green(), arm.blue(), hsv);
         if (hsv[1] < 0.25) {
-            this.opMode.telemetry.addLine("CARGO!");
 //            this.opMode.telemetry.update();
             return true;
         }

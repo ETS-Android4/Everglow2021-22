@@ -18,8 +18,12 @@ public class testColorSystem extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            colorSystem.overWhite();
-            colorSystem.isCargo();
+            float lightness = colorSystem.bottomSensorLightness();
+            boolean overWhite = colorSystem.overWhite();
+            boolean isCargo = colorSystem.isCargo();
+            telemetry.addData("overWhite", overWhite);
+            telemetry.addData("isCargo", isCargo);
+            telemetry.addData("lightness", lightness);
             telemetry.update();
         }
     }
