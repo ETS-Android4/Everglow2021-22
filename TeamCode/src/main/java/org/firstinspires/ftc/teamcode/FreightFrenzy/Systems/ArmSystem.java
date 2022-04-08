@@ -74,6 +74,15 @@ public class ArmSystem {
         }
     }
 
+    public void RZNCXSpit(){
+        collectState = CollectState.SPITTING;
+        if (colorSystem.isCargo()) {
+            flyWheels.setVelocity(-2000);
+        } else {
+            flyWheels.setVelocity(-2500);
+        }
+    }
+
     /**
      * Toggle the deployment on and off
      */

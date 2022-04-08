@@ -98,17 +98,18 @@ public class Routes {
     }
 
     private void RZNCXLoop(int i) {
-        systems.drivingSystem.driveUntilWhite(0.7,false);
-        systems.drivingSystem.driveUntilCollect(200,0.3);
+        systems.drivingSystem.driveUntilWhite(0.6,false);
+        systems.drivingSystem.driveStraight(i*5,0.6);
+        systems.drivingSystem.driveUntilCollect(200,0.2);
         systems.drivingSystem.driveSideways(15,0.5*mirror);
-        systems.drivingSystem.driveUntilWhite(-0.7,false);
+        systems.drivingSystem.driveUntilWhite(-0.6,false);
         systems.drivingSystem.driveStraight(50,-0.7);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
         systems.drivingSystem.driveToPoint(15*mirror,-55,-45 * mirror,0.7,1);
-        systems.armSystem.spit();
+        systems.armSystem.RZNCXSpit();
         TimeUtils.sleep(200);
         systems.armSystem.moveArm(0);
-        systems.drivingSystem.driveToPoint(-25*mirror,70,-90*mirror,0.7,1);
+        systems.drivingSystem.driveToPoint(-20*mirror,65,-90*mirror,0.7,1);
     }
 
 
@@ -116,10 +117,10 @@ public class Routes {
 //        craterPlaceFreight(true);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
         systems.drivingSystem.driveToPoint(10*mirror,-50,-45 * mirror,0.7,1);
-        systems.armSystem.spit();
+        systems.armSystem.RZNCXSpit();
         TimeUtils.sleep(200);
         systems.armSystem.moveArm(0);
-        systems.drivingSystem.driveToPoint(-25*mirror,60,-90*mirror,0.7,1);
+        systems.drivingSystem.driveToPoint(-20*mirror,60,-90*mirror,0.7,1);
         for (int i = 0; i < 4; i++) {
             RZNCXLoop(i);
         }
