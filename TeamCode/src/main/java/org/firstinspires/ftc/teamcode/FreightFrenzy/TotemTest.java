@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@TeleOp(name = "EndGameCapping", group = "Linear Opmode")
-public class EndGameCapping extends LinearOpMode {
+@TeleOp(name = "TotemTest", group = "Linear Opmode")
+public class TotemTest extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
@@ -135,10 +135,10 @@ public class EndGameCapping extends LinearOpMode {
                 duckSpin = false;
             }
 
-            aziPowerRight = gamepad2.right_stick_x;
-            altPowerRight = -gamepad2.right_stick_y;
-            aziPowerLeft = gamepad2.left_stick_x;
-            altPowerLeft = -gamepad2.left_stick_y;
+            aziPowerRight = gamepad2.right_stick_x/500;
+            altPowerRight = -gamepad2.right_stick_y/500;
+            aziPowerLeft = gamepad2.left_stick_x/500;
+            altPowerLeft = -gamepad2.left_stick_y/500;
 
             if (gamepad2.right_stick_button) {
                 aziPowerRight /= 2;

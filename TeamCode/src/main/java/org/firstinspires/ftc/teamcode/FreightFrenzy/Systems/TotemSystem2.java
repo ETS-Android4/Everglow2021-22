@@ -12,8 +12,8 @@ public class TotemSystem2 {
     private final CRServo       meterRight;
     private final DrivingSystem drivingSystem;
 
-    private final double ALTITUDE1_ZERO = 0;
-    private final double ALTITUDE2_ZERO = 0;
+    private final double ALTITUDE1_ZERO = 0.5;
+    private final double ALTITUDE2_ZERO = 0.5;
 
     public TotemSystem2(LinearOpMode opMode) {
         this.opMode   = opMode;
@@ -22,6 +22,8 @@ public class TotemSystem2 {
         meterLeft     = opMode.hardwareMap.get(CRServo.class, "meter_left");
         meterRight    = opMode.hardwareMap.get(CRServo.class, "meter_right");
         drivingSystem = new DrivingSystem(opMode);
+        altitude1.setPosition(ALTITUDE1_ZERO);
+        altitude2.setPosition(ALTITUDE2_ZERO);
     }
 
     public void extendLeft(double power) {
