@@ -120,7 +120,7 @@ public class Routes {
         systems.armSystem.spit();
         sleep(200);
         systems.armSystem.moveArm(0);
-        systems.drivingSystem.driveToPoint(-20 * mirror, 55, -90 * mirror, 0.9, 1);
+        systems.drivingSystem.driveToPoint(-20 * mirror, 55, -90 * mirror, 0.9, 1,true);
     }
 
 
