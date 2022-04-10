@@ -96,7 +96,7 @@ public class Routes {
         //
     }
 
-    private void craterPlaceFreight(boolean returnToWall) {
+    public void craterPlaceFreight(boolean returnToWall) {
         pickupTotem();
         systems.armSystem.moveArm(floor);
         systems.drivingSystem.driveToPoint(10 * mirror, -(47 - INITIAL_DRIVE_STRAIGHT_DISTANCE), -45 * mirror, 0.9, 1);
