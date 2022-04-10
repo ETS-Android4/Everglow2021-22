@@ -221,14 +221,14 @@ public class DrivingSystem {
 
     public void rotateAroundDucks(double power, boolean red) {
         double factor = 3;
-        double forward = 0.2 * Math.abs(power);
+        double forward = 0.3 * Math.abs(power);
         if (red) {
-            backRight.setPower(forward + power * (1.5 / factor));
+            backRight.setPower(-forward + power * (1.5 / factor));
             backLeft.setPower(forward - power * (1 / factor));
             frontLeft.setPower(forward - power * (0.5 / factor));
             frontRight.setPower(forward);
         } else {
-            backLeft.setPower(forward + power * (1.5 / factor));
+            backLeft.setPower(-forward + power * (1.5 / factor));
             backRight.setPower(forward - power * (1 / factor));
             frontRight.setPower(forward - power * (0.5 / factor));
             frontLeft.setPower(forward);

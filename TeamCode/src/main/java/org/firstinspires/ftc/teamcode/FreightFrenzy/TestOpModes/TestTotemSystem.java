@@ -58,15 +58,15 @@ public class TestTotemSystem extends LinearOpMode {
                 ));
             }
 
-            if(gamepad1.right_trigger == 0 && !gamepad1.dpad_down && !gamepad1.dpad_up){
+            if (gamepad1.right_trigger == 0 && !gamepad1.dpad_down && !gamepad1.dpad_up) {
                 totemSystem.stopRight();
             }
-            if(gamepad1.left_trigger == 0 && !gamepad1.dpad_down && !gamepad1.dpad_up){
+            if (gamepad1.left_trigger == 0 && !gamepad1.dpad_down && !gamepad1.dpad_up) {
                 totemSystem.stopLeft();
             }
 
-            totemSystem.moveAltitude(gamepad1.right_stick_y / 1000);
-            totemSystem.moveAltitude(gamepad1.left_stick_y / 1000);
+            totemSystem.moveAltitude(gamepad1.right_stick_y / 500);
+            totemSystem.moveAltitude(gamepad1.left_stick_y / 500);
 
             telemetry.addData("currPos1", totemSystem.altitude1.getPosition());
             telemetry.addData("currPos2", totemSystem.altitude2.getPosition());

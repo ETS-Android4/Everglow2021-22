@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ColorSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -16,11 +17,12 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
 
     // when the right stick is pressed on the controller, make the rotation slower by this factor.
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
-    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION  = 2;
+    private static final double LEFT_STICK_DOWN_MOVE_REDUCTION = 2;
 
-    DrivingSystem   drivingSystem;
-    ArmSystem       armSystem;
-    DuckSystem      duckSystem;
+    DrivingSystem drivingSystem;
+    ArmSystem armSystem;
+    DuckSystem duckSystem;
+    TotemSystem2 totemSystem;
     ColorSystem colorSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
@@ -32,11 +34,12 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
     public void runOpMode() {
         TimeUtils.opMode = this;
         drivingSystem = new DrivingSystem(this);
-        armSystem     = new ArmSystem(this);
-        duckSystem    = new DuckSystem(this);
+        armSystem = new ArmSystem(this);
+        duckSystem = new DuckSystem(this);
+        totemSystem = new TotemSystem2(this);
         colorSystem = new ColorSystem(this);
-        ourGamepad1   = new EverglowGamepad(gamepad1);
-        ourGamepad2   = new EverglowGamepad(gamepad2);
+        ourGamepad1 = new EverglowGamepad(gamepad1);
+        ourGamepad2 = new EverglowGamepad(gamepad2);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;
@@ -52,7 +55,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 double left_stick_y = gamepad1.left_stick_y;
                 double right_stick_x = gamepad1.right_stick_x;
 
-                if (gamepad1.right_trigger>0.1){
+                if (gamepad1.right_trigger > 0.1) {
                     left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
@@ -112,12 +115,11 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.dpad_left()) {
-                if(!duckSpin){
+                if (!duckSpin) {
                     duckSystem.speed = 0.7;
                     duckSystem.runRev();
                     duckSpin = true;
-                }
-                else{
+                } else {
                     duckSystem.speed = 1;
                     duckSystem.runRev();
                     duckSpin = false;
@@ -129,18 +131,24 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 duckSpin = false;
             }
 
-//            double aziPower = gamepad2.right_stick_x / 1000;
-//            double altPower = -gamepad2.left_stick_y / 1000;
-//
-//            if (gamepad2.right_stick_button) {
-//                aziPower /= 2;
-//            }
-//            if (gamepad2.left_stick_button) {
-//                altPower /= 2;
-//            }
+            double aziPowerRed = gamepad2.right_stick_x / 1000;
+            double aziPowerBlue = gamepad2.left_stick_x / 1000;
+
+            if (gamepad2.right_stick_button) {
+                aziPowerRed /= 2;
+            }
+            if (gamepad2.left_stick_button) {
+                aziPowerBlue /= 2;
+            }
+
+            drivingSystem.rotateAroundDucks(aziPowerRed, true);
+            drivingSystem.rotateAroundDucks(aziPowerBlue, false);
+
+            totemSystem.moveAltitude(gamepad2.right_stick_y / 500);
+            totemSystem.moveAltitude(gamepad2.left_stick_y / 500);
 
             // rumble controller if touchSensor was just pressed
-            boolean touchPressed =  armSystem.touch.isPressed();
+            boolean touchPressed = armSystem.touch.isPressed();
 
             if (touchPressed && armSystem.getCollectState() == ArmSystem.CollectState.COLLECTING) {
                 armSystem.stop();
@@ -157,7 +165,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 armSystem.restOnLoad();
             }
 
-            if(ourGamepad1.squareHold()){
+            if (ourGamepad1.squareHold()) {
                 armSystem.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
