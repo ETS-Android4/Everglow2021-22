@@ -141,9 +141,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 aziPowerBlue /= 2;
             }
 
-            drivingSystem.rotateAroundDucks(aziPowerRed, true);
-            drivingSystem.rotateAroundDucks(aziPowerBlue, false);
-
             totemSystem.moveAltitude(gamepad2.right_stick_y / 500);
             totemSystem.moveAltitude(gamepad2.left_stick_y / 500);
 
