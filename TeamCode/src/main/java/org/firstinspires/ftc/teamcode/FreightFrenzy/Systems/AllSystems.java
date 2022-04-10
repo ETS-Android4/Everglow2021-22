@@ -21,10 +21,9 @@ public class AllSystems {
         this.totemSystem = totemSystem;
         this.cameraSystem = cameraSystem;
         this.side = side;
-
     }
 
-    private AllSystems(LinearOpMode opMode, Side side) {
+    public AllSystems(LinearOpMode opMode, Side side) {
         this.opMode = opMode;
         this.armSystem = new ArmSystem(opMode);
         this.drivingSystem = new DrivingSystem(opMode);

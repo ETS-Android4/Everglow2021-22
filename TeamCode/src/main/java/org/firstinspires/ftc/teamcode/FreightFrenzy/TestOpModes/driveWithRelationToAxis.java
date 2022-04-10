@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@TeleOp(name = "driveWithRelationToAxis", group = "Linear Opmode")
+@TeleOp(name = "driveWithRelationToAxis", group = "Test")
 public class driveWithRelationToAxis extends LinearOpMode {
     DrivingSystem drivingSystem;
     ArmSystem armSystem;

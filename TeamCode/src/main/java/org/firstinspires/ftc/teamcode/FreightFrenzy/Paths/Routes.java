@@ -25,7 +25,7 @@ public class Routes {
      * @param mirror 1 if mirrored, -1 if not
      * @return the distance, in centimeters, the robot should drive to pick up the totem.
      */
-    public static double driveStraightDistanceForTotemPickup(ArmSystem.Floors floor, int mirror) {
+    private static double driveStraightDistanceForTotemPickup(ArmSystem.Floors floor, int mirror) {
         switch (floor) {
             case FIRST:
             case SECOND:
@@ -60,7 +60,7 @@ public class Routes {
         systems.drivingSystem.driveStraight(INITIAL_DRIVE_STRAIGHT_DISTANCE - driveStraightDistanceForTotem, -0.6);
     }
 
-    private void craterPlaceFreight(boolean toPoint) {
+    public void craterPlaceFreight(boolean toPoint) {
         pickupTotem();
         if (floor == ArmSystem.Floors.FIRST) {
             // because the the totem system blocks the armSystem, we can't use the autonomousPlaceFreight, so we turn 180 degrees and use placeFreight instead.
@@ -85,11 +85,15 @@ public class Routes {
             TimeUtils.sleep(50);
             systems.armSystem.spit();
             TimeUtils.sleep(300);
-            systems.armSystem.moveArm(0);
+            systems.armSystem.autonomousReload();
             if (toPoint) {
                 systems.drivingSystem.driveToPoint(0, 70, 90 * mirror, 0.5, 1);
             }
         }
+    }
+
+    private void goToCarouselB() {
+        //
     }
 
     private void RZNCXLoop(int i) {
@@ -121,5 +125,139 @@ public class Routes {
         }
         systems.drivingSystem.driveUntilWhite(0.9, false);
         systems.drivingSystem.driveStraight(15, 0.9);
+    }
+
+    /**
+     * Goes to carousel behind SH, then to crater. Rams through obstacle.
+     */
+    public void RBYCO(int mirror) {
+        craterPlaceFreight(true);
+        goToCarouselB();
+        TimeUtils.sleep(500);
+        systems.duckSystem.runFor(3000);
+
+        systems.drivingSystem.driveSideways(30, 0.7 * mirror);
+        systems.drivingSystem.turn(180, 200);
+        systems.armSystem.moveArm(-200);
+        systems.drivingSystem.driveStraight(280, 1);
+    }
+
+    /**
+     * Goes to carousel behind SH, then to crater. Enters through path.
+     */
+    public void RBYCP(int mirror) {
+        craterPlaceFreight(true);
+        goToCarouselB();
+        TimeUtils.sleep(500);
+        systems.duckSystem.runFor(3000);
+
+        systems.drivingSystem.driveSideways(35, 0.7 * mirror);
+        systems.drivingSystem.turn(180, 200);
+        systems.drivingSystem.driveStraight(100, 0.7);
+        systems.drivingSystem.driveSideways(70, 0.7 * mirror);
+        systems.drivingSystem.driveStraight(150, 0.7);
+    }
+
+    /**
+     * Goes to carousel behind SH, then to warehouse.
+     */
+    public void RBYW(int mirror) {
+        craterPlaceFreight(true);
+        goToCarouselB();
+        TimeUtils.sleep(500);
+        systems.duckSystem.runFor(3000);
+
+        systems.drivingSystem.driveSideways(55, 0.6 * mirror);
+        systems.drivingSystem.driveStraight(7, 0.6);
+    }
+
+    /**
+     * Goes to warehouse behind SH.
+     */
+    public void RBNW(int mirror) {
+        craterPlaceFreight(true);
+
+        systems.drivingSystem.driveSideways(50, 0.6 * mirror);
+        systems.drivingSystem.driveStraight(185, 0.6);
+        systems.drivingSystem.driveSideways(90, -0.6 * mirror);
+    }
+
+    /**
+     * Goes to carousel in front of SH, then to warehouse.
+     */
+    public void RFYW(int mirror) {
+        craterPlaceFreight(true);
+
+        if (floor == ArmSystem.Floors.FIRST) {
+            systems.drivingSystem.driveSideways(20, -0.6 * mirror);
+        } else {
+            systems.drivingSystem.turn(-40, 200);
+        }
+        systems.drivingSystem.driveStraight(185, 0.6);
+        systems.drivingSystem.driveSideways(40, -0.6 * mirror);
+        TimeUtils.sleep(500);
+        systems.duckSystem.runFor(3000);
+
+        systems.drivingSystem.driveSideways(65, 0.6 * mirror);
+        systems.drivingSystem.driveStraight(5, 0.6);
+    }
+
+    /**
+     * Goes to warehouse in front of SH.
+     */
+    public void RFNW(int mirror) {
+        craterPlaceFreight(true);
+
+        if (floor == ArmSystem.Floors.FIRST) {
+            systems.drivingSystem.driveSideways(20, -0.6 * mirror);
+        } else {
+            systems.drivingSystem.turn(-40, 200);
+        }
+        systems.drivingSystem.driveStraight(175, 0.6);
+        systems.drivingSystem.driveSideways(40, 0.6 * mirror);
+    }
+
+    /**
+     * Goes to carousel, then to crater through path.
+     */
+    public void RFYCO(int mirror) {
+        craterPlaceFreight(true);
+
+        if (floor == ArmSystem.Floors.FIRST) {
+            systems.drivingSystem.driveSideways(20, -0.6 * mirror);
+        } else {
+            systems.drivingSystem.turn(-40, 200);
+        }
+        systems.drivingSystem.driveStraight(180, 0.6);
+        systems.drivingSystem.driveSideways(40, -0.6 * mirror);
+        TimeUtils.sleep(500);
+        systems.duckSystem.runFor(3000);
+
+        systems.drivingSystem.driveSideways(30, 0.6 * mirror);
+        systems.drivingSystem.turn(180, 50);
+        systems.armSystem.moveArm(-200);
+        systems.drivingSystem.driveStraight(280, 1);
+    }
+
+    /**
+     * Goes to carousel, then to crater from obstacle.
+     */
+    public void RFYCP(int mirror) {
+        craterPlaceFreight(true);
+
+        if (floor == ArmSystem.Floors.FIRST) {
+            systems.drivingSystem.driveSideways(20, -0.6 * mirror);
+        } else {
+            systems.drivingSystem.turn(-40, 200);
+        }
+        systems.drivingSystem.driveStraight(180, 0.6);
+        systems.drivingSystem.driveSideways(40, -0.6 * mirror);
+        TimeUtils.sleep(500);
+        systems.duckSystem.runFor(3000);
+
+        systems.drivingSystem.driveStraight(50, -0.8);
+        systems.drivingSystem.turn(180, 200);
+        systems.drivingSystem.driveSideways(25, 0.6 * mirror);
+        systems.drivingSystem.driveStraight(150, 1);
     }
 }

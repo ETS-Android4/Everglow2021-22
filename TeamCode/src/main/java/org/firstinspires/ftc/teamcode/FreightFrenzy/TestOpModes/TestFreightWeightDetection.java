@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "TestFreightWeightDetection", group = "LinearOpMode")
+@TeleOp(name = "TestFreightWeightDetection", group = "Test")
 @Disabled
 public class TestFreightWeightDetection extends LinearOpMode {
     EverglowGamepad ourGamepad1;

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@TeleOp(name = "Totem Test", group = "Test Opmode")
+@TeleOp(name = "Totem Test", group = "Test")
 public class TestTotemSystem extends LinearOpMode {
 
     TotemSystem2 totemSystem;

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "TestRotationAroundDuck", group = "Test Opmode")
+@TeleOp(name = "Test rotateAroundDuck", group = "Test")
 public class TestRotationAroundDuck extends LinearOpMode {
 
     DrivingSystem drivingSystem;

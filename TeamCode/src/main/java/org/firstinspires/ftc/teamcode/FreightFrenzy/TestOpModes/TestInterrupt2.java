@@ -13,8 +13,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "Test Interupt 2", group = "Test")
-public class TestInterupt2 extends LinearOpMode {
+@Autonomous(name = "Test Interrupt 2", group = "Test")
+public class TestInterrupt2 extends LinearOpMode {
 
     class MockCameraPipeline extends OpenCvPipeline{
         private final LinearOpMode opMode;
