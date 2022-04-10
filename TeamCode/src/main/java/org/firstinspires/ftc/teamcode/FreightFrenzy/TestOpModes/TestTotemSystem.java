@@ -14,7 +14,7 @@ public class TestTotemSystem extends LinearOpMode {
     EverglowGamepad gamepad;
     DrivingSystem drivingSystem;
     int dirR = 1;
-    int dirL = 1;
+    int dirL = -1;
 
     @Override
     public void runOpMode() {
@@ -29,12 +29,12 @@ public class TestTotemSystem extends LinearOpMode {
 
             gamepad.update();
             if (gamepad1.dpad_up) {
-                totemSystem.extendLeft(-1);
-                totemSystem.extendRight(1);
-            }
-            if (gamepad1.dpad_down) {
                 totemSystem.extendLeft(1);
                 totemSystem.extendRight(-1);
+            }
+            if (gamepad1.dpad_down) {
+                totemSystem.extendLeft(-1);
+                totemSystem.extendRight(1);
             }
 
             if (gamepad.rb()) {
