@@ -42,7 +42,6 @@ public class AllSystems {
     }
 
     public void cleanup(){
-        cameraSystem.cleanup();
         armSystem.fullStop();
         duckSystem.stop();
         drivingSystem.stop();

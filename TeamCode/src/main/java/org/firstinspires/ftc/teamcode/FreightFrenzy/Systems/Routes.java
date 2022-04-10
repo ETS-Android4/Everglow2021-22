@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.isMirrored;
+import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils.sleep;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -57,40 +58,54 @@ public class Routes {
         systems.drivingSystem.driveStraight(INITIAL_DRIVE_STRAIGHT_DISTANCE - driveStraightDistanceForTotem, -0.6);
     }
 
-    public void craterPlaceFreight(boolean toPoint) {
-        pickupTotem();
-        if (floor == ArmSystem.Floors.FIRST) {
-            // because the the totem system blocks the armSystem, we can't use the autonomousPlaceFreight, so we turn 180 degrees and use placeFreight instead.
-            systems.armSystem.autonomousMoveArm(floor);
-            systems.drivingSystem.driveToPoint(5 * mirror, -60 + driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror), -90 * mirror, 0.5, 0.7);
-            systems.armSystem.awaitArmArrival();
-            TimeUtils.sleep(50);
-            systems.armSystem.spit();
-            TimeUtils.sleep(300);
-            if (toPoint) {
-                systems.drivingSystem.driveToPoint((20 - 25 * isMirrored(mirror)) * mirror, 65, 90 * mirror, 0.5, 1);
-                if (floor != ArmSystem.Floors.FIRST) {
-                    systems.drivingSystem.driveStraight(8, 0.6);
-                }
-                systems.armSystem.moveArm(0);
-            }
-        } else {
-            systems.armSystem.moveArm(floor);
-            TimeUtils.sleep(700);
-            systems.drivingSystem.driveToPoint(2 * mirror, -37 + driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror), 50 * mirror, 0.5, 0.7);
-            systems.armSystem.awaitArmArrival();
-            TimeUtils.sleep(50);
-            systems.armSystem.spit();
-            TimeUtils.sleep(300);
-            systems.armSystem.autonomousReload();
-            if (toPoint) {
-                systems.drivingSystem.driveToPoint(0, 70, 90 * mirror, 0.5, 1);
-            }
-        }
-    }
+//    public void craterPlaceFreight(boolean toPoint) {
+//        pickupTotem();
+//        if (floor == ArmSystem.Floors.FIRST) {
+//            // because the the totem system blocks the armSystem, we can't use the autonomousPlaceFreight, so we turn 180 degrees and use placeFreight instead.
+//            systems.armSystem.autonomousMoveArm(floor);
+//            systems.drivingSystem.driveToPoint(5 * mirror, -60 + driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror), -90 * mirror, 0.5, 0.7);
+//            systems.armSystem.awaitArmArrival();
+//            TimeUtils.sleep(50);
+//            systems.armSystem.spit();
+//            TimeUtils.sleep(300);
+//            if (toPoint) {
+//                systems.drivingSystem.driveToPoint((20 - 25 * isMirrored(mirror)) * mirror, 65, 90 * mirror, 0.5, 1);
+//                if (floor != ArmSystem.Floors.FIRST) {
+//                    systems.drivingSystem.driveStraight(8, 0.6);
+//                }
+//                systems.armSystem.moveArm(0);
+//            }
+//        } else {
+//            systems.armSystem.moveArm(floor);
+//            TimeUtils.sleep(700);
+//            systems.drivingSystem.driveToPoint(2 * mirror, -37 + driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror), 50 * mirror, 0.5, 0.7);
+//            systems.armSystem.awaitArmArrival();
+//            TimeUtils.sleep(50);
+//            systems.armSystem.spit();
+//            TimeUtils.sleep(300);
+//            systems.armSystem.autonomousReload();
+//            if (toPoint) {
+//                systems.drivingSystem.driveToPoint(0, 70, 90 * mirror, 0.5, 1);
+//            }
+//        }
+//    }
+
+
 
     private void goToCarouselB() {
         //
+    }
+
+    private void craterPlaceFreight(boolean returnToWall) {
+        pickupTotem();
+        systems.armSystem.moveArm(floor);
+        systems.drivingSystem.driveToPoint(10 * mirror, -(47 - INITIAL_DRIVE_STRAIGHT_DISTANCE), -45 * mirror, 0.9, 1);
+        systems.armSystem.spit();
+        sleep(200);
+        systems.armSystem.moveArm(0);
+        if (returnToWall) {
+            systems.drivingSystem.driveToPoint(-20 * mirror, 60, -90 * mirror, 0.9, 1);
+        }
     }
 
     private void RZNCXLoop(int i) {
@@ -103,20 +118,14 @@ public class Routes {
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
         systems.drivingSystem.driveToPoint(15 * mirror, -55, -45 * mirror - 5 * isMirrored(mirror), 0.9, 1);
         systems.armSystem.spit();
-        TimeUtils.sleep(200);
+        sleep(200);
         systems.armSystem.moveArm(0);
         systems.drivingSystem.driveToPoint(-20 * mirror, 55, -90 * mirror, 0.9, 1);
     }
 
 
     public void RZNCX() {
-//        craterPlaceFreight(true);
-        systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
-        systems.drivingSystem.driveToPoint(10 * mirror, -47, -45 * mirror, 0.9, 1);
-        systems.armSystem.spit();
-        TimeUtils.sleep(200);
-        systems.armSystem.moveArm(0);
-        systems.drivingSystem.driveToPoint(-20 * mirror, 60, -90 * mirror, 0.9, 1);
+        craterPlaceFreight(true);
         for (int i = 0; i < 3; i++) {
             RZNCXLoop(i);
         }
@@ -130,7 +139,7 @@ public class Routes {
     public void RBYCO(int mirror) {
         craterPlaceFreight(true);
         goToCarouselB();
-        TimeUtils.sleep(500);
+        sleep(500);
         systems.duckSystem.runFor(3000);
 
         systems.drivingSystem.driveSideways(30, 0.7 * mirror);
@@ -145,7 +154,7 @@ public class Routes {
     public void RBYCP(int mirror) {
         craterPlaceFreight(true);
         goToCarouselB();
-        TimeUtils.sleep(500);
+        sleep(500);
         systems.duckSystem.runFor(3000);
 
         systems.drivingSystem.driveSideways(35, 0.7 * mirror);
@@ -161,7 +170,7 @@ public class Routes {
     public void RBYW(int mirror) {
         craterPlaceFreight(true);
         goToCarouselB();
-        TimeUtils.sleep(500);
+        sleep(500);
         systems.duckSystem.runFor(3000);
 
         systems.drivingSystem.driveSideways(55, 0.6 * mirror);
@@ -192,7 +201,7 @@ public class Routes {
         }
         systems.drivingSystem.driveStraight(185, 0.6);
         systems.drivingSystem.driveSideways(40, -0.6 * mirror);
-        TimeUtils.sleep(500);
+        sleep(500);
         systems.duckSystem.runFor(3000);
 
         systems.drivingSystem.driveSideways(65, 0.6 * mirror);
@@ -227,7 +236,7 @@ public class Routes {
         }
         systems.drivingSystem.driveStraight(180, 0.6);
         systems.drivingSystem.driveSideways(40, -0.6 * mirror);
-        TimeUtils.sleep(500);
+        sleep(500);
         systems.duckSystem.runFor(3000);
 
         systems.drivingSystem.driveSideways(30, 0.6 * mirror);
@@ -249,7 +258,7 @@ public class Routes {
         }
         systems.drivingSystem.driveStraight(180, 0.6);
         systems.drivingSystem.driveSideways(40, -0.6 * mirror);
-        TimeUtils.sleep(500);
+        sleep(500);
         systems.duckSystem.runFor(3000);
 
         systems.drivingSystem.driveStraight(50, -0.8);

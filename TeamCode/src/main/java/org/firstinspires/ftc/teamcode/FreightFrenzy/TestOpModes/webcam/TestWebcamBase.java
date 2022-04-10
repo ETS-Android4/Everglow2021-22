@@ -1,14 +1,11 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes.webcam;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraPreview;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -21,19 +18,14 @@ public abstract class TestWebcamBase extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        CameraSystem cameraSystem = new CameraSystem(this, side);
+        CameraPreview cameraPreview = new CameraPreview(this, side);
         EverglowGamepad gamepad = new EverglowGamepad(gamepad1);
         int frameNum = 1;
         waitForStart();
         while (opModeIsActive()){
             gamepad.update();
-            if (gamepad.square()){
-                cameraSystem.captureImage();
-                telemetry.addLine("Captured Image");
-                telemetry.update();
-            }
             ElapsedTime elapsedTime = new ElapsedTime();
-            ArmSystem.Floors floor = cameraSystem.detectTotem();
+            ArmSystem.Floors floor = cameraPreview.detectTotem();
             telemetry.addData("Floor: ", floor);
             telemetry.addData("frameNum", frameNum++);
             telemetry.addData("Time", elapsedTime.seconds());
