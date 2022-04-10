@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@Autonomous(name = "Test Interrupt", group = "Test")
+@Autonomous(name = "RedRZNCX", group = "Test")
 public class RedRZNCX extends LinearOpMode {
     @Override
     public void runOpMode() {

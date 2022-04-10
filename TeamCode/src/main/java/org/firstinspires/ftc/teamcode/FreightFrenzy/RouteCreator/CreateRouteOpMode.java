@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.AndroidUtils;
 
 @TeleOp(name = "Create Route", group = "Linear Opmode")
 public class CreateRouteOpMode extends LinearOpMode {
