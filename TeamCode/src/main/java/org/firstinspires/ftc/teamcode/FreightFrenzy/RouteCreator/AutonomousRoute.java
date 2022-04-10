@@ -96,24 +96,6 @@ public class AutonomousRoute {
     }
 
 
-    static class CarouselPlaceFreightAndCraterInstruction implements RouteInstruction {
-        public CarouselPlaceFreightAndCraterInstruction() {
-        }
-
-        @Override
-        public void execute(AllSystems systems, int mirror) {
-            Carousel carousel = new Carousel(systems);
-            carousel.placeFreight(mirror);
-            carousel.goToCarousel(mirror);
-        }
-
-        @Override
-        public String toJavaCode() {
-            return "placeFreight(mirror);\ngoToCarousel(mirror);";
-        }
-    }
-
-
     static class PlaceFreightInstruction implements RouteInstruction {
         public PlaceFreightInstruction() {
         }

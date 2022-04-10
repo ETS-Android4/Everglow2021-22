@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.CarouselPlaceFreightAndCraterInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveSidewaysInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveStraightInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.PlaceFreightInstruction;
