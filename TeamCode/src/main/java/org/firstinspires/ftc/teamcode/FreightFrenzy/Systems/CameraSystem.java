@@ -1,21 +1,16 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
-import android.media.Image;
-
 import androidx.annotation.Nullable;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.androidUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.AndroidUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -102,7 +97,7 @@ public class CameraSystem {
         public Mat processFrame(Mat input) {
             if (isCapturingImage) {
                 isCapturingImage = false;
-                String timeStamp = androidUtils.timestampString();
+                String timeStamp = AndroidUtils.timestampString();
                 String filepath = new File(AppUtil.ROBOT_DATA_DIR, String.format("img_%s.png", timeStamp)).getAbsolutePath();
                 saveMatToDiskFullPath(input, filepath);
             }
