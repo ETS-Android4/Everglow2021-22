@@ -158,10 +158,8 @@ public class Carousel {
         drivingSystem.resetDistance();
         if (USE_DETECTION) {
             totemSystem.prePickupMove(mirror);
-            floor = ArmSystem.Floors.FIRST;
-        } else {
-            floor = ArmSystem.Floors.FIRST;
         }
+        floor = ArmSystem.Floors.FIRST;
         opMode.telemetry.update();
         totemSystem.collectTotem(floor, mirror);
 
@@ -178,7 +176,7 @@ public class Carousel {
         armSystem.autonomousReload();
     }
 
-    public void newPlaceFreightAndCaursel(int mirror) {
+    public void newPlaceFreightAndCarousel(int mirror) {
         newPlaceFreightAndCollectTotem(mirror);
         drivingSystem.turn(-90 * mirror, 100);
         drivingSystem.driveSidewaysUntilBumping(0.5 * mirror, 20);
@@ -202,7 +200,7 @@ public class Carousel {
     }
 
     public void LZYW(int mirror) {
-        newPlaceFreightAndCaursel(mirror);
+        newPlaceFreightAndCarousel(mirror);
         drivingSystem.driveSideways(20, -0.5 * mirror);
         drivingSystem.driveStraight(40, -0.5);
         drivingSystem.turn(-90 * mirror, 200);
@@ -319,7 +317,7 @@ public class Carousel {
      * Goes to Carousel, and then to Crater in front of SH. Enters Crater through path.
      */
     public void LFYCP(int mirror) {
-        newPlaceFreightAndCaursel(mirror);
+        newPlaceFreightAndCarousel(mirror);
         // Go to Crater through path
         drivingSystem.driveSideways(50, -0.6 * mirror);
         drivingSystem.turn(90 * mirror, 150);
@@ -331,7 +329,7 @@ public class Carousel {
      * Goes to Carousel, and then to Crater in front of SH. Rams through obstacle.
      */
     public void LFYCO(int mirror) {
-        newPlaceFreightAndCaursel(mirror);
+        newPlaceFreightAndCarousel(mirror);
 
         // Ram through obstacle
         drivingSystem.driveSideways(30, -0.6 * mirror);
@@ -342,7 +340,7 @@ public class Carousel {
     }
 
     public void LFYCX(int mirror){
-        newPlaceFreightAndCaursel(mirror);
+        newPlaceFreightAndCarousel(mirror);
         // Go to Crater through path
         drivingSystem.driveSideways(30, -0.6 * mirror);
         drivingSystem.driveStraight(20, -0.6);
@@ -356,7 +354,7 @@ public class Carousel {
      * Goes to Carousel, and then to Crater behind SH. Enters Crater through path.
      */
     public void LBYCP(int mirror) {
-        newPlaceFreightAndCaursel(mirror);
+        newPlaceFreightAndCarousel(mirror);
         // Go to Crater through path
         drivingSystem.driveSideways(50, -0.7 * mirror);
         drivingSystem.turn(90 * mirror, 150);
@@ -370,7 +368,7 @@ public class Carousel {
      * Goes to Carousel, and then to Crater behind SH. Rams through obstacle.
      */
     public void LBYCO(int mirror) {
-        newPlaceFreightAndCaursel(mirror);
+        newPlaceFreightAndCarousel(mirror);
 
         // Ram through obstacle
         drivingSystem.driveSideways(50, -0.7 * mirror);

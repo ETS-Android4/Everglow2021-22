@@ -260,4 +260,86 @@ public class Routes {
         systems.drivingSystem.driveSideways(25, 0.6 * mirror);
         systems.drivingSystem.driveStraight(150, 1);
     }
+
+    public void LZYW(int mirror) {
+//        newPlaceFreightAndCarousel(mirror);
+        systems.drivingSystem.driveSideways(20, -0.5 * mirror);
+        systems.drivingSystem.driveStraight(40, -0.5);
+        systems.drivingSystem.turn(-90 * mirror, 200);
+        systems.drivingSystem.driveStraight(25, 0.5);
+    }
+
+    /**
+     * Goes to Storage Unit.
+     */
+    public void LZNW(int mirror) {
+//        placeFreight(mirror);
+        systems.drivingSystem.driveStraight(55, -0.6);
+        systems.drivingSystem.driveSideways(30, 0.6 * mirror);
+    }
+
+    /**
+     * Goes to Carousel, and then to Crater in front of SH. Enters Crater through path.
+     */
+    public void LFYCP(int mirror) {
+        newPlaceFreightAndCarousel(mirror);
+        // Go to Crater through path
+        drivingSystem.driveSideways(50, -0.6 * mirror);
+        drivingSystem.turn(90 * mirror, 150);
+        drivingSystem.driveSidewaysUntilBumping(0.6 * mirror, 10);
+        drivingSystem.driveStraight(230, 0.7);
+    }
+
+    /**
+     * Goes to Carousel, and then to Crater in front of SH. Rams through obstacle.
+     */
+    public void LFYCO(int mirror) {
+        newPlaceFreightAndCarousel(mirror);
+
+        // Ram through obstacle
+        drivingSystem.driveSideways(30, -0.6 * mirror);
+        drivingSystem.driveStraight(20, -0.6);
+        drivingSystem.turn(90 * mirror, 150);
+        armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
+        drivingSystem.driveStraight(300, 1);
+    }
+
+    /**
+     * Goes to Carousel, then to Crater behind SH. Rams through obstacle.
+     */
+    public void LBNCO(int mirror) {
+        placeFreight(mirror);
+
+        // Go to the right of the shipping hub and dodge
+        drivingSystem.driveSideways(50, -0.6 * mirror);
+        drivingSystem.driveStraight(125, 0.6);
+        drivingSystem.driveSideways(45, 0.6 * mirror);
+        drivingSystem.turn(180, 200);
+        dodgeOtherTotem(mirror);
+
+        // Ram through obstacle
+        drivingSystem.turn(180, 200);
+        armSystem.moveArm(-200);
+        drivingSystem.driveStraight(30, -0.6);
+        drivingSystem.driveStraight(150, 1);
+    }
+
+    /**
+     * Goes to Carousel, then to Crater behind SH. Goes through path.
+     */
+    public void LBNCP(int mirror) {
+        placeFreight(mirror);
+
+        // Go to right of the shipping hub and dodge
+        drivingSystem.driveSideways(50, -0.6 * mirror);
+        drivingSystem.driveStraight(125, 0.6);
+        drivingSystem.driveSideways(45, 0.6 * mirror);
+        drivingSystem.turn(180, 200);
+        dodgeOtherTotem(mirror);
+
+        // Go through path
+        drivingSystem.turn(180, 200);
+        drivingSystem.driveSideways(50, 0.6 * mirror);
+        drivingSystem.driveStraight(100, 0.6);
+    }
 }
