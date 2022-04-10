@@ -1,187 +1,57 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.signum;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
-
 public class TotemSystem {
-    public static final double DRIVE_STRAIGHT_PRE_DETECT_DISTANCE = 15;
+    private final LinearOpMode  opMode;
+    public final Servo         altitude1;
+    public final Servo         altitude2;
+    private final CRServo       meterLeft;
+    private final CRServo       meterRight;
 
-    public static final double THIRD_FLOOR_SIDEWAYS_DISTANCE = 0;
+    private final double ALTITUDE1_ZERO = 0.5;
+    private final double ALTITUDE2_ZERO = 0.5;
+    private final double ALTITUDE1_MAX = 0.67;
+    private final double ALTITUDE2_MAX = 0.29;
 
-    private final LinearOpMode opMode;
-    public static final double AZIMUTH_START = 0.10;
-    public static final double ALTITUDE_START = 1;
-    public static final double AZIMUTH_ZERO = 0.2;
-    public static final double ALTITUDE_ZERO = 0.9;
-    private static final double TOTEM_ALTITUDE_INCREASE = 0;
-    // these servos are not initialized now, this entire class will be deleted.
-    public Servo azimuth;
-    public Servo altitude;
-    public CRServo meter;
 
-    DrivingSystem drivingSystem;
-
-    public TotemSystem(LinearOpMode opMode, boolean startOpMode) {
-        this.opMode = opMode;
-        drivingSystem = new DrivingSystem(opMode);
-        if (startOpMode) {
-            setAzimuth(AZIMUTH_ZERO);
-            TimeUtils.sleep(250);
-            altitude.setPosition(ALTITUDE_ZERO);
-        } else {
-            setAzimuth(AZIMUTH_START);
-            TimeUtils.sleep(1000);
-            setAltitude(ALTITUDE_START);
-        }
+    public TotemSystem(LinearOpMode opMode) {
+        this.opMode   = opMode;
+        altitude1     = opMode.hardwareMap.get(Servo.class, "altitude1");
+        altitude2     = opMode.hardwareMap.get(Servo.class, "altitude2");
+        meterLeft     = opMode.hardwareMap.get(CRServo.class, "meter_left");
+        meterRight    = opMode.hardwareMap.get(CRServo.class, "meter_right");
+        altitude1.setPosition(ALTITUDE1_ZERO);
+        altitude2.setPosition(ALTITUDE2_ZERO);
     }
 
-    /**
-     * Moves the azimuch of the totem. Positive numbers move up, negetive numbers down.
-     *
-     * @param pos the number of complete movements from one side to another that the robot should make in 1 second.
-     */
-    public void moveAzimuth(double pos) {
-        azimuth.setPosition(azimuth.getPosition() + pos);
+    public void extendLeft(double power) {
+        meterLeft.setPower(power);
     }
 
-    public void moveAltitude(double pos) {
-        altitude.setPosition(altitude.getPosition() + pos);
+    public void extendRight(double power) {
+        meterRight.setPower(power);
     }
 
-    public void setAzimuth(double pos) {
-        azimuth.setPosition(pos);
+    public void stopLeft() {
+        meterLeft.setPower(0);
     }
 
-    public void setAltitude(double pos) {
-        altitude.setPosition(pos);
+    public void stopRight() {
+        meterRight.setPower(0);
     }
 
-    public void extend(double power) {
-        meter.setPower(-power);
+    public void moveAltitude(double delta) {
+        if(altitude1.getPosition() + delta > ALTITUDE1_MAX || altitude2.getPosition() - delta < ALTITUDE2_MAX) return;
+
+        altitude1.setPosition(altitude1.getPosition() + delta);
+        altitude2.setPosition(altitude2.getPosition() - delta);
     }
 
-    public void stop() {
-        meter.setPower(0);
+    public void setAltitude(double position) {
+        altitude1.setPosition(position);
+        altitude2.setPosition(1 - position);
     }
-
-    public void prePickupMove(int mirror){
-        setAzimuth(0.12);
-        setAltitude(0.61);
-        drivingSystem.driveStraight(DRIVE_STRAIGHT_PRE_DETECT_DISTANCE, -0.5);
-    }
-
-    public void collectTotem(ArmSystem.Floors floor, int mirror) {
-        floor = floor.switchIfMirrored(mirror);
-        double driveSidewaysDistance;
-        switch (floor) {
-            case FIRST:
-                if (mirror == 1) {
-                    setAzimuth(0.17);
-                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
-                    driveSidewaysDistance = 5;
-                } else {
-                    setAzimuth(0.17);
-                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
-                    driveSidewaysDistance = 15;
-                }
-                TimeUtils.sleep(200);
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.3 * signum(driveSidewaysDistance) * mirror);
-                drivingSystem.driveStraight(driveStraightDistanceForFloor(floor,mirror) - DRIVE_STRAIGHT_PRE_DETECT_DISTANCE, -0.5);
-                secureTotem();
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.3 * signum(driveSidewaysDistance) * mirror);
-                break;
-            case SECOND:
-                if (mirror == 1) {
-                    setAzimuth(0.17);
-                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
-                    driveSidewaysDistance = -15;
-                } else {
-                    setAzimuth(0.17);
-                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
-                    driveSidewaysDistance = -5;
-                }
-                TimeUtils.sleep(250);
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.3 * signum(driveSidewaysDistance) * mirror);
-                drivingSystem.driveStraight(driveStraightDistanceForFloor(floor,mirror) - DRIVE_STRAIGHT_PRE_DETECT_DISTANCE, -0.5);
-                secureTotem();
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.3 * signum(driveSidewaysDistance) * mirror);
-                break;
-            case THIRD:
-                if (mirror == 1) {
-                    setAzimuth(0.35);
-                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
-                    driveSidewaysDistance = -22;
-
-                } else {
-                    setAzimuth(0.0);
-                    setAltitude(0.57 + TOTEM_ALTITUDE_INCREASE);
-                    driveSidewaysDistance = -13;
-                }
-                TimeUtils.sleep(250);
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), 0.3 * signum(driveSidewaysDistance) * mirror);
-                drivingSystem.driveStraight(driveStraightDistanceForFloor(floor,mirror) - DRIVE_STRAIGHT_PRE_DETECT_DISTANCE, -0.5);
-                secureTotem();
-                drivingSystem.driveSideways(abs(driveSidewaysDistance), -0.3 * signum(driveSidewaysDistance) * mirror);
-                break;
-        }
-
-
-        secureTotem();
-    }
-
-    private static final boolean RETRACT_TOTEM = true;
-
-    public void secureTotem() {
-        setAltitudeSlow(ALTITUDE_ZERO, 200);
-        setAzimuth(AZIMUTH_ZERO);
-
-        if (RETRACT_TOTEM) {
-            new Thread(() -> {
-                extend(-0.7);
-                TimeUtils.sleep(250);
-                stop();
-            }).start();
-        }
-    }
-
-    public void setAzimuthSlow(double pos, long time) {
-        moveServoSlow(azimuth, pos, time);
-    }
-
-    public void setAltitudeSlow(double pos, long time) {
-        moveServoSlow(altitude, pos, time);
-    }
-
-    private static void moveServoSlow(Servo servo, double targetPos, long time) {
-        final int NUM_STEPS = 100;
-        double startPos = servo.getPosition();
-        for (int i = 0; i < NUM_STEPS; i++) {
-            double partComplete = ((double) i) / NUM_STEPS;
-            double currentPos = startPos * (1 - partComplete) + targetPos * partComplete;
-            servo.setPosition(currentPos);
-            TimeUtils.sleep(time / NUM_STEPS);
-        }
-    }
-
-    public static double driveStraightDistanceForFloor(ArmSystem.Floors floor,int mirror) {
-        switch (floor) {
-            case FIRST:
-                return 19;
-            case SECOND:
-                return 19;
-            case THIRD:
-
-                return 19 + 6 * MathUtils.isMirrored(mirror);
-            default:
-                throw new IllegalArgumentException("Floor for driveStraightDistanceForFloor must be FIRST, SECOND, or THIRD.");
-        }
-    }
-
 }

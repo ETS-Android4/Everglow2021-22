@@ -8,9 +8,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ColorSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "TwoDriverGameTeleOp", group = "Linear Opmode")
 public class TwoDriverGameTeleOp extends LinearOpMode {
@@ -22,7 +21,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
     DrivingSystem drivingSystem;
     ArmSystem armSystem;
     DuckSystem duckSystem;
-    TotemSystem2 totemSystem;
+    TotemSystem totemSystem;
     ColorSystem colorSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
@@ -32,11 +31,10 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TimeUtils.opMode = this;
         drivingSystem = new DrivingSystem(this);
         armSystem = new ArmSystem(this);
         duckSystem = new DuckSystem(this);
-        totemSystem = new TotemSystem2(this);
+        totemSystem = new TotemSystem(this);
         colorSystem = new ColorSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);

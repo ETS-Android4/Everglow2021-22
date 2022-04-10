@@ -3,18 +3,13 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ColorSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
-
-import java.sql.Time;
 
 @TeleOp(name = "GameTeleOp", group = "Linear Opmode")
 public class GameTeleOp extends LinearOpMode {
@@ -28,19 +23,18 @@ public class GameTeleOp extends LinearOpMode {
     DuckSystem      duckSystem;
     ColorSystem colorSystem;
     EverglowGamepad ourGamepad1;
-    TotemSystem2 totemSystem;
+    TotemSystem totemSystem;
 
     boolean passingObstacle = false;
 
     @Override
     public void runOpMode() {
-        TimeUtils.opMode = this;
         drivingSystem = new DrivingSystem(this);
         armSystem     = new ArmSystem(this);
         duckSystem    = new DuckSystem(this);
         colorSystem = new ColorSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
-        totemSystem =  new TotemSystem2(this);
+        totemSystem =  new TotemSystem(this);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;

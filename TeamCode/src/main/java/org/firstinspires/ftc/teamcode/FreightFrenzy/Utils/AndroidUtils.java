@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.Utils;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Utils {
+public class AndroidUtils {
     public static void saveToClipBoard(String data) {
         Context context = AppUtil.getDefContext();
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

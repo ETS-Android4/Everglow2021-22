@@ -4,21 +4,24 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@TeleOp(name = "Test Webcam", group = "Test")
-public class TestWebcam extends LinearOpMode {
+public abstract class TestWebcamBase extends LinearOpMode {
+
+    private final Side side;
+    public TestWebcamBase(Side side) {
+        this.side = side;
+    }
 
     @Override
     public void runOpMode() {
-        AllSystems systems = AllSystems.init(this, MathUtils.Side.BLUE);
-        CameraSystem cameraSystem = systems.cameraSystem;
-        TimeUtils.opMode = this;
+        CameraSystem cameraSystem = new CameraSystem(this, side);
         EverglowGamepad gamepad = new EverglowGamepad(gamepad1);
         int frameNum = 1;
         waitForStart();

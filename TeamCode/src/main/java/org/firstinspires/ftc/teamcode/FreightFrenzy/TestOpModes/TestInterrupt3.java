@@ -18,12 +18,11 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "Test Interupt 3", group = "Test")
-public class TestInterupt3 extends LinearOpMode {
+@Autonomous(name = "Test Interrupt 3", group = "Test")
+public class TestInterrupt3 extends LinearOpMode {
 
     @Override
-    public void runOpMode() {
-        TimeUtils.opMode = this;
+    public void runOpMode() throws InterruptedException {
         DuckSystem duckSystem = new DuckSystem(this);
 
         CameraSystem2 cameraSystem2 = new CameraSystem2(this, MathUtils.Side.RED);

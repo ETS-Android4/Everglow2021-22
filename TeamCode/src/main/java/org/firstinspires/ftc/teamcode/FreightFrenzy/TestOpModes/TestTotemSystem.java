@@ -4,14 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@TeleOp(name = "Totem Test", group = "Test Opmode")
+@TeleOp(name = "Totem Test", group = "Test")
 public class TestTotemSystem extends LinearOpMode {
 
-    TotemSystem2 totemSystem;
+    TotemSystem totemSystem;
     EverglowGamepad gamepad;
     DrivingSystem drivingSystem;
     int dirR = 1;
@@ -19,8 +18,7 @@ public class TestTotemSystem extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TimeUtils.opMode = this;
-        totemSystem = new TotemSystem2(this);
+        totemSystem = new TotemSystem(this);
         gamepad = new EverglowGamepad(gamepad1);
         drivingSystem = new DrivingSystem(this);
         waitForStart();

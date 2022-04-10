@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator;
 
-import static org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.CarouselPlaceFreightInstruction;
-import static org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.CraterPlaceFreightInstruction;
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DeployDuckInstruction;
 
 import androidx.annotation.Nullable;
@@ -9,16 +7,16 @@ import androidx.annotation.Nullable;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.CarouselPlaceFreightAndCraterInstruction;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.CraterPlaceFreightAndCraterInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveSidewaysInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.DriveStraightInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.PlaceFreightInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.ReloadArmInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.RouteInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.TurnInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.AndroidUtils;
 
 @TeleOp(name = "Create Route", group = "Linear Opmode")
 public class CreateRouteOpMode extends LinearOpMode {
@@ -45,7 +43,7 @@ public class CreateRouteOpMode extends LinearOpMode {
 
         if (opModeIsActive()) {
             prevAutonomousRoute = recordAutonomousRoute();
-            Utils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
+            AndroidUtils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
         }
         while (opModeIsActive()) {
             ourGamepad1.update();
@@ -70,7 +68,7 @@ public class CreateRouteOpMode extends LinearOpMode {
 
             if (ourGamepad2.a()) {
                 prevAutonomousRoute = recordAutonomousRoute();
-                Utils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
+                AndroidUtils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
             }
 
             telemetry.update();
@@ -89,10 +87,6 @@ public class CreateRouteOpMode extends LinearOpMode {
             telemetry.addLine("Press cross to place freight now");
             telemetry.addLine("Press dpad right to reload arm");
             telemetry.addLine("Press dpad up to active duck system");
-            telemetry.addLine("Press dpad left to place freight on caursel side");
-            telemetry.addLine("Press dpad right to place freight on crater side");
-            telemetry.addLine("Press left bumper to place freight and go to Carousel on caursel side");
-            telemetry.addLine("Press right bumper to place freight and go to Carousel on crater side");
             telemetry.addLine();
             telemetry.addLine("Current code: ");
             telemetry.addLine(autonomousRoute.toJavaCode());
@@ -146,32 +140,6 @@ public class CreateRouteOpMode extends LinearOpMode {
                 routeInstruction.execute(systems, 1);
                 autonomousRoute.addRouteInstruction(routeInstruction);
             }
-
-            if (ourGamepad2.dpad_left()) {
-                RouteInstruction routeInstruction = new CarouselPlaceFreightInstruction();
-                routeInstruction.execute(systems, 1);
-                autonomousRoute.addRouteInstruction(routeInstruction);
-            }
-
-            if (ourGamepad2.dpad_right()) {
-                RouteInstruction routeInstruction = new CraterPlaceFreightInstruction();
-                routeInstruction.execute(systems, 1);
-                autonomousRoute.addRouteInstruction(routeInstruction);
-            }
-
-            if (ourGamepad2.lb()) {
-                RouteInstruction routeInstruction = new CarouselPlaceFreightAndCraterInstruction();
-                routeInstruction.execute(systems, 1);
-                autonomousRoute.addRouteInstruction(routeInstruction);
-            }
-
-
-            if (ourGamepad2.rb()) {
-                RouteInstruction routeInstruction = new CraterPlaceFreightAndCraterInstruction();
-                routeInstruction.execute(systems, 1);
-                autonomousRoute.addRouteInstruction(routeInstruction);
-            }
-
 
 
             if (ourGamepad2.dpad_down()){
