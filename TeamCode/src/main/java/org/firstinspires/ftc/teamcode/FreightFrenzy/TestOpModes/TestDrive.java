@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Paths.Crater;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 
 @TeleOp(name = "Test Drive", group = "Test")
+@Disabled
 public class TestDrive extends LinearOpMode {
     Crater crater;
 

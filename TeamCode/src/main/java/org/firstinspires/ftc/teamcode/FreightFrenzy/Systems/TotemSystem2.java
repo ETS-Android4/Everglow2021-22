@@ -6,14 +6,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class TotemSystem2 {
     private final LinearOpMode  opMode;
-    private final Servo         altitude1;
-    private final Servo         altitude2;
+    public final Servo         altitude1;
+    public final Servo         altitude2;
     private final CRServo       meterLeft;
     private final CRServo       meterRight;
     private final DrivingSystem drivingSystem;
 
     private final double ALTITUDE1_ZERO = 0.5;
     private final double ALTITUDE2_ZERO = 0.5;
+    private final double ALTITUDE1_MAX = 0.29;
+    private final double ALTITUDE2_MAX = 0.67;
 
     public TotemSystem2(LinearOpMode opMode) {
         this.opMode   = opMode;
@@ -43,8 +45,10 @@ public class TotemSystem2 {
     }
 
     public void moveAltitude(double delta) {
-        altitude1.setPosition(altitude1.getPosition() + delta);
-        altitude2.setPosition(altitude2.getPosition() - delta);
+//        if(altitude1.getPosition() + delta < ALTITUDE1_MAX && altitude2.getPosition() - delta > ALTITUDE2_MAX) {
+            altitude1.setPosition(altitude1.getPosition() + delta);
+            altitude2.setPosition(altitude2.getPosition() - delta);
+//        }
     }
 
     public void setAltitude(double position) {
