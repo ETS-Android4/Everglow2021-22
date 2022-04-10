@@ -19,8 +19,8 @@ public class TotemSystem {
 
     public TotemSystem(LinearOpMode opMode) {
         this.opMode   = opMode;
-        altitude1     = opMode.hardwareMap.get(Servo.class, "altitude1");
-        altitude2     = opMode.hardwareMap.get(Servo.class, "altitude2");
+        altitude1     = opMode.hardwareMap.get(Servo.class, "altitude_right");
+        altitude2     = opMode.hardwareMap.get(Servo.class, "altitude_left");
         meterLeft     = opMode.hardwareMap.get(CRServo.class, "meter_left");
         meterRight    = opMode.hardwareMap.get(CRServo.class, "meter_right");
         altitude1.setPosition(ALTITUDE1_ZERO);
