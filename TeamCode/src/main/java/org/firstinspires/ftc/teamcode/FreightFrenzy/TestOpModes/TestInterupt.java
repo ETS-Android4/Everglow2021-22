@@ -7,9 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
-@Autonomous(name = "TestInterupt", group = "Test")
-@Disabled
-public class TestDriveStraight extends LinearOpMode {
+@Autonomous(name = "Test Interupt", group = "Test")
+public class TestInterupt extends LinearOpMode {
     @Override
     public void runOpMode() {
         AllSystems systems = AllSystems.init(this);
