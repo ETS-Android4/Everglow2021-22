@@ -20,7 +20,7 @@ public class ArmSystem {
     private boolean loaded = false;
     private boolean firstFloor = false;
     private Integer targetPosition = null;
-    private CollectState collectState = CollectState.STOPPED;
+    public CollectState collectState = CollectState.STOPPED;
 
     public ArmSystem(LinearOpMode opMode) {
         flyWheels = opMode.hardwareMap.get(DcMotorEx.class, "flywheels");
@@ -70,7 +70,7 @@ public class ArmSystem {
         if (colorSystem.isCargo()) {
             flyWheels.setVelocity(-2000);
         } else {
-            flyWheels.setVelocity(-3000);
+            flyWheels.setVelocity(-2500);
         }
     }
 
@@ -193,6 +193,14 @@ public class ArmSystem {
         if (-50 <= arm.getCurrentPosition() && loaded) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            arm.setPower(0);
+        }
+    }
+
+    public void stayDownOnLoad(){
+        if(loaded) {
+            arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            arm.setPower(0.1);
         }
     }
 

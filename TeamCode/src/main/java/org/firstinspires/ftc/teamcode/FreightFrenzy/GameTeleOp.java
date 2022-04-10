@@ -151,8 +151,12 @@ public class GameTeleOp extends LinearOpMode {
                 armSystem.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
-            armSystem.restOnFirstFloor();
-            armSystem.slowArm();
+            if(armSystem.collectState != ArmSystem.CollectState.COLLECTING) {
+                armSystem.restOnFirstFloor();
+            }
+            else{
+                armSystem.stayDownOnLoad();
+            }
 
             telemetry.addData("arm pos: ", armSystem.arm.getTargetPosition());
             telemetry.addData("is cargo sensor: ", colorSystem.isCargo());

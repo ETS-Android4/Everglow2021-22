@@ -166,7 +166,13 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
                 armSystem.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
-            armSystem.restOnFirstFloor();
+            if(armSystem.collectState != ArmSystem.CollectState.COLLECTING) {
+                armSystem.restOnFirstFloor();
+            }
+            else{
+                armSystem.stayDownOnLoad();
+            }
+
             telemetry.addData("is cargo sensor: ", colorSystem.isCargo());
             telemetry.update();
         }
