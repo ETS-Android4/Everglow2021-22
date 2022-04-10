@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Crater {
-    DrivingSystem drivingSystem;
-    ArmSystem armSystem;
+    private final DrivingSystem drivingSystem;
+    private final ArmSystem armSystem;
     TotemSystem totemSystem;
     DuckSystem duckSystem;
     public DetectionSystem detectionSystem;
@@ -26,15 +26,13 @@ public class Crater {
     ArmSystem.Floors floor;
     private final CameraSystem cameraSystem;
 
-
-
     public Crater(LinearOpMode opMode) {
         this.opMode = opMode;
         drivingSystem = new DrivingSystem(opMode);
         armSystem = new ArmSystem(opMode);
         detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem = new DuckSystem(opMode);
-        this.totemSystem = new TotemSystem(opMode, false);
+        totemSystem = new TotemSystem(opMode, false);
         cameraSystem = new CameraSystem(opMode, Side.RED, null);
     }
 
