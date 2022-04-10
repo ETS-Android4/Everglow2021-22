@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.normalizeAngle;
-import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.reduceValue;
 import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.copySign;
@@ -316,90 +315,6 @@ public class DrivingSystem {
         stop();
     }
 
-    public void driveToPoint2(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
-        resetDistance();
-        double currentX = 0;
-        double currentY = 0;
-        this.targetAngle = ang;
-
-        final double ROTATE_SPEED_MIN = 0.2;
-
-        final double SLOWDOWN_START_DISTANCE = 30.;
-        final double SLOWDOWN_MIN_MULTIPLIER = 0.1;
-
-        double lastDistanceTravelled = 0;
-        while (opMode.opModeIsActive()) {
-            double angleDeviation = getAngleDeviation();
-            double xDiff = targetX - currentX;
-            double yDiff = targetY - currentY;
-            boolean xPassed = abs(currentX) >= abs(targetX);
-            boolean yPassed = abs(currentY) >= abs(targetY);
-
-            double xPower, yPower, rotatePower;
-            if (Math.abs(angleDeviation) < 1){
-                rotatePower = 0;
-            }else {
-                rotatePower = copySign(
-                        min(abs(angleDeviation)/180 * (abs(rotateSpeed) - ROTATE_SPEED_MIN) + ROTATE_SPEED_MIN, 1),
-                        angleDeviation);
-            }
-            double maxDiff = max(abs(xDiff), abs(yDiff));
-            if (xPassed || maxDiff == 0) {
-                xPower = 0;
-            } else {
-                xPower = reduceValue(xDiff/maxDiff * driveSpeed,
-                        abs(xDiff),
-                        SLOWDOWN_START_DISTANCE,
-                        SLOWDOWN_MIN_MULTIPLIER);
-            }
-
-            if (yPassed || maxDiff == 0) {
-                yPower = 0;
-            } else {
-                yPower = reduceValue(yDiff/maxDiff * driveSpeed,
-                        abs(yDiff),
-                        SLOWDOWN_START_DISTANCE,
-                        SLOWDOWN_MIN_MULTIPLIER);
-            }
-            // normalize so that xPower^2 + yPower^2 + rotatePower^2 = 1
-            double powerHypot = sqrt(pow(xPower, 2) + pow(yPower, 2) + pow(rotatePower, 2));
-            double xPowerNormalized = xPower/powerHypot;
-            double yPowerNormalized = yPower/powerHypot;
-
-
-            // stop if got to destination
-            if (yPassed && xPassed && Math.abs(angleDeviation) < 1){
-                break;
-            }
-
-            driveByJoystickWithRelationToAxis(xPower, yPower, rotatePower);
-
-            double currEncoder = (abs(backLeft.getCurrentPosition())
-                    + abs(backRight.getCurrentPosition())
-                    + abs(frontLeft.getCurrentPosition())
-                    + abs(frontRight.getCurrentPosition()))/4.;
-            double currentDistanceTraveled = currEncoder / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM);
-            double distanceTraveledNow = currentDistanceTraveled - lastDistanceTravelled;
-            lastDistanceTravelled = currentDistanceTraveled;
-            currentX += xPowerNormalized *  distanceTraveledNow;
-            currentY += yPowerNormalized * distanceTraveledNow;
-
-            opMode.telemetry.addData("angleDeviation: ", angleDeviation);
-            opMode.telemetry.addData("rotatePower: ", rotatePower);
-            opMode.telemetry.addData("currentX: ", currentX);
-            opMode.telemetry.addData("currentY: ", currentY);
-            opMode.telemetry.addData("xDiff: ", xDiff);
-            opMode.telemetry.addData("yDiff: ", yDiff);
-            opMode.telemetry.addData("powerX: ", xPower);
-            opMode.telemetry.addData("powerY: ", yPower);
-            opMode.telemetry.addData("xPassed: ", xPassed);
-            opMode.telemetry.addData("yPassed: ", yPassed);
-            opMode.telemetry.addData("currentDistance: ", currentDistanceTraveled);
-            opMode.telemetry.update();
-        }
-        stop();
-    }
-
     /**
      * The method we use to rotate in place. The robot rotates rapidly if the Angle Deviation is
      * large, and decelerates as it gets closer to the target angle.
@@ -423,13 +338,6 @@ public class DrivingSystem {
             );
         }
         stop();
-    }
-
-    /**
-     * Same as drive straight, but has a default stopAfter of true. robot will stop after driving.
-     */
-    public void driveStraight(double distance, double power) {
-        driveStraight(distance, power, true);
     }
 
     /**
@@ -459,7 +367,6 @@ public class DrivingSystem {
                 armSystem.stop();
                 return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
             }
-
         }
 
         stop();
@@ -467,69 +374,13 @@ public class DrivingSystem {
     }
 
     public void driveUntilWhite(double power ,boolean stopAfter){
-        driveByJoystick(0,-power,0);
         while(!colorSystem.overWhite() && opMode.opModeIsActive()){
+            double angleDeviation = getAngleDeviation();
+            driveByJoystick(0,-power,angleDeviation / ROTATE_SPEED_DECREASE);
+
         }
         if(stopAfter)
             stop();
-    }
-
-    public double combinedDriveUntilCollect(double maxDistance, double power){
-        resetDistance();
-        armSystem.collect();
-        double bumpingThreshold = abs(power) * ACCELERATION_BUMPING_THRESHOLD;
-        while (opMode.opModeIsActive()) {
-            double averageMotors = abs(
-                    (frontRight.getCurrentPosition() + frontLeft.getCurrentPosition()
-                            + backLeft.getCurrentPosition() + backRight.getCurrentPosition()
-                    ) / 4.0
-            );
-            double distanceTraveled = (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
-            driveByJoystick(0, -power, getAngleDeviation() / ROTATE_SPEED_DECREASE);
-            if (armSystem.touch.isPressed() || distanceTraveled > maxDistance){
-                stop();
-                armSystem.stop();
-                return distanceTraveled;
-            }else if (getAccelerationMagnitude() > bumpingThreshold && distanceTraveled > 15){
-                opMode.telemetry.addLine("Passed Acceleration bumping Threshold");
-                opMode.telemetry.update();
-                wobbleDriveUntilCollect(100, power);
-                stop();
-                armSystem.stop();
-                return distanceTraveled;
-            }
-        }
-        // only returned when the opMode stops.
-        return 0;
-    }
-
-    public double wobbleDriveUntilCollect(double maxDistance, double power){
-        final double WOBBLE_AMPLITUDE = 20;
-        final double WOBBLE_PERIOD = 0.4;
-        final double WOBBLE_ANG_FREQ = 2*Math.PI/WOBBLE_PERIOD;
-        final double WOBBLE_DISTANCE_FACTOR = 1.3;
-        ElapsedTime elapsedTime = new ElapsedTime();
-        armSystem.collect();
-        resetDistance();
-        while (opMode.opModeIsActive()){
-            double averageMotors = abs(
-                    (frontRight.getCurrentPosition() + frontLeft.getCurrentPosition()
-                            + backLeft.getCurrentPosition() + backRight.getCurrentPosition()
-                    ) / 4.0
-            );
-            double distanceTraveled = (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV * WOBBLE_DISTANCE_FACTOR;
-            double currentTargetAngle = targetAngle + WOBBLE_AMPLITUDE * Math.sin(elapsedTime.seconds() * WOBBLE_ANG_FREQ);
-            double angleDeviation = normalizeAngle(getCurrentAngle() - currentTargetAngle);
-            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
-
-            if (distanceTraveled > maxDistance || armSystem.touch.isPressed()){
-                stop();
-                armSystem.stop();
-                return distanceTraveled;
-            }
-        }
-        // only returned when the opMode stops.
-        return 0;
     }
 
     /**
@@ -567,6 +418,13 @@ public class DrivingSystem {
         }
     }
 
+    /**
+     * Same as drive straight, but has a default stopAfter of true. robot will stop after driving.
+     */
+    public void driveStraight(double distance, double power) {
+        driveStraight(distance, power, true);
+    }
+
     public void driveStraightUntilBumping(double power, double initialDistance){
         driveStraight(initialDistance, power, false);
         final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
@@ -586,16 +444,6 @@ public class DrivingSystem {
             driveByJoystick(power, 0, angleDeviation / ROTATE_SPEED_DECREASE);
         }
         stop();
-    }
-
-
-    /**
-     * The method we use to travel a set distance rightwards or leftwards.
-     *  @param distance The distance to be travelled.
-     * @param power    The power of the driving motors (positive = rightward).
-     */
-    public void driveSideways(double distance, double power) {
-        driveSideways(distance, power, true);
     }
 
     /**
@@ -637,56 +485,12 @@ public class DrivingSystem {
     }
 
     /**
-     * Drives sideways, and repeatedly calls the DetectionSystem.scan() method.
+     * The method we use to travel a set distance rightwards or leftwards.
+     *  @param distance The distance to be travelled.
+     * @param power    The power of the driving motors (positive = rightward).
      */
-    public void driveSidewaysAndScan(double distance, double power, DetectionSystem detectionSystem) {
-        this.targetAngle = getCurrentAngle();
-        // The method receives a positive distance.
-        if (distance < 0) {
-            throw new IllegalArgumentException("Method driveSidewaysAndScan was given a negative distance: " + distance);
-        }
-
-        resetDistance();
-        /*
-         * The average distance the motors have travelled (in ticks).
-         * Basically means how far the robot has travelled.
-         */
-        double averageMotors = 0;
-
-        while ((abs(distance) * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors && opMode.opModeIsActive()) {
-            driveByJoystick(power, 0, getAngleDeviation() / ROTATE_SPEED_DECREASE);
-            averageMotors = abs(
-                    (-this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()
-                            + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
-                    ) / 4.0
-            );
-            detectionSystem.scan();
-        }
-        stop();
-    }
-
-    /**
-     * Drives forward until the desired distance from an obstacle (received by the distance sensors) is reached.
-     */
-    public void driveUntilObstacle(double distance, double power) {
-        this.targetAngle = getCurrentAngle();
-        resetDistance();
-
-        while (sensorBackUp.getDistance(DistanceUnit.CM) > distance && opMode.opModeIsActive()) {
-            driveByJoystick(0, -power, getAngleDeviation() / ROTATE_SPEED_DECREASE);
-        }
-        stop();
-    }
-
-    /**
-     * Same as driveUntilObstacle, but also lifts the arm so that it doesn't block the sensors.
-     */
-    @Deprecated
-    public void moveArmAndDriveUntilObstacle(double distance, double power, ArmSystem armSystem) {
-        armSystem.moveArm(-300);
-        TimeUtils.sleep(700);
-        driveUntilObstacle(distance, power);
-        armSystem.autonomousReload();
+    public void driveSideways(double distance, double power) {
+        driveSideways(distance, power, true);
     }
 
     /**
@@ -743,71 +547,6 @@ public class DrivingSystem {
         }
         stop();
         return abs(averageMotors / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM));
-    }
-
-    /**
-     * @param duration       The duration (in seconds) of the scanning.
-     * @param distanceSensor The sensor for which to measure an average distance received over time.
-     * @return The average distance shown by distanceSensor over the given span of time.
-     */
-    public double distanceSensorAverage(double duration, DistanceSensor distanceSensor) {
-        List<Double> distances = new ArrayList<>();
-        ElapsedTime elapsedTime = new ElapsedTime();
-
-        elapsedTime.reset();
-        elapsedTime.startTime();
-
-        // Run for [duration] seconds
-        while (elapsedTime.seconds() < duration && opMode.opModeIsActive()) {
-            double distance = distanceSensor.getDistance(DistanceUnit.CM);
-            if (distance < 50) {
-                distances.add(distance);
-            }
-        }
-
-        return MathUtils.average(distances);
-    }
-
-    /**
-     * Goes to a fixed distance from an object, given the current distance from said object.
-     * If too far, go forward, and if too close go backward.
-     *
-     * @param currentDistance The current distance from the object.
-     * @param distance        The wanted distance from the object.
-     * @param power           The power of the driving motors.
-     */
-    public void driveToFixedDistance(double currentDistance, double distance, double power) {
-        if (currentDistance > distance) {
-            driveStraight(currentDistance - distance, -power);
-        } else {
-            driveStraight(distance - currentDistance, power);
-        }
-    }
-
-    /**
-     * A method to execute the Capping Sequence: the robot caps the Shipping Hub with the Team Shipping Element.
-     *
-     * @param armSystem The Arm System to be used by the CS.
-     */
-    public void CS(ArmSystem armSystem) {
-        // Go right until the Shipping Hubs' stem is detected
-        while ((sensorBackUp.getDistance(DistanceUnit.CM) > 50 || sensorBackDown.getDistance(DistanceUnit.CM) > 50) && opMode.opModeIsActive()) {
-            driveByJoystick(-0.4, 0, 0);
-        }
-        stop();
-
-        double avgDistance = distanceSensorAverage(2, sensorBackDown);
-        driveToFixedDistance(avgDistance, 35, 0.3);
-
-        while (sensorBackDown.getDistance(DistanceUnit.CM) < 40 && opMode.opModeIsActive()) {
-            driveByJoystick(0, 0, 0.2);
-        }
-
-        armSystem.placeTotem();
-        driveStraight(10, 0.3);
-        armSystem.stop();
-        armSystem.autonomousReload();
-        TimeUtils.sleep(3000);
     }
 
     /**

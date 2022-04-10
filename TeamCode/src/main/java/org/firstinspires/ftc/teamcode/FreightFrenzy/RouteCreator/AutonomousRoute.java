@@ -96,25 +96,6 @@ public class AutonomousRoute {
         }
     }
 
-    static class DriveUntilObstacleInstruction implements RouteInstruction {
-        private final double distance;
-        private final double power;
-
-        public DriveUntilObstacleInstruction(double distance, double power) {
-            this.distance = distance;
-            this.power = power;
-        }
-
-        @Override
-        public void execute(AllSystems systems, int mirror) {
-            systems.drivingSystem.moveArmAndDriveUntilObstacle(distance, power, systems.armSystem);
-        }
-
-        @Override
-        public String toJavaCode() {
-                return String.format("drivingSystem.moveArmAndDriveUntilObstacle(%.1f, %.1f, armSystem);\n", distance, power);
-        }
-    }
 
     static class CraterPlaceFreightInstruction implements RouteInstruction {
         public CraterPlaceFreightInstruction() {

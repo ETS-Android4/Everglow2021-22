@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
@@ -21,7 +20,6 @@ public class Crater {
     private final ArmSystem armSystem;
     TotemSystem totemSystem;
     DuckSystem duckSystem;
-    public DetectionSystem detectionSystem;
     LinearOpMode opMode;
     ArmSystem.Floors floor;
     private final CameraSystem cameraSystem;
@@ -30,7 +28,6 @@ public class Crater {
         this.opMode = opMode;
         drivingSystem = new DrivingSystem(opMode);
         armSystem = new ArmSystem(opMode);
-        detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem = new DuckSystem(opMode);
         totemSystem = new TotemSystem(opMode, false);
         cameraSystem = new CameraSystem(opMode, Side.RED, null);
@@ -40,7 +37,6 @@ public class Crater {
         this.opMode = systems.opMode;
         this.drivingSystem = systems.drivingSystem;
         this.armSystem = systems.armSystem;
-        this.detectionSystem = null; // todo: remove completely
         this.duckSystem = systems.duckSystem;
         this.cameraSystem = systems.cameraSystem;
     }
@@ -51,7 +47,6 @@ public class Crater {
     public void placeFreight(int mirror) {
         drivingSystem.resetDistance();
         drivingSystem.driveStraight(25, 0.6);
-        floor = detectionSystem.findTargetFloor2(mirror);
         drivingSystem.driveStraight(25, -0.6);
 
         // avoid totem
@@ -126,7 +121,7 @@ public class Crater {
 
     public void DetectAndCollectTotem(int mirror) {
         totemSystem.prePickupMove(mirror);
-        floor = detectionSystem.findTargetFloor2(mirror);
+        floor = ArmSystem.Floors.FIRST;
         totemSystem.collectTotem(floor, mirror);
     }
 
@@ -244,7 +239,7 @@ public class Crater {
      */
     public void RZNCO(int mirror) {
         totemSystem.prePickupMove(mirror);
-        floor = detectionSystem.findTargetFloor2(mirror);
+        floor = ArmSystem.Floors.FIRST;
         //collect totem
         totemSystem.collectTotem(floor, mirror);
 
@@ -266,7 +261,7 @@ public class Crater {
      */
     public void RZNCP(int mirror) {
         totemSystem.prePickupMove(mirror);
-        floor = detectionSystem.findTargetFloor2(mirror);
+        floor = ArmSystem.Floors.FIRST;
         //collect totem
         totemSystem.collectTotem(floor, mirror);
 

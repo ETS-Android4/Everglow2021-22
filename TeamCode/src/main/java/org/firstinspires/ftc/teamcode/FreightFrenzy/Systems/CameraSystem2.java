@@ -116,14 +116,6 @@ public class CameraSystem2 {
         return imageProcessor.findFloor(mat);
     }
 
-    /**
-     * Do something with the frame
-     */
-    private void onNewFrame(Bitmap frame) {
-        saveBitmap(frame);
-        frame.recycle(); // not strictly necessary, but helpful
-    }
-
     //----------------------------------------------------------------------------------------------
     // Camera operations
     //----------------------------------------------------------------------------------------------
@@ -244,8 +236,7 @@ public class CameraSystem2 {
     //----------------------------------------------------------------------------------------------
 
     private void error(String msg) {
-        opMode.telemetry.log().add(msg);
-        opMode.telemetry.update();
+        throw new RuntimeException("Error with Camera: " + msg);
     }
 
     private void error(String format, Object... args) {

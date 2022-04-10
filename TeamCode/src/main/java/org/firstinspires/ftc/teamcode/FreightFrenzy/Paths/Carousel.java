@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
@@ -18,7 +17,6 @@ public class Carousel {
     ArmSystem armSystem;
     DuckSystem duckSystem;
     TotemSystem totemSystem;
-    DetectionSystem detectionSystem;
     LinearOpMode opMode;
     ElapsedTime timer;
     ArmSystem.Floors floor;
@@ -30,7 +28,6 @@ public class Carousel {
         armSystem = new ArmSystem(opMode);
         duckSystem = new DuckSystem(opMode);
         totemSystem = new TotemSystem(opMode, false);
-        detectionSystem = new DetectionSystem(opMode, armSystem);
         cameraSystem = new CameraSystem(opMode, MathUtils.Side.RED, null);
         timer = new ElapsedTime();
     }
@@ -40,7 +37,6 @@ public class Carousel {
         this.drivingSystem = systems.drivingSystem;
         this.armSystem = systems.armSystem;
         this.duckSystem = systems.duckSystem;
-        this.detectionSystem = null; // todo: remove completely
         this.cameraSystem = systems.cameraSystem;
         timer = new ElapsedTime();
     }
@@ -51,7 +47,7 @@ public class Carousel {
     public void placeFreight(int mirror) {
         drivingSystem.resetDistance();
         drivingSystem.driveStraight(25, -0.6);
-        floor = detectionSystem.findTargetFloor2(mirror);
+        floor = ArmSystem.Floors.THIRD;
         drivingSystem.turn(180, 300);
 
         //avoid totem
@@ -162,7 +158,7 @@ public class Carousel {
         drivingSystem.resetDistance();
         if (USE_DETECTION) {
             totemSystem.prePickupMove(mirror);
-            floor = detectionSystem.findTargetFloor2(mirror);
+            floor = ArmSystem.Floors.FIRST;
         } else {
             floor = ArmSystem.Floors.FIRST;
         }
