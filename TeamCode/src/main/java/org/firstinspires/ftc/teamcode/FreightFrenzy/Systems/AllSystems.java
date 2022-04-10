@@ -9,11 +9,11 @@ public class AllSystems {
     public final ArmSystem armSystem;
     public final DrivingSystem drivingSystem;
     public final DuckSystem duckSystem;
-    public final TotemSystem2 totemSystem;
+    public final TotemSystem totemSystem;
     public final CameraSystem cameraSystem;
     public final Side side;
 
-    public AllSystems(LinearOpMode opMode, ArmSystem armSystem, DrivingSystem drivingSystem, DuckSystem duckSystem, TotemSystem2 totemSystem, CameraSystem cameraSystem, Side side) {
+    public AllSystems(LinearOpMode opMode, ArmSystem armSystem, DrivingSystem drivingSystem, DuckSystem duckSystem, TotemSystem totemSystem, CameraSystem cameraSystem, Side side) {
         this.opMode = opMode;
         this.armSystem = armSystem;
         this.drivingSystem = drivingSystem;
@@ -28,7 +28,7 @@ public class AllSystems {
         this.armSystem = new ArmSystem(opMode);
         this.drivingSystem = new DrivingSystem(opMode);
         this.duckSystem = new DuckSystem(opMode);
-        this.totemSystem = new TotemSystem2(opMode);
+        this.totemSystem = new TotemSystem(opMode);
         this.cameraSystem = new CameraSystem(opMode, side);
         this.side = side;
     }

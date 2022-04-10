@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class TotemSystem2 {
+public class TotemSystem {
     private final LinearOpMode  opMode;
     public final Servo         altitude1;
     public final Servo         altitude2;
@@ -17,7 +17,7 @@ public class TotemSystem2 {
     private final double ALTITUDE2_MAX = 0.29;
 
 
-    public TotemSystem2(LinearOpMode opMode) {
+    public TotemSystem(LinearOpMode opMode) {
         this.opMode   = opMode;
         altitude1     = opMode.hardwareMap.get(Servo.class, "altitude1");
         altitude2     = opMode.hardwareMap.get(Servo.class, "altitude2");
