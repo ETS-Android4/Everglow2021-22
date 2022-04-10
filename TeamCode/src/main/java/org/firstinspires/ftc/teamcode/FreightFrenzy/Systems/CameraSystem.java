@@ -22,7 +22,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.io.File;
 
-public class CameraSystem3 {
+public class CameraSystem {
 
     private static final int rectXIncrease = 20;
     private static final int rectYIncrease = 100;
@@ -43,6 +43,20 @@ public class CameraSystem3 {
     private static final Scalar low_red2 = new Scalar(0, 80, 2);
     private static final Scalar high_red2 = new Scalar(15, 255, 255);
 
+    class NewPipeline extends OpenCvPipeline{
+        private ImageProcessor imageProcessor;
+
+        @Override
+        public void init(Mat mat) {
+            imageProcessor = new ImageProcessor(mat, side);
+        }
+
+        @Override
+        public Mat processFrame(Mat input) {
+            imageProcessor.drawOnPreview(input);
+            return input;
+        }
+    }
 
     class CameraPipeline extends OpenCvPipeline {
 
@@ -159,7 +173,7 @@ public class CameraSystem3 {
     private final OpenCvCamera camera;
     private final AllSystems systems;
 
-    public CameraSystem3(LinearOpMode opMode, Side side, AllSystems systems) {
+    public CameraSystem(LinearOpMode opMode, Side side, AllSystems systems) {
         this.side = side;
         this.opMode = opMode;
         this.systems = systems;
@@ -167,6 +181,7 @@ public class CameraSystem3 {
         int cameraMonitorViewId = this.opMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", this.opMode.hardwareMap.appContext.getPackageName());
         WebcamName webcamName = this.opMode.hardwareMap.get(WebcamName.class, "webcam");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        camera.setPipeline(cameraPipeline);
         startCamera();
     }
 
@@ -175,7 +190,6 @@ public class CameraSystem3 {
             @Override
             public void onOpened() {
                 camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
-                camera.setPipeline(cameraPipeline);
             }
 
             @Override

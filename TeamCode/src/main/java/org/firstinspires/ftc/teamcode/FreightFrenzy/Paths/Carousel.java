@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem3;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
@@ -22,7 +22,7 @@ public class Carousel {
     LinearOpMode opMode;
     ElapsedTime timer;
     ArmSystem.Floors floor;
-    private final CameraSystem3 cameraSystem;
+    private final CameraSystem cameraSystem;
 
     public Carousel(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -31,7 +31,7 @@ public class Carousel {
         duckSystem = new DuckSystem(opMode);
         totemSystem = new TotemSystem(opMode, false);
         detectionSystem = new DetectionSystem(opMode, armSystem);
-        cameraSystem = new CameraSystem3(opMode, MathUtils.Side.RED, null);
+        cameraSystem = new CameraSystem(opMode, MathUtils.Side.RED, null);
         timer = new ElapsedTime();
     }
 

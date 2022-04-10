@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem3;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DetectionSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
@@ -24,7 +24,7 @@ public class Crater {
     public DetectionSystem detectionSystem;
     LinearOpMode opMode;
     ArmSystem.Floors floor;
-    private final CameraSystem3 cameraSystem;
+    private final CameraSystem cameraSystem;
 
 
 
@@ -35,7 +35,7 @@ public class Crater {
         detectionSystem = new DetectionSystem(opMode, armSystem);
         duckSystem = new DuckSystem(opMode);
         this.totemSystem = new TotemSystem(opMode, false);
-        cameraSystem = new CameraSystem3(opMode, Side.RED, null);
+        cameraSystem = new CameraSystem(opMode, Side.RED, null);
     }
 
     public Crater(AllSystems systems) {
