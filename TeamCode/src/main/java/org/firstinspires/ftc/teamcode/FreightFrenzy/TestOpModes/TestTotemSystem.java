@@ -19,7 +19,6 @@ public class TestTotemSystem extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TimeUtils.opMode = this;
         totemSystem = new TotemSystem2(this);
         gamepad = new EverglowGamepad(gamepad1);
         drivingSystem = new DrivingSystem(this);

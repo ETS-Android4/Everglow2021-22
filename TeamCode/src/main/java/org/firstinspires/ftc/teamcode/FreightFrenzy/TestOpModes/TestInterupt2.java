@@ -34,7 +34,6 @@ public class TestInterupt2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TimeUtils.opMode = this;
         DuckSystem duckSystem = new DuckSystem(this);
 
         MockCameraPipeline pipeline = new MockCameraPipeline(this);

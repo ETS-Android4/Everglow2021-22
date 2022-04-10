@@ -377,7 +377,6 @@ public class DrivingSystem {
         while(!colorSystem.overWhite() && opMode.opModeIsActive()){
             double angleDeviation = getAngleDeviation();
             driveByJoystick(0,-power,angleDeviation / ROTATE_SPEED_DECREASE);
-
         }
         if(stopAfter)
             stop();

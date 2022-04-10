@@ -34,7 +34,6 @@ public class GameTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TimeUtils.opMode = this;
         drivingSystem = new DrivingSystem(this);
         armSystem     = new ArmSystem(this);
         duckSystem    = new DuckSystem(this);

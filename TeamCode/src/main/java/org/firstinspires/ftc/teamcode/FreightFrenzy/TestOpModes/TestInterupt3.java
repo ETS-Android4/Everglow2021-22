@@ -23,7 +23,6 @@ public class TestInterupt3 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TimeUtils.opMode = this;
         DuckSystem duckSystem = new DuckSystem(this);
 
         CameraSystem2 cameraSystem2 = new CameraSystem2(this, MathUtils.Side.RED);

@@ -1,14 +1,8 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator;
+package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class AllSystems {
     public final LinearOpMode opMode;
@@ -28,11 +22,9 @@ public class AllSystems {
         this.cameraSystem = cameraSystem;
         this.side = side;
 
-        TimeUtils.opMode = opMode;
     }
 
     private AllSystems(LinearOpMode opMode, Side side) {
-        TimeUtils.opMode = opMode;
         this.opMode = opMode;
         this.armSystem = new ArmSystem(opMode);
         this.drivingSystem = new DrivingSystem(opMode);

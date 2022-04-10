@@ -7,8 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.Utils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.androidUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -104,7 +103,7 @@ public class CameraSystem {
             }
             if (isCapturingImage) {
                 isCapturingImage = false;
-                String timeStamp = Utils.timestampString();
+                String timeStamp = androidUtils.timestampString();
                 String filepath = new File(AppUtil.ROBOT_DATA_DIR, String.format("img_%s.png", timeStamp)).getAbsolutePath();
                 saveMatToDiskFullPath(input, filepath);
             }

@@ -17,8 +17,10 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.ReloadArmInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.RouteInstruction;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AutonomousRoute.TurnInstruction;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.androidUtils;
 
 @TeleOp(name = "Create Route", group = "Linear Opmode")
 public class CreateRouteOpMode extends LinearOpMode {
@@ -45,7 +47,7 @@ public class CreateRouteOpMode extends LinearOpMode {
 
         if (opModeIsActive()) {
             prevAutonomousRoute = recordAutonomousRoute();
-            Utils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
+            androidUtils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
         }
         while (opModeIsActive()) {
             ourGamepad1.update();
@@ -70,7 +72,7 @@ public class CreateRouteOpMode extends LinearOpMode {
 
             if (ourGamepad2.a()) {
                 prevAutonomousRoute = recordAutonomousRoute();
-                Utils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
+                androidUtils.saveToClipBoard(prevAutonomousRoute.toJavaCode());
             }
 
             telemetry.update();
