@@ -30,7 +30,7 @@ public class Crater {
         armSystem = new ArmSystem(opMode);
         duckSystem = new DuckSystem(opMode);
         totemSystem = new TotemSystem(opMode, false);
-        cameraSystem = new CameraSystem(opMode, Side.RED, null);
+        cameraSystem = new CameraSystem(opMode, Side.RED);
     }
 
     public Crater(AllSystems systems) {

@@ -28,7 +28,7 @@ public class Carousel {
         armSystem = new ArmSystem(opMode);
         duckSystem = new DuckSystem(opMode);
         totemSystem = new TotemSystem(opMode, false);
-        cameraSystem = new CameraSystem(opMode, MathUtils.Side.RED, null);
+        cameraSystem = new CameraSystem(opMode, MathUtils.Side.RED);
         timer = new ElapsedTime();
     }
 

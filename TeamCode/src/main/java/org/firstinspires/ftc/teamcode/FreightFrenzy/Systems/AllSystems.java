@@ -30,7 +30,7 @@ public class AllSystems {
         this.drivingSystem = new DrivingSystem(opMode);
         this.duckSystem = new DuckSystem(opMode);
         this.totemSystem = new TotemSystem2(opMode);
-        this.cameraSystem = new CameraSystem(opMode, side, this);
+        this.cameraSystem = new CameraSystem(opMode, side);
         this.side = side;
     }
 

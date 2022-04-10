@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
+import android.media.Image;
+
 import androidx.annotation.Nullable;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -59,6 +61,9 @@ public class CameraSystem {
 
     class CameraPipeline extends OpenCvPipeline {
 
+        private ImageProcessor imageProcessor;
+        private final Side side;
+
         private boolean isCapturingImage = false;
         private boolean isDetectingTotem = false;
 
@@ -69,6 +74,10 @@ public class CameraSystem {
         private Mat mask1;
         private Mat mask2;
         private Mat coloredMask;
+
+        CameraPipeline(Side side) {
+            this.side = side;
+        }
 
 
         public void captureImage() {
@@ -82,86 +91,26 @@ public class CameraSystem {
                 // sample
             }
             return floor;
-
         }
 
         @Override
         public void init(Mat mat) {
-            hsvAll = new Mat(mat.rows(), mat.cols(), mat.type());
-            mask1 = new Mat(mat.rows(), mat.cols(), mat.type());
-            mask2 = new Mat(mat.rows(), mat.cols(), mat.type());
-            coloredMask = new Mat(mat.rows(), mat.cols(), mat.type());
+            imageProcessor = new ImageProcessor(mat, side);
         }
 
         @Override
         public Mat processFrame(Mat input) {
-            if (!opMode.opModeIsActive()){
-                systems.cleanup();
-                camera.closeCameraDeviceAsync(()->{});
-                Thread.currentThread().interrupt();
-                return null;
-            }
             if (isCapturingImage) {
                 isCapturingImage = false;
                 String timeStamp = androidUtils.timestampString();
                 String filepath = new File(AppUtil.ROBOT_DATA_DIR, String.format("img_%s.png", timeStamp)).getAbsolutePath();
                 saveMatToDiskFullPath(input, filepath);
             }
-            ElapsedTime elapsedTime = new ElapsedTime();
-            Imgproc.cvtColor(input, hsvAll, Imgproc.COLOR_RGB2HSV);
-            double cvtColorTime = elapsedTime.seconds();
-            elapsedTime.reset();
-            if (side == Side.RED) {
-                Core.inRange(hsvAll, low_red1, high_red1, mask1);
-                Core.inRange(hsvAll, low_red2, high_red2, mask2);
-                Core.bitwise_or(mask1, mask2, coloredMask);
-            } else {
-                Core.inRange(hsvAll, low_blue, high_blue, coloredMask);
-            }
-            double inRangeTime = elapsedTime.seconds();
-            elapsedTime.reset();
-
-
             if (isDetectingTotem) {
-                isDetectingTotem = false;
-                Mat left = coloredMask.submat(leftArea);
-                Mat center = coloredMask.submat(centerArea);
-                Mat right = coloredMask.submat(rightArea);
-
-                int leftPixels = Core.countNonZero(left);
-                int centerPixels = Core.countNonZero(center);
-                int rightPixels = Core.countNonZero(right);
-
-                // find the area with the fewest colored
-                ArmSystem.Floors floorResult;
-                if (leftPixels < rightPixels && leftPixels < centerPixels) {
-                    floorResult = ArmSystem.Floors.FIRST;
-                } else if (centerPixels < leftPixels && centerPixels < rightPixels) {
-                    floorResult = ArmSystem.Floors.SECOND;
-                } else {
-                    floorResult = ArmSystem.Floors.THIRD;
-                }
-                this.floor = floorResult;
+                this.floor = imageProcessor.findFloor(input);
             }
-            double chooseLocationTime = elapsedTime.seconds();
-            elapsedTime.reset();
+            imageProcessor.drawOnPreview(input);
 
-            if (side == Side.RED) {
-                input.setTo(new Scalar(72, 224, 251), coloredMask);
-            } else {
-                input.setTo(new Scalar(251, 72, 196), coloredMask);
-            }
-
-            Imgproc.rectangle(input, leftArea, new Scalar(0, 255, 0), 7);
-            Imgproc.rectangle(input, centerArea, new Scalar(0, 255, 0), 7);
-            Imgproc.rectangle(input, rightArea, new Scalar(0, 255, 0), 7);
-
-            double drawTime = elapsedTime.seconds();
-//            opMode.telemetry.addData("cvtColorTime", cvtColorTime);
-//            opMode.telemetry.addData("inRangeTime", inRangeTime);
-//            opMode.telemetry.addData("chooseLocationTime", chooseLocationTime);
-//            opMode.telemetry.addData("drawTime", drawTime);
-//            opMode.telemetry.update();
             return input;
         }
     }
@@ -170,13 +119,11 @@ public class CameraSystem {
     private final Side side;
     private final CameraPipeline cameraPipeline;
     private final OpenCvCamera camera;
-    private final AllSystems systems;
 
-    public CameraSystem(LinearOpMode opMode, Side side, AllSystems systems) {
+    public CameraSystem(LinearOpMode opMode, Side side) {
         this.side = side;
         this.opMode = opMode;
-        this.systems = systems;
-        cameraPipeline = new CameraPipeline();
+        cameraPipeline = new CameraPipeline(side);
         int cameraMonitorViewId = this.opMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", this.opMode.hardwareMap.appContext.getPackageName());
         WebcamName webcamName = this.opMode.hardwareMap.get(WebcamName.class, "webcam");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);

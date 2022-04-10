@@ -14,7 +14,6 @@ import java.util.List;
 public class AutonomousRoute {
     interface RouteInstruction {
         void execute(AllSystems systems, int mirror);
-
         String toJavaCode();
     }
 
@@ -97,57 +96,6 @@ public class AutonomousRoute {
         }
     }
 
-
-    static class CraterPlaceFreightInstruction implements RouteInstruction {
-        public CraterPlaceFreightInstruction() {
-        }
-
-        @Override
-        public void execute(AllSystems systems, int mirror) {
-            Crater crater = new Crater(systems);
-            crater.placeFreight(mirror);
-        }
-
-        @Override
-        public String toJavaCode() {
-            return "placeFreight(mirror);\n";
-        }
-
-    }
-
-    static class CraterPlaceFreightAndCraterInstruction implements RouteInstruction {
-        public CraterPlaceFreightAndCraterInstruction() {
-        }
-
-        @Override
-        public void execute(AllSystems systems, int mirror) {
-            Crater crater = new Crater(systems);
-            crater.placeFreight(mirror);
-            crater.goToCarouselB(mirror);
-        }
-
-        @Override
-        public String toJavaCode() {
-            return "placeFreight(mirror);\ngoToCarouselB(mirror);";
-        }
-    }
-
-
-    static class CarouselPlaceFreightInstruction implements RouteInstruction {
-        public CarouselPlaceFreightInstruction() {
-        }
-
-        @Override
-        public void execute(AllSystems systems, int mirror) {
-            Carousel carousel = new Carousel(systems);
-            carousel.placeFreight(mirror);
-        }
-
-        @Override
-        public String toJavaCode() {
-            return "placeFreight(mirror);\n";
-        }
-    }
 
     static class CarouselPlaceFreightAndCraterInstruction implements RouteInstruction {
         public CarouselPlaceFreightAndCraterInstruction() {
