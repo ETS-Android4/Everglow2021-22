@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
-import static org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem.driveStraightDistanceForFloor;
 import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.isMirrored;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.AllSystems;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -65,7 +62,7 @@ public class Routes {
         if (floor == ArmSystem.Floors.FIRST) {
             // because the the totem system blocks the armSystem, we can't use the autonomousPlaceFreight, so we turn 180 degrees and use placeFreight instead.
             systems.armSystem.autonomousMoveArm(floor);
-            systems.drivingSystem.driveToPoint(5 * mirror, -60 + driveStraightDistanceForFloor(floor.switchIfMirrored(mirror), mirror), -90 * mirror, 0.5, 0.7);
+            systems.drivingSystem.driveToPoint(5 * mirror, -60 + driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror), -90 * mirror, 0.5, 0.7);
             systems.armSystem.awaitArmArrival();
             TimeUtils.sleep(50);
             systems.armSystem.spit();
@@ -80,7 +77,7 @@ public class Routes {
         } else {
             systems.armSystem.moveArm(floor);
             TimeUtils.sleep(700);
-            systems.drivingSystem.driveToPoint(2 * mirror, -37 + driveStraightDistanceForFloor(floor.switchIfMirrored(mirror), mirror), 50 * mirror, 0.5, 0.7);
+            systems.drivingSystem.driveToPoint(2 * mirror, -37 + driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror), 50 * mirror, 0.5, 0.7);
             systems.armSystem.awaitArmArrival();
             TimeUtils.sleep(50);
             systems.armSystem.spit();
