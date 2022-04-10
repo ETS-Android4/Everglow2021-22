@@ -255,7 +255,7 @@ public class DrivingSystem {
             boolean yPassed = abs(currentY) >= abs(targetY);
 
             double xPower, yPower, rotatePower;
-            if (Math.abs(angleDeviation) < 1){
+            if (Math.abs(angleDeviation) < 0.5){
                 rotatePower = 0;
             }else {
                 rotatePower = copySign(
@@ -284,7 +284,7 @@ public class DrivingSystem {
             double xPowerNormalized = xPower/powerHypot;
             double yPowerNormalized = yPower/powerHypot;
 
-            if (yPassed && xPassed && Math.abs(angleDeviation) < 1){
+            if (yPassed && xPassed && Math.abs(angleDeviation) < 0.5){
                 break;
             }
 
@@ -437,7 +437,7 @@ public class DrivingSystem {
     * @param power driving power
     * @return distance traveled
     */
-    public double[] driveUntilCollect(double maxDistance, double power){
+    public double driveUntilCollect(double maxDistance, double power){
         armSystem.collect();
 
         resetDistance();
@@ -457,13 +457,13 @@ public class DrivingSystem {
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
             if(armSystem.touch.isPressed()){
                 armSystem.stop();
-                return new double[]{(2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV,distanceLeft};
+                return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
             }
 
         }
 
         stop();
-        return new double[]{maxDistance, distanceLeft};
+        return maxDistance;
     }
 
     public void driveUntilWhite(double power ,boolean stopAfter){

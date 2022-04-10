@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -99,33 +100,33 @@ public class Routes {
 
     private void RZNCXLoop(int i) {
         systems.drivingSystem.driveUntilWhite(0.6,false);
-        systems.drivingSystem.driveStraight(i*10,0.7);
-        systems.drivingSystem.driveUntilCollect(200,0.2);
-        systems.drivingSystem.driveSideways(15,0.8*mirror);
+        systems.drivingSystem.driveStraight(i*10,0.7,false);
+        double distance = systems.drivingSystem.driveUntilCollect(200,0.3);
+        systems.drivingSystem.driveToPoint((distance/2)*mirror, 15,-90*mirror,0.9,1);
         systems.drivingSystem.driveUntilWhite(-0.6,false);
-        systems.drivingSystem.driveStraight(50,-0.8);
+        systems.drivingSystem.driveStraight(50,-0.9,false);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
-        systems.drivingSystem.driveToPoint(15*mirror,-55,-45 * mirror,0.7,1);
+        systems.drivingSystem.driveToPoint(15*mirror,-55,-45 * mirror -5*isMirrored(mirror),0.9,1);
         systems.armSystem.RZNCXSpit();
         TimeUtils.sleep(200);
         systems.armSystem.moveArm(0);
-        systems.drivingSystem.driveToPoint(-20*mirror,55,-90*mirror,0.7,1);
+        systems.drivingSystem.driveToPoint(-20*mirror,55,-90*mirror,0.9,1);
     }
 
 
     public void RZNCX(){
 //        craterPlaceFreight(true);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
-        systems.drivingSystem.driveToPoint(10*mirror,-50,-45 * mirror,0.7,1);
+        systems.drivingSystem.driveToPoint(10*mirror,-47,-45 * mirror,0.9,1);
         systems.armSystem.RZNCXSpit();
         TimeUtils.sleep(200);
         systems.armSystem.moveArm(0);
-        systems.drivingSystem.driveToPoint(-20*mirror,60,-90*mirror,0.7,1);
+        systems.drivingSystem.driveToPoint(-20*mirror,60,-90*mirror,0.9,1);
         for (int i = 0; i < 3; i++) {
             RZNCXLoop(i);
         }
-        systems.drivingSystem.driveUntilWhite(0.7,false);
-        systems.drivingSystem.driveStraight(50, 0.7);
+        systems.drivingSystem.driveUntilWhite(0.9,false);
+        systems.drivingSystem.driveStraight(15, 0.9);
 
     }
 }

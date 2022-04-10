@@ -65,7 +65,7 @@ public class TestTotemSystem extends LinearOpMode {
                 totemSystem.stopLeft();
             }
 
-            totemSystem.moveAltitude(gamepad1.right_stick_y / 1000);
+            totemSystem.moveAltitude(-gamepad1.right_stick_y / 1000);
             totemSystem.moveAltitude(gamepad1.left_stick_y / 1000);
 
             telemetry.addData("currPos1", totemSystem.altitude1.getPosition());

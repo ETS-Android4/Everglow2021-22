@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ColorSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -24,6 +25,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
     ColorSystem colorSystem;
     EverglowGamepad ourGamepad1;
     EverglowGamepad ourGamepad2;
+    TotemSystem2 totemSystem;
 
     boolean passingObstacle = false;
     boolean duckSpin = false;
@@ -37,6 +39,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
         colorSystem = new ColorSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
+        totemSystem = new TotemSystem2(this);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;

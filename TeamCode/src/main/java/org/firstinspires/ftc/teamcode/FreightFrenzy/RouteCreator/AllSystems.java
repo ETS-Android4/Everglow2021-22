@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.CameraSystem3;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DrivingSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem2;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
@@ -15,11 +15,11 @@ public class AllSystems {
     public final ArmSystem armSystem;
     public final DrivingSystem drivingSystem;
     public final DuckSystem duckSystem;
-    public final TotemSystem totemSystem;
+    public final TotemSystem2 totemSystem;
     public final CameraSystem3 cameraSystem;
     public final Side side;
 
-    public AllSystems(LinearOpMode opMode, ArmSystem armSystem, DrivingSystem drivingSystem, DuckSystem duckSystem, TotemSystem totemSystem, CameraSystem3 cameraSystem, Side side) {
+    public AllSystems(LinearOpMode opMode, ArmSystem armSystem, DrivingSystem drivingSystem, DuckSystem duckSystem, TotemSystem2 totemSystem, CameraSystem3 cameraSystem, Side side) {
         this.opMode = opMode;
         this.armSystem = armSystem;
         this.drivingSystem = drivingSystem;
@@ -37,9 +37,9 @@ public class AllSystems {
         this.armSystem = new ArmSystem(opMode);
         this.drivingSystem = new DrivingSystem(opMode);
         this.duckSystem = new DuckSystem(opMode);
-        this.totemSystem = null;
-//        this.cameraSystem = null;
-        this.cameraSystem = new CameraSystem3(opMode, side, this);
+        this.totemSystem = new TotemSystem2(opMode);
+        this.cameraSystem = null;
+//        this.cameraSystem = new CameraSystem3(opMode, side, this);
         this.side = side;
     }
 
