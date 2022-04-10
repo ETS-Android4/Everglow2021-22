@@ -52,10 +52,10 @@ public class Routes {
         systems.opMode.telemetry.addData("Camera Time: ", elapsedTime.seconds());
         systems.opMode.telemetry.update();
 
-        double driveStraightDistanceForTotem = driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror);
-        systems.drivingSystem.driveStraight(driveStraightDistanceForTotem, -0.6);
-        // pick up totem
-        systems.drivingSystem.driveStraight(INITIAL_DRIVE_STRAIGHT_DISTANCE - driveStraightDistanceForTotem, -0.6);
+//        double driveStraightDistanceForTotem = driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror);
+//        systems.drivingSystem.driveStraight(driveStraightDistanceForTotem, -0.6);
+//        // pick up totem
+//        systems.drivingSystem.driveStraight(INITIAL_DRIVE_STRAIGHT_DISTANCE - driveStraightDistanceForTotem, -0.6);
     }
 
 //    public void craterPlaceFreight(boolean toPoint) {
@@ -98,13 +98,14 @@ public class Routes {
 
     public void craterPlaceFreight(boolean returnToWall) {
         pickupTotem();
+//        floor = ArmSystem.Floors.FIRST;
         systems.armSystem.moveArm(floor);
-        systems.drivingSystem.driveToPoint(10 * mirror, -(47 - INITIAL_DRIVE_STRAIGHT_DISTANCE), -45 * mirror, 0.9, 1);
+        systems.drivingSystem.driveToPoint(10 * mirror, -47, -45 * mirror, 0.9, 1);
         systems.armSystem.spit();
         sleep(200);
         systems.armSystem.moveArm(0);
         if (returnToWall) {
-            systems.drivingSystem.driveToPoint(-20 * mirror, 60, -90 * mirror, 0.9, 1);
+            systems.drivingSystem.driveToPoint(-20 * mirror, 60, -90 * mirror, 0.9, 1,true);
         }
     }
 
