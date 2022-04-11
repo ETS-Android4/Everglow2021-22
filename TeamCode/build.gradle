@@ -30,7 +30,7 @@ android {
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
-    implementation 'org.openftc:easyopencv:1.5.0'
+    implementation 'org.openftc:easyopencv:1.5.1'
 
     // added
     implementation group: 'org.ejml', name: 'ejml-all', version: '0.41'

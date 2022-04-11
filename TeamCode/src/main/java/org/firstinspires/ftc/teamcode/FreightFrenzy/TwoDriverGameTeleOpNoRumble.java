@@ -94,7 +94,7 @@ public class TwoDriverGameTeleOpNoRumble extends LinearOpMode {
             }
 
             if (ourGamepad2.lt()) {
-                armSystem.toggleSpitting(colorSystem.isCargo());
+                armSystem.toggleSpitting();
             }
 
             if (ourGamepad2.rb()) {

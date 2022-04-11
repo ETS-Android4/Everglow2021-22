@@ -19,6 +19,7 @@ public class EverglowGamepad {
     private boolean  previousRt;
     private boolean previousLb;
     private boolean  previousLt;
+    private boolean previousShare;
 
     private boolean currentA;
     private boolean currentB;
@@ -32,6 +33,7 @@ public class EverglowGamepad {
     private boolean  currentRt;
     private boolean currentLb;
     private boolean  currentLt;
+    private boolean currentShare;
 
     public EverglowGamepad(Gamepad gamepad) {
         this.gamepad = gamepad;
@@ -119,6 +121,10 @@ public class EverglowGamepad {
         return false;
     }
 
+    public boolean share() {
+        return currentShare && !previousShare;
+    }
+
     public void update() {
         previousA = currentA;
         previousB = currentB;
@@ -150,6 +156,8 @@ public class EverglowGamepad {
         if(!gamepad.x){
             squareHoldTimer.reset();
         }
+
+        previousShare = currentShare;
     }
 
 }

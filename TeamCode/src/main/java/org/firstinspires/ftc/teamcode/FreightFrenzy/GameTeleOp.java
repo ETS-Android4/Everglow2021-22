@@ -91,7 +91,7 @@ public class GameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad1.lt()) {
-                armSystem.toggleSpitting(colorSystem.isCargo());
+                armSystem.toggleSpitting();
             }
 
             if (ourGamepad1.rb()) {

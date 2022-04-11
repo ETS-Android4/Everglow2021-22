@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 import java.io.File;
@@ -40,5 +41,10 @@ public class AndroidUtils {
 
     public static Bitmap matToBitmap(Mat image) {
         return Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
+    }
+    public static Mat bitmapToMat(Bitmap image) {
+        Mat mat = new Mat();
+        Utils.bitmapToMat(image, mat);
+        return mat;
     }
 }

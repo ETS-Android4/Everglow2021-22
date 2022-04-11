@@ -209,15 +209,6 @@ public class DrivingSystem {
                 x2);
     }
 
-
-    public void rotateAroundArm(double power) {
-        double factor = 3;
-        backLeft.setPower(power * (0.1 + 1 / factor / 2));
-        backRight.setPower(power * (0.1 - 1 / factor));
-        frontLeft.setPower(power * (0.1 - 1 / factor / 8.5));
-        frontRight.setPower(power * (0.1 + 1 / factor / 8.5));
-    }
-
     public void rotateAroundDucks(double power, boolean red) {
         double factor = 3;
         double forward = 0.3 * Math.abs(power);
@@ -232,6 +223,11 @@ public class DrivingSystem {
             frontRight.setPower(forward - power * (0.5 / factor));
             frontLeft.setPower(forward);
         }
+    }
+
+    public void rotateAroundDucks2(double power){
+        final double factor = 2;
+        driveByJoystick(0, abs(power)/factor, power);
     }
 
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed){
@@ -400,7 +396,8 @@ public class DrivingSystem {
     public void driveStraight(double distance, double power, boolean stopAfter) {
         // The method receives a positive distance.
         if (distance < 0) {
-            throw new IllegalArgumentException("Method driveStraight was given a negative distance: " + distance);
+            distance = -distance;
+            power = -power;
         }
 
         resetDistance();
@@ -464,7 +461,8 @@ public class DrivingSystem {
     public void driveSideways(double distance, double power, boolean stopAfter) {
         // The method receives a positive distance.
         if (distance < 0) {
-            throw new IllegalArgumentException("Method driveSideways was given a negative distance: " + distance);
+            distance = -distance;
+            power = -power;
         }
 
         resetDistance();

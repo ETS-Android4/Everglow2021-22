@@ -11,10 +11,13 @@ public class TotemSystem {
     private final CRServo       meterLeft;
     private final CRServo       meterRight;
 
-    private final double ALTITUDE1_ZERO = 0.5;
-    private final double ALTITUDE2_ZERO = 0.5;
-    private final double ALTITUDE1_MAX = 0.67;
-    private final double ALTITUDE2_MAX = 0.29;
+    private static final double ALTITUDE1_ZERO = 0.5;
+    private static final double ALTITUDE2_ZERO = 0.5;
+    private static final double ALTITUDE1_MAX = 0.67;
+    private static final double ALTITUDE2_MAX = 0.32;
+
+    public static final double ALTITUDE_PICKUP = 0.30;
+    public static final double ALTITUDE_AFTER_PICKUP = 0.55;
 
 
     public TotemSystem(LinearOpMode opMode) {
@@ -23,8 +26,7 @@ public class TotemSystem {
         altitude2     = opMode.hardwareMap.get(Servo.class, "altitude_left");
         meterLeft     = opMode.hardwareMap.get(CRServo.class, "meter_left");
         meterRight    = opMode.hardwareMap.get(CRServo.class, "meter_right");
-        altitude1.setPosition(ALTITUDE1_ZERO);
-        altitude2.setPosition(ALTITUDE2_ZERO);
+        setAltitude(ALTITUDE1_MAX);
     }
 
     public void extendLeft(double power) {
@@ -44,7 +46,7 @@ public class TotemSystem {
     }
 
     public void moveAltitude(double delta) {
-        if(altitude1.getPosition() + delta > ALTITUDE1_MAX || altitude2.getPosition() - delta < ALTITUDE2_MAX) return;
+//        if(altitude1.getPosition() + delta > ALTITUDE1_MAX || altitude2.getPosition() - delta < ALTITUDE2_MAX) return;
 
         altitude1.setPosition(altitude1.getPosition() + delta);
         altitude2.setPosition(altitude2.getPosition() - delta);

@@ -29,8 +29,13 @@ public class AllSystems {
         this.drivingSystem = new DrivingSystem(opMode);
         this.duckSystem = new DuckSystem(opMode);
         this.totemSystem = new TotemSystem(opMode);
+        opMode.telemetry.addLine("Loading Camera");
+        opMode.telemetry.update();
         this.cameraSystem = new CameraSystem(opMode, side);
         this.side = side;
+        opMode.telemetry.addLine("Autonomous Ready");
+        opMode.telemetry.update();
+
     }
 
     public static AllSystems init(LinearOpMode opMode) {

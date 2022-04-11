@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils.sleep
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Routes {
@@ -13,27 +12,9 @@ public class Routes {
     private final int mirror;
     private ArmSystem.Floors floor;
 
-    private static final double INITIAL_DRIVE_STRAIGHT_DISTANCE = 30;
-
-    /**
-     * At the start of the autonomous period, we need to take drive straight to pick up the totem.
-     * This varries based on the floor we are going picking up and the floor we are going to.
-     *
-     * @param floor  The floor we need to go to in order to pick up the Totem. Should be switched if mirrored, call switchIfMirrored(mirror)
-     * @param mirror 1 if mirrored, -1 if not
-     * @return the distance, in centimeters, the robot should drive to pick up the totem.
-     */
-    private static double driveStraightDistanceForTotemPickup(ArmSystem.Floors floor, int mirror) {
-        switch (floor) {
-            case FIRST:
-            case SECOND:
-                return 19;
-            case THIRD:
-                return 19 + 6 * MathUtils.isMirrored(mirror);
-            default:
-                throw new IllegalArgumentException("Floor for driveStraightDistanceForFloor must be FIRST, SECOND, or THIRD.");
-        }
-    }
+    // the distances the robot drove in the X and Y directions in order to pickup the totem
+    private double pickupTotemX = 0;
+    private double pickupTotemY = 0;
 
     public Routes(AllSystems systems) {
         this.systems = systems;
@@ -41,9 +22,9 @@ public class Routes {
     }
 
     /**
-     * Picks up the totem and drives INITIAL_DRIVE_STRAIGHT_DISTANCE centimeters forward.
+     * Picks up the totem and drives INITIAL_DRIVE_STRAIGHT_DISTANCE centimeters backwards.
      */
-    private void pickupTotem() {
+    public void pickupTotem() {
         systems.opMode.telemetry.addLine("Detecting Totem...");
         systems.opMode.telemetry.update();
         ElapsedTime elapsedTime = new ElapsedTime();
@@ -51,6 +32,43 @@ public class Routes {
         systems.opMode.telemetry.addData("Floor: ", floor);
         systems.opMode.telemetry.addData("Camera Time: ", elapsedTime.seconds());
         systems.opMode.telemetry.update();
+
+        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP);
+        ArmSystem.Floors floorForPickup = floor.switchIfMirrored(mirror);
+        switch (floorForPickup){
+            case FIRST:
+                if (mirror == 1){
+                    pickupTotemX = 15;
+                    pickupTotemY = -20;
+
+                    systems.drivingSystem.driveSideways(pickupTotemX, 0.5);
+                    systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
+                    systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_AFTER_PICKUP);
+                    TimeUtils.sleep(1000);
+                }
+                break;
+            case SECOND:
+                if (mirror == 1){
+                    pickupTotemX = -5;
+                    pickupTotemY = -20;
+                    systems.drivingSystem.driveSideways(pickupTotemX, 0.5);
+                    systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
+                    systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_AFTER_PICKUP);
+                    TimeUtils.sleep(1000);
+                }
+                break;
+            case THIRD:
+                if (mirror == 1){
+                    systems.drivingSystem.driveStraight(5, 0.5);
+                    systems.drivingSystem.turn(20, 150);
+                    systems.drivingSystem.driveToPoint(0, 20, 20, 0.5, 1);
+                    systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_AFTER_PICKUP);
+                    TimeUtils.sleep(1000);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Floor Must be FIRST, SECOND, or THIRD");
+        }
 
 //        double driveStraightDistanceForTotem = driveStraightDistanceForTotemPickup(floor.switchIfMirrored(mirror), mirror);
 //        systems.drivingSystem.driveStraight(driveStraightDistanceForTotem, -0.6);

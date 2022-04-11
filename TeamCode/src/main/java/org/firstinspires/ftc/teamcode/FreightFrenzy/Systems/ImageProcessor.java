@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
+import android.graphics.Bitmap;
+
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.AndroidUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -51,16 +55,20 @@ public class ImageProcessor {
     private static final Scalar low_red2 = new Scalar(0, 80, 2);
     private static final Scalar high_red2 = new Scalar(15, 255, 255);
 
+    private final Mat frame;
     private final Mat hsvAll;
     private final Mat mask1;
     private final Mat mask2;
+    private final Mat mask3;
     private final Mat coloredMask;
     private final TotemAreas totemAreas;
 
     public ImageProcessor(Mat frameTemplate, MathUtils.Side side) {
+        frame = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         hsvAll = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         mask1 = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         mask2 = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
+        mask3 = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         coloredMask = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         this.side = side;
         if (side == MathUtils.Side.RED) {
@@ -68,6 +76,10 @@ public class ImageProcessor {
         } else {
             totemAreas = BLUE_AREAS;
         }
+    }
+
+    public ImageProcessor(Bitmap bitmap, MathUtils.Side side){
+        this(AndroidUtils.bitmapToMat(bitmap), side);
     }
 
     private void findColoredAreas() {
@@ -102,18 +114,50 @@ public class ImageProcessor {
         }
     }
 
-    public Mat drawOnPreview(Mat input) {
-        Imgproc.cvtColor(input, hsvAll, Imgproc.COLOR_RGB2HSV);
-        findColoredAreas();
+    public ArmSystem.Floors findFloor(Bitmap input){
+        Utils.bitmapToMat(input, frame);
+        return findFloor(frame);
+    }
+
+    /**
+     * Checks wether a frame is completely black, since a completely black frame means the input is invalid.
+     * @param input a frame from the camera
+     * @return true if the frame is ok, false if the frame is fully black.
+     */
+    public boolean isFrameValid(Bitmap input){
+        Utils.bitmapToMat(input, frame);
+        return isFrameValid(frame);
+    }
+
+    public boolean isFrameValid(Mat input){
+        Core.inRange(input, new Scalar(1,1,1), new Scalar(255, 255, 255), mask1);
+        return Core.countNonZero(mask1) > 10;
+    }
+
+    public ArmSystem.Floors drawOnPreviewAndDetect(Mat input) {
+        ArmSystem.Floors floor = findFloor(input);
         if (side == MathUtils.Side.RED) {
             input.setTo(new Scalar(72, 224, 251), coloredMask);
         } else {
             input.setTo(new Scalar(251, 72, 196), coloredMask);
         }
-
-        Imgproc.rectangle(input, totemAreas.left, new Scalar(0, 255, 0), 7);
-        Imgproc.rectangle(input, totemAreas.center, new Scalar(0, 255, 0), 7);
-        Imgproc.rectangle(input, totemAreas.right, new Scalar(0, 255, 0), 7);
-        return input;
+        int leftThickness = 7;
+        int centerThickness = 7;
+        int rightThickness = 7;
+        switch (floor){
+            case FIRST:
+                leftThickness = 18;
+                break;
+            case SECOND:
+                centerThickness = 18;
+                break;
+            case THIRD:
+                rightThickness = 18;
+                break;
+        }
+        Imgproc.rectangle(input, totemAreas.left, new Scalar(0, 255, 0), leftThickness);
+        Imgproc.rectangle(input, totemAreas.center, new Scalar(0, 255, 0), centerThickness);
+        Imgproc.rectangle(input, totemAreas.right, new Scalar(0, 255, 0), rightThickness);
+        return floor;
     }
 }

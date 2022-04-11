@@ -42,7 +42,6 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
         boolean prevTouchPressed = false;
         boolean toggleReload = true;
 
-
         waitForStart();
 
         while (opModeIsActive()) {
@@ -97,7 +96,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if (ourGamepad2.lt()) {
-                armSystem.toggleSpitting(colorSystem.isCargo());
+                armSystem.toggleSpitting();
             }
 
             if (ourGamepad2.rb()) {
