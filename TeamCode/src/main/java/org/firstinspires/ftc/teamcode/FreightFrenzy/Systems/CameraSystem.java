@@ -79,7 +79,7 @@ public class CameraSystem {
     private Handler callbackHandler;
 
     private final Side side;
-    private final OpMode opMode;
+    private final LinearOpMode opMode;
     private ImageProcessor imageProcessor;
 
     //----------------------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ public class CameraSystem {
     public Bitmap getFrame() {
         while (true) {
             Bitmap bmp = frameQueue.poll();
-            if (bmp != null){
+            if (bmp != null && opMode.opModeIsActive()){
                 return bmp;
             }
         }

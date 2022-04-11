@@ -16,8 +16,7 @@ public class RedRZNCX extends LinearOpMode {
         routes = new Routes(AllSystems.init(this, MathUtils.Side.RED));
         waitForStart();
 
-        while (opModeIsActive()) {
-            routes.RZNCX();
-        }
+        routes.RZNCX();
+
     }
 }

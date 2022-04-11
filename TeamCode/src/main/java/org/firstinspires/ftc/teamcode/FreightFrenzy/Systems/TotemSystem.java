@@ -14,7 +14,7 @@ public class TotemSystem {
     private final double ALTITUDE1_ZERO = 0.5;
     private final double ALTITUDE2_ZERO = 0.5;
     private final double ALTITUDE1_MAX = 0.67;
-    private final double ALTITUDE2_MAX = 0.29;
+    private final double ALTITUDE2_MAX = 0.32;
 
 
     public TotemSystem(LinearOpMode opMode) {
