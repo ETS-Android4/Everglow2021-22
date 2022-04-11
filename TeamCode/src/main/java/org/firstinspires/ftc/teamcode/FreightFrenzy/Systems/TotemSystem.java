@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class TotemSystem {
     private final LinearOpMode  opMode;
@@ -17,7 +20,7 @@ public class TotemSystem {
     private static final double ALTITUDE2_MAX = 0.32;
 
     public static final double ALTITUDE_PICKUP = 0.30;
-    public static final double ALTITUDE_AFTER_PICKUP = 0.55;
+    public static final double ALTITUDE_AFTER_PICKUP = 0.6;
 
 
     public TotemSystem(LinearOpMode opMode) {
@@ -55,5 +58,19 @@ public class TotemSystem {
     public void setAltitude(double position) {
         altitude1.setPosition(position);
         altitude2.setPosition(1 - position);
+    }
+
+    public void setAltitudeSlowly(double targetAltitude, long time){
+        final int NUM_ITERATIONS = 100;
+        final double NUM_ITERATIONS_D = NUM_ITERATIONS; // store as double so math works out
+        final double startAltitude = altitude1.getPosition();
+        ElapsedTime elapsedTime = new ElapsedTime();
+        for (int i = 1; i<= NUM_ITERATIONS; i++){
+            double percentDone = i / NUM_ITERATIONS_D;
+            setAltitude(startAltitude * (1 - percentDone) + targetAltitude * percentDone);
+
+            int timeDelay = (int) (time * percentDone - elapsedTime.milliseconds());
+            TimeUtils.sleep(Math.max(timeDelay, 0));
+        }
     }
 }

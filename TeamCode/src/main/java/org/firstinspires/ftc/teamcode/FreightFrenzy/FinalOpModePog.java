@@ -52,7 +52,7 @@ public class FinalOpModePog extends LinearOpMode {
             ourGamepad2.update();
 
             // nati
-            {
+            if (gamepad2.right_stick_x == 0 && gamepad2.left_stick_x == 0){
                 double left_stick_x = gamepad1.left_stick_x;
                 double left_stick_y = gamepad1.left_stick_y;
                 double right_stick_x = gamepad1.right_stick_x;

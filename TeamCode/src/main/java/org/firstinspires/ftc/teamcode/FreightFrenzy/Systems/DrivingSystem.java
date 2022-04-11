@@ -18,20 +18,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.RouteCreator.StopCondition;
-import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DrivingSystem {
 
@@ -113,14 +107,14 @@ public class DrivingSystem {
         byte AXIS_MAP_CONFIG_BYTE = 0x6; //This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
         byte AXIS_MAP_SIGN_BYTE = 0x1; //This is what to write to the AXIS_MAP_SIGN register to negate the z axis
         //Need to be in CONFIG mode to write to registers
-        imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
+        imu.write8(BNO055IMU.Register.OPR_MODE, BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
         TimeUtils.sleep(100); //Changing modes requires a delay before doing anything else
         //Write to the AXIS_MAP_CONFIG register
-        imu.write8(BNO055IMU.Register.AXIS_MAP_CONFIG,AXIS_MAP_CONFIG_BYTE & 0x0F);
+        imu.write8(BNO055IMU.Register.AXIS_MAP_CONFIG, AXIS_MAP_CONFIG_BYTE & 0x0F);
         //Write to the AXIS_MAP_SIGN register
-        imu.write8(BNO055IMU.Register.AXIS_MAP_SIGN,AXIS_MAP_SIGN_BYTE & 0x0F);
+        imu.write8(BNO055IMU.Register.AXIS_MAP_SIGN, AXIS_MAP_SIGN_BYTE & 0x0F);
         //Need to change back into the IMU mode to use the gyro
-        imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.IMU.bVal & 0x0F);
+        imu.write8(BNO055IMU.Register.OPR_MODE, BNO055IMU.SensorMode.IMU.bVal & 0x0F);
         TimeUtils.sleep(100); //Changing modes again requires a delay
 
 
@@ -236,20 +230,40 @@ public class DrivingSystem {
 
     public void rotateAroundDuck2(double power, boolean red) {
         double factor = 2;
-
-        double dirX = 0.5;
+        double push = 0.2 * Math.abs(power);
         double dirY = 0.5;
+        double dirX;
 
-        double x1 = 1.16 * (sin((90 - getCurrentAngle()) * Math.PI / 180) * dirX + sin(getCurrentAngle() * Math.PI / 180) * dirY);
-        double y1 = -cos(getCurrentAngle() * Math.PI / 180) * dirY + cos((90 - getCurrentAngle()) * Math.PI / 180) * dirX;
+        if (red)
+            dirX = 0.5;
+        else
+            dirX = -0.5;
 
-        x1 *= 0.2 * Math.abs(power);
-        y1 *= 0.2 * Math.abs(power);
+        double x1 = 1.16 * push * (
+                sin((90 - getCurrentAngle()) * Math.PI / 180) * dirX
+                        + sin(getCurrentAngle() * Math.PI / 180) * dirY
+        );
+        double y1 = push * (
+                -cos(getCurrentAngle() * Math.PI / 180) * dirY
+                        + cos((90 - getCurrentAngle()) * Math.PI / 180) * dirX
+        );
 
-        double frontRightPower = -y1 - x1 ;
-        double frontLeftPower = -y1 + x1 - power * (0.5 / factor);
-        double backRightPower = -y1 + x1 + power * (1 / factor);
-        double backLeftPower = -y1 - x1 - power * (1 / factor);
+        double frontRightPower;
+        double frontLeftPower;
+        double backRightPower;
+        double backLeftPower;
+
+        if (red) {
+            frontRightPower = -y1 - x1;
+            frontLeftPower = -y1 + x1 - power * (0.5 / factor);
+            backRightPower = -y1 + x1 + power * (1 / factor);
+            backLeftPower = -y1 - x1 - power * (1 / factor);
+        } else {
+            frontRightPower = -y1 - x1 - power * (0.5 / factor);
+            frontLeftPower = -y1 + x1;
+            backRightPower = -y1 + x1 - power * (1 / factor);
+            backLeftPower = -y1 - x1 + power * (1 / factor);
+        }
 
         // Normalization of the driving motors' power
         if (abs(frontRightPower) > 1 || abs(frontLeftPower) > 1
@@ -258,6 +272,7 @@ public class DrivingSystem {
                     max(abs(frontRightPower), abs(frontLeftPower)),
                     max(abs(backRightPower), abs(backLeftPower))
             );
+
             frontRightPower /= norm;
             frontLeftPower /= norm;
             backRightPower /= norm;
@@ -270,8 +285,8 @@ public class DrivingSystem {
         backLeft.setPower(backLeftPower);
     }
 
-    public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed){
-        driveToPoint(targetX,targetY,ang,driveSpeed,rotateSpeed,false);
+    public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed) {
+        driveToPoint(targetX, targetY, ang, driveSpeed, rotateSpeed, false);
     }
 
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed, boolean stopIfBump) {
@@ -294,43 +309,42 @@ public class DrivingSystem {
             boolean yPassed = abs(currentY) >= abs(targetY);
 
             double xPower, yPower, rotatePower;
-            if (Math.abs(angleDeviation) < 0.5){
+            if (Math.abs(angleDeviation) < 0.5) {
                 rotatePower = 0;
-            }else {
+            } else {
                 rotatePower = copySign(
-                        min(abs(angleDeviation)/180 * (abs(rotateSpeed) - ROTATE_SPEED_MIN) + ROTATE_SPEED_MIN, 1),
+                        min(abs(angleDeviation) / 180 * (abs(rotateSpeed) - ROTATE_SPEED_MIN) + ROTATE_SPEED_MIN, 1),
                         angleDeviation);
             }
             double maxDiff = max(abs(xDiff), abs(yDiff));
             if (xPassed || maxDiff == 0) {
                 xPower = 0;
-            } else if(Math.abs(xDiff/targetX) < slowDownArea) {
-                xPower = Math.max(Math.abs(xDiff/targetX)/slowDownArea*driveSpeed,MIN_MOVE_SPEED)*xDiff/Math.abs(xDiff);
-            }else{
-                xPower = driveSpeed*xDiff/Math.abs(xDiff);
+            } else if (Math.abs(xDiff / targetX) < slowDownArea) {
+                xPower = Math.max(Math.abs(xDiff / targetX) / slowDownArea * driveSpeed, MIN_MOVE_SPEED) * xDiff / Math.abs(xDiff);
+            } else {
+                xPower = driveSpeed * xDiff / Math.abs(xDiff);
             }
 
             if (yPassed || maxDiff == 0) {
                 yPower = 0;
-            } else if(Math.abs(yDiff/targetY) < slowDownArea) {
-                yPower = Math.max(Math.abs(yDiff/targetY)/slowDownArea*driveSpeed,MIN_MOVE_SPEED)*yDiff/Math.abs(yDiff);
-            }
-            else{
-                yPower = driveSpeed*yDiff/Math.abs(yDiff);
+            } else if (Math.abs(yDiff / targetY) < slowDownArea) {
+                yPower = Math.max(Math.abs(yDiff / targetY) / slowDownArea * driveSpeed, MIN_MOVE_SPEED) * yDiff / Math.abs(yDiff);
+            } else {
+                yPower = driveSpeed * yDiff / Math.abs(yDiff);
             }
             // normalize so that xPower^2 + yPower^2 + rotatePower^2 = 1
             double powerHypot = sqrt(pow(xPower, 2) + pow(yPower, 2) + pow(rotatePower, 2));
-            double xPowerNormalized = xPower/powerHypot;
-            double yPowerNormalized = yPower/powerHypot;
+            double xPowerNormalized = xPower / powerHypot;
+            double yPowerNormalized = yPower / powerHypot;
 
             final double bumpingThreshold = abs(driveSpeed * ACCELERATION_BUMPING_THRESHOLD);
 
-            if(getAccelerationMagnitude() > bumpingThreshold){
+            if (getAccelerationMagnitude() > bumpingThreshold) {
                 opMode.telemetry.addLine("bump");
                 opMode.telemetry.update();
             }
 
-            if ((yPassed && xPassed && Math.abs(angleDeviation) < 0.5) || (getAccelerationMagnitude() > bumpingThreshold && stopIfBump)){
+            if ((yPassed && xPassed && Math.abs(angleDeviation) < 0.5) || (getAccelerationMagnitude() > bumpingThreshold && stopIfBump)) {
                 break;
             }
 
@@ -339,11 +353,11 @@ public class DrivingSystem {
             double currEncoder = (abs(backLeft.getCurrentPosition())
                     + abs(backRight.getCurrentPosition())
                     + abs(frontLeft.getCurrentPosition())
-                    + abs(frontRight.getCurrentPosition()))/4.;
+                    + abs(frontRight.getCurrentPosition())) / 4.;
             double currentDistanceTraveled = currEncoder / COUNTS_PER_MOTOR_REV * (2.0 * Math.PI * WHEEL_RADIUS_CM);
             double distanceTraveledNow = (currentDistanceTraveled - lastDistanceTravelled);
             lastDistanceTravelled = currentDistanceTraveled;
-            currentX += xPowerNormalized *  distanceTraveledNow;
+            currentX += xPowerNormalized * distanceTraveledNow;
             currentY += yPowerNormalized * distanceTraveledNow;
 
             opMode.telemetry.addData("angleDeviation: ", angleDeviation);
@@ -388,12 +402,14 @@ public class DrivingSystem {
     }
 
     /**
-    * @param maxDistance max distance until robot stops
-    * @param power driving power
-    * @return distance traveled
-    */
-    public double driveUntilCollect(double maxDistance, double power){
+     * @param maxDistance max distance until robot stops
+     * @param power       driving power
+     * @return distance traveled
+     */
+    public double driveUntilCollect(double maxDistance, double power) {
         armSystem.collect();
+        armSystem.arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armSystem.arm.setPower(0.1);
 
         resetDistance();
         double averageMotors = 0;
@@ -408,22 +424,30 @@ public class DrivingSystem {
 
             double angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
-            if(armSystem.touch.isPressed()){
+            if (armSystem.touch.isPressed()) {
                 armSystem.stop();
+                armSystem.arm.setPower(0);
                 return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
             }
         }
 
         stop();
+        armSystem.arm.setPower(0);
         return maxDistance;
     }
 
-    public void driveUntilWhite(double power ,boolean stopAfter){
-        while(!colorSystem.overWhite() && opMode.opModeIsActive()){
+    public void driveUntilWhite(double power, double maxDistance,boolean stopAfter) {
+        double averageMotors = 0;
+        while (!colorSystem.overWhite() && opMode.opModeIsActive() && (maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors)) {
             double angleDeviation = getAngleDeviation();
-            driveByJoystick(0,-power,angleDeviation / ROTATE_SPEED_DECREASE);
+            averageMotors = abs(
+                    (this.frontRight.getCurrentPosition() + this.frontLeft.getCurrentPosition()
+                            + this.backLeft.getCurrentPosition() + this.backRight.getCurrentPosition()
+                    ) / 4.0
+            );
+            driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
         }
-        if(stopAfter)
+        if (stopAfter)
             stop();
     }
 
@@ -436,7 +460,8 @@ public class DrivingSystem {
     public void driveStraight(double distance, double power, boolean stopAfter) {
         // The method receives a positive distance.
         if (distance < 0) {
-            throw new IllegalArgumentException("Method driveStraight was given a negative distance: " + distance);
+            distance = -distance;
+            power = -power;
         }
 
         resetDistance();
@@ -457,7 +482,7 @@ public class DrivingSystem {
                     ) / 4.0
             );
         }
-        if(stopAfter) {
+        if (stopAfter) {
             stop();
         }
     }
@@ -469,7 +494,7 @@ public class DrivingSystem {
         driveStraight(distance, power, true);
     }
 
-    public void driveStraightUntilBumping(double power, double initialDistance){
+    public void driveStraightUntilBumping(double power, double initialDistance) {
         driveStraight(initialDistance, power, false);
         final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
         while (getAccelerationMagnitude() < bumpingThreshold && opMode.opModeIsActive()) {
@@ -479,7 +504,8 @@ public class DrivingSystem {
         }
         stop();
     }
-    public void driveSidewaysUntilBumping(double power, double initialDistance){
+
+    public void driveSidewaysUntilBumping(double power, double initialDistance) {
         driveSideways(initialDistance, power, false);
         final double bumpingThreshold = abs(power * ACCELERATION_BUMPING_THRESHOLD);
         while (getAccelerationMagnitude() < bumpingThreshold && opMode.opModeIsActive()) {
@@ -493,14 +519,15 @@ public class DrivingSystem {
     /**
      * The method we use to travel a set distance rightwards or leftwards.
      *
-     * @param distance The distance to be travelled.
-     * @param power    The power of the driving motors (positive = rightward).
+     * @param distance  The distance to be travelled.
+     * @param power     The power of the driving motors (positive = rightward).
      * @param stopAfter if true, the robot stops after moving
      */
     public void driveSideways(double distance, double power, boolean stopAfter) {
         // The method receives a positive distance.
         if (distance < 0) {
-            throw new IllegalArgumentException("Method driveSideways was given a negative distance: " + distance);
+            distance = -distance;
+            power = -power;
         }
 
         resetDistance();
@@ -530,7 +557,8 @@ public class DrivingSystem {
 
     /**
      * The method we use to travel a set distance rightwards or leftwards.
-     *  @param distance The distance to be travelled.
+     *
+     * @param distance The distance to be travelled.
      * @param power    The power of the driving motors (positive = rightward).
      */
     public void driveSideways(double distance, double power) {

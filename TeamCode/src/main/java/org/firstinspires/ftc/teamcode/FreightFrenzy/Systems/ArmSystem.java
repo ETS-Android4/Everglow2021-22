@@ -15,7 +15,7 @@ public class ArmSystem {
     public DcMotorEx arm;
     public TouchSensor touch;
     public TouchSensor underHand;
-    private ColorSystem colorSystem;
+    private final ColorSystem colorSystem;
     public int changeHeight = 0;
     private boolean loaded = false;
     private boolean firstFloor = false;
@@ -72,6 +72,11 @@ public class ArmSystem {
         } else {
             flyWheels.setVelocity(-2500);
         }
+    }
+
+    public void spitCargo() {
+        collectState = CollectState.SPITTING;
+        flyWheels.setVelocity(-2000);
     }
 
     /**
@@ -202,10 +207,16 @@ public class ArmSystem {
      * Reload method to be used in an autonomous. Contains restOnLoad() as well.
      */
     public void autonomousReload() {
-        reload();
-        restOnLoad();
-        TimeUtils.sleep(500);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        new Thread(() -> {
+            firstFloor = false;
+            arm.setTargetPosition(0);
+            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm.setPower(0.5);
+            loaded = true;
+            restOnLoad();
+            TimeUtils.sleep(3000);
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }).start();
     }
 
     /**

@@ -164,7 +164,7 @@ public class TwoDriverGameTeleOp extends LinearOpMode {
             }
 
             if(armSystem.collectState != ArmSystem.CollectState.COLLECTING) {
-                armSystem.restOnFirstFloor();
+                armSystem.restOnLoad();
             }
             else{
                 armSystem.stayDownOnLoad();

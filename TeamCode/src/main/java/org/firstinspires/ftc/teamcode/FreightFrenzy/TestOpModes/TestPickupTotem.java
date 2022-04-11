@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.Routes;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "Test Pickup Totem", group = "Test")
 public class TestPickupTotem extends LinearOpMode {
@@ -20,6 +21,6 @@ public class TestPickupTotem extends LinearOpMode {
         waitForStart();
 
         routes.pickupTotem();
-        allSystems.duckSystem.runFor(10000);
+//        allSystems.drivingSystem.driveStraight(-20, 0.5);
     }
 }

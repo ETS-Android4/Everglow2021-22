@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import android.graphics.Bitmap;
 
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem.Floors;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.AndroidUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.opencv.android.Utils;
@@ -27,9 +28,9 @@ public class ImageProcessor {
     }
 
     private static final TotemAreas BLUE_AREAS = new TotemAreas(
-            createRect(0, 553, 250, 250),
-            createRect(379, 528, 250, 250),
-            createRect(828, 505, 250, 250)
+            createRect(0, 340, 250, 250),
+            createRect(381, 308, 250, 250),
+            createRect(828, 281, 250, 250)
     );
 
     private static final TotemAreas RED_AREAS = new TotemAreas(
@@ -39,6 +40,8 @@ public class ImageProcessor {
     );
 
     private final MathUtils.Side side;
+
+    private static final int THRESHOLD = 1000;
 
     private static final int RECT_X_INCREASE = 0;
     private static final int RECT_Y_INCRASE = 0;
@@ -62,6 +65,7 @@ public class ImageProcessor {
     private final Mat mask3;
     private final Mat coloredMask;
     private final TotemAreas totemAreas;
+
 
     public ImageProcessor(Mat frameTemplate, MathUtils.Side side) {
         frame = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
@@ -92,7 +96,7 @@ public class ImageProcessor {
         }
     }
 
-    public ArmSystem.Floors findFloor(Mat input) {
+    public Floors findFloor(Mat input) {
         Imgproc.cvtColor(input, hsvAll, Imgproc.COLOR_RGB2HSV);
         findColoredAreas();
 
@@ -104,17 +108,27 @@ public class ImageProcessor {
         int centerPixels = Core.countNonZero(center);
         int rightPixels = Core.countNonZero(right);
 
-        // find the area with the fewest colored
-        if (leftPixels < rightPixels && leftPixels < centerPixels) {
-            return ArmSystem.Floors.FIRST;
-        } else if (centerPixels < leftPixels && centerPixels < rightPixels) {
-            return ArmSystem.Floors.SECOND;
-        } else {
-            return ArmSystem.Floors.THIRD;
+        // on the red side, we can use all 3 tapes. On the blue side we must only use the center and right
+        if (side == MathUtils.Side.RED) {
+            if (leftPixels < rightPixels && leftPixels < centerPixels) {
+                return Floors.FIRST;
+            } else if (centerPixels < leftPixels && centerPixels < rightPixels) {
+                return Floors.SECOND;
+            } else {
+                return Floors.THIRD;
+            }
+        }else {
+            if (centerPixels < THRESHOLD){
+                return Floors.SECOND;
+            }else if (rightPixels < THRESHOLD){
+                return Floors.THIRD;
+            }else {
+                return Floors.FIRST;
+            }
         }
     }
 
-    public ArmSystem.Floors findFloor(Bitmap input){
+    public Floors findFloor(Bitmap input){
         Utils.bitmapToMat(input, frame);
         return findFloor(frame);
     }
@@ -134,8 +148,8 @@ public class ImageProcessor {
         return Core.countNonZero(mask1) > 10;
     }
 
-    public ArmSystem.Floors drawOnPreviewAndDetect(Mat input) {
-        ArmSystem.Floors floor = findFloor(input);
+    public Floors drawOnPreviewAndDetect(Mat input) {
+        Floors floor = findFloor(input);
         if (side == MathUtils.Side.RED) {
             input.setTo(new Scalar(72, 224, 251), coloredMask);
         } else {

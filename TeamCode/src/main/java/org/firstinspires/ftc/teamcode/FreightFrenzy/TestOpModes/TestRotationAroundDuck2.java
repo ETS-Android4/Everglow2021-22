@@ -45,7 +45,7 @@ public class TestRotationAroundDuck2 extends LinearOpMode {
 
                 drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             } else {
-                drivingSystem.rotateAroundDucks2(gamepad1.right_stick_x);
+                drivingSystem.rotateAroundDuck2(gamepad1.right_stick_x, true);
             }
 
             if (gamepad1.right_trigger > 0.1) {
