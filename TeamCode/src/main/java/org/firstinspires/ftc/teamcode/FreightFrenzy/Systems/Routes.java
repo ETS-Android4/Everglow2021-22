@@ -118,7 +118,7 @@ public class Routes {
         pickupTotem();
 //        floor = ArmSystem.Floors.FIRST;
         systems.armSystem.moveArm(floor);
-        systems.drivingSystem.driveToPoint(10 * mirror, -47, -45 * mirror, 0.9, 1);
+        systems.drivingSystem.driveToPoint(10 * mirror, -47, -45 * mirror, 0.5, 1);
         systems.armSystem.spit();
         sleep(200);
         systems.armSystem.moveArm(0);
@@ -130,16 +130,16 @@ public class Routes {
     private void RZNCXLoop(int i) {
         systems.drivingSystem.driveUntilWhite(0.6, false);
         systems.drivingSystem.driveStraight(i * 10, 0.7, false);
-        double distance = systems.drivingSystem.driveUntilCollect(200, 0.3);
+        double distance = systems.drivingSystem.driveUntilCollect(200, 0.2);
         systems.drivingSystem.driveToPoint((distance / 2) * mirror, 15, -90 * mirror, 0.9, 1);
         systems.drivingSystem.driveUntilWhite(-0.6, false);
-        systems.drivingSystem.driveStraight(50, -0.9, false);
+        systems.drivingSystem.driveStraight(35 + 15 * isMirrored(mirror), -0.9, false);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
-        systems.drivingSystem.driveToPoint(15 * mirror, -55, -45 * mirror - 5 * isMirrored(mirror), 0.9, 1);
+        systems.drivingSystem.driveToPoint(15 * mirror, -55, -40 * mirror, 0.9, 1);
         systems.armSystem.spit();
         sleep(200);
         systems.armSystem.moveArm(0);
-        systems.drivingSystem.driveToPoint(-20 * mirror, 55, -90 * mirror, 0.9, 1,true);
+        systems.drivingSystem.driveToPoint(-20 * mirror, 80, -90 * mirror, 0.9, 1,true);
     }
 
 

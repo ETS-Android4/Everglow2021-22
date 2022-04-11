@@ -209,6 +209,15 @@ public class DrivingSystem {
                 x2);
     }
 
+
+    public void rotateAroundArm(double power) {
+        double factor = 3;
+        backLeft.setPower(power * (0.1 + 1 / factor / 2));
+        backRight.setPower(power * (0.1 - 1 / factor));
+        frontLeft.setPower(power * (0.1 - 1 / factor / 8.5));
+        frontRight.setPower(power * (0.1 + 1 / factor / 8.5));
+    }
+
     public void rotateAroundDucks(double power, boolean red) {
         double factor = 3;
         double forward = 0.3 * Math.abs(power);
@@ -225,9 +234,40 @@ public class DrivingSystem {
         }
     }
 
-    public void rotateAroundDucks2(double power){
-        final double factor = 2;
-        driveByJoystick(0, abs(power)/factor, power);
+    public void rotateAroundDuck2(double power, boolean red) {
+        double factor = 2;
+
+        double dirX = 0.5;
+        double dirY = 0.5;
+
+        double x1 = 1.16 * (sin((90 - getCurrentAngle()) * Math.PI / 180) * dirX + sin(getCurrentAngle() * Math.PI / 180) * dirY);
+        double y1 = -cos(getCurrentAngle() * Math.PI / 180) * dirY + cos((90 - getCurrentAngle()) * Math.PI / 180) * dirX;
+
+        x1 *= 0.2 * Math.abs(power);
+        y1 *= 0.2 * Math.abs(power);
+
+        double frontRightPower = -y1 - x1 ;
+        double frontLeftPower = -y1 + x1 - power * (0.5 / factor);
+        double backRightPower = -y1 + x1 + power * (1 / factor);
+        double backLeftPower = -y1 - x1 - power * (1 / factor);
+
+        // Normalization of the driving motors' power
+        if (abs(frontRightPower) > 1 || abs(frontLeftPower) > 1
+                || abs(backRightPower) > 1 || abs(backRightPower) > 1) {
+            double norm = max(
+                    max(abs(frontRightPower), abs(frontLeftPower)),
+                    max(abs(backRightPower), abs(backLeftPower))
+            );
+            frontRightPower /= norm;
+            frontLeftPower /= norm;
+            backRightPower /= norm;
+            backLeftPower /= norm;
+        }
+
+        frontRight.setPower(frontRightPower);
+        frontLeft.setPower(frontLeftPower);
+        backRight.setPower(backRightPower);
+        backLeft.setPower(backLeftPower);
     }
 
     public void driveToPoint(double targetX, double targetY, double ang, double driveSpeed, double rotateSpeed){
@@ -283,14 +323,14 @@ public class DrivingSystem {
             double xPowerNormalized = xPower/powerHypot;
             double yPowerNormalized = yPower/powerHypot;
 
-            final double bumpingThreshold = abs(Math.sqrt(yPower*yPower + xPower*xPower) * ACCELERATION_BUMPING_THRESHOLD);
+            final double bumpingThreshold = abs(driveSpeed * ACCELERATION_BUMPING_THRESHOLD);
 
             if(getAccelerationMagnitude() > bumpingThreshold){
                 opMode.telemetry.addLine("bump");
                 opMode.telemetry.update();
             }
 
-            if ((yPassed && xPassed && Math.abs(angleDeviation) < 0.5) || getAccelerationMagnitude() > bumpingThreshold){
+            if ((yPassed && xPassed && Math.abs(angleDeviation) < 0.5) || (getAccelerationMagnitude() > bumpingThreshold && stopIfBump)){
                 break;
             }
 
@@ -396,8 +436,7 @@ public class DrivingSystem {
     public void driveStraight(double distance, double power, boolean stopAfter) {
         // The method receives a positive distance.
         if (distance < 0) {
-            distance = -distance;
-            power = -power;
+            throw new IllegalArgumentException("Method driveStraight was given a negative distance: " + distance);
         }
 
         resetDistance();
@@ -461,8 +500,7 @@ public class DrivingSystem {
     public void driveSideways(double distance, double power, boolean stopAfter) {
         // The method receives a positive distance.
         if (distance < 0) {
-            distance = -distance;
-            power = -power;
+            throw new IllegalArgumentException("Method driveSideways was given a negative distance: " + distance);
         }
 
         resetDistance();

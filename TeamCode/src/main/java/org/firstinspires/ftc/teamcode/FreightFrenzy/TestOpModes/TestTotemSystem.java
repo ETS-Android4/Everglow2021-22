@@ -24,11 +24,15 @@ public class TestTotemSystem extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-//            if (gamepad1.right_stick_x > 0) {
-//                drivingSystem.rotateAroundDucks(gamepad1.right_stick_x, true);
-//            } else if (gamepad1.left_stick_x > 0) {
-//                drivingSystem.rotateAroundDucks(gamepad1.left_stick_x, false);
-//            }
+            if (Math.abs(gamepad1.right_stick_x) > 0) {
+                drivingSystem.rotateAroundDuck2(gamepad1.right_stick_x, true);
+            } else if (Math.abs(gamepad1.left_stick_x) > 0) {
+                drivingSystem.rotateAroundDuck2(gamepad1.left_stick_x, false);
+            } else {
+                telemetry.addLine("stop");
+                telemetry.update();
+                drivingSystem.stop();
+            }
 
             gamepad.update();
             if (gamepad1.dpad_up) {
