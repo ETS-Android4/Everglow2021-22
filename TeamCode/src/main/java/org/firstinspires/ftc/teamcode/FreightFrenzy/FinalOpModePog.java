@@ -113,11 +113,11 @@ public class FinalOpModePog extends LinearOpMode {
                 totemSystem.moveAltitude(-gamepad2.left_stick_y / 500);
 
                 // extend meter
-                if (gamepad2.dpad_up) {
+                if (gamepad2.dpad_down) {
                     totemSystem.extendLeft(1);
                     totemSystem.extendRight(-1);
                 }
-                if (gamepad2.dpad_down) {
+                if (gamepad2.dpad_up) {
                     totemSystem.extendLeft(-1);
                     totemSystem.extendRight(1);
                 }

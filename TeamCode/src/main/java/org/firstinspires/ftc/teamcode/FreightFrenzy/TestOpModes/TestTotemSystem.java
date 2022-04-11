@@ -35,11 +35,11 @@ public class TestTotemSystem extends LinearOpMode {
             }
 
             gamepad.update();
-            if (gamepad1.dpad_up) {
+            if (gamepad1.dpad_down) {
                 totemSystem.extendLeft(1);
                 totemSystem.extendRight(-1);
             }
-            if (gamepad1.dpad_down) {
+            if (gamepad1.dpad_up) {
                 totemSystem.extendLeft(-1);
                 totemSystem.extendRight(1);
             }
