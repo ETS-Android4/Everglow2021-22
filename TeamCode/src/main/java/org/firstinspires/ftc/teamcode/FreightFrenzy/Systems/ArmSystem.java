@@ -257,7 +257,7 @@ public class ArmSystem {
                 moveArm(-580);
                 break;
             case FIRST:
-                moveArm(-250);
+                moveArm(-275);
                 break;
         }
     }
