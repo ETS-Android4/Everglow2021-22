@@ -155,7 +155,7 @@ public class TwoDriverGameTeleOpNoRumble extends LinearOpMode {
                 armSystem.restOnLoad();
             }
 
-            if(ourGamepad1.squareHold()){
+            if(ourGamepad1.crossHold()){
                 armSystem.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 

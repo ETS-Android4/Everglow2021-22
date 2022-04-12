@@ -20,7 +20,7 @@ public class TestPickupTotem extends LinearOpMode {
 
         waitForStart();
 
-        routes.pickupTotem();
+        routes.pickupTotem(true);
 //        allSystems.drivingSystem.driveStraight(-20, 0.5);
     }
 }

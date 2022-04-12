@@ -149,18 +149,6 @@ public class ArmSystem {
         arm.setTargetPosition(place);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(0.5);
-        this.opMode.telemetry.addLine("fast");
-        this.opMode.telemetry.update();
-    }
-
-    public void slowArm() {
-        if (targetPosition != null && Math.abs(targetPosition - arm.getCurrentPosition()) < 800) {
-            arm.setPower(0.2);
-            this.opMode.telemetry.addLine("slow");
-        } else {
-            this.opMode.telemetry.addLine("fast inside slow arm");
-        }
-        this.opMode.telemetry.update();
     }
 
     /**

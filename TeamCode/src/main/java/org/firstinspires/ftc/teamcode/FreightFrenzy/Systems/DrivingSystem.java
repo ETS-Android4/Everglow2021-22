@@ -194,10 +194,6 @@ public class DrivingSystem {
         double angleAdjustment = toDegrees(atan2(x2, drivePower));
         double angle = getCurrentAngle() - 0.3 * angleAdjustment;
 
-        opMode.telemetry.addData("angleAdjustment", angleAdjustment);
-        opMode.telemetry.update();
-
-
         driveByJoystick(1.16 * (sin((90 - angle) * Math.PI / 180) * x1 + sin(angle * Math.PI / 180) * y1),
                 -cos(angle * Math.PI / 180) * y1 + cos((90 - angle) * Math.PI / 180) * x1,
                 x2);
@@ -339,11 +335,6 @@ public class DrivingSystem {
 
             final double bumpingThreshold = abs(driveSpeed * ACCELERATION_BUMPING_THRESHOLD);
 
-            if (getAccelerationMagnitude() > bumpingThreshold) {
-                opMode.telemetry.addLine("bump");
-                opMode.telemetry.update();
-            }
-
             if ((yPassed && xPassed && Math.abs(angleDeviation) < 0.5) || (getAccelerationMagnitude() > bumpingThreshold && stopIfBump)) {
                 break;
             }
@@ -359,19 +350,6 @@ public class DrivingSystem {
             lastDistanceTravelled = currentDistanceTraveled;
             currentX += xPowerNormalized * distanceTraveledNow;
             currentY += yPowerNormalized * distanceTraveledNow;
-
-            opMode.telemetry.addData("angleDeviation: ", angleDeviation);
-            opMode.telemetry.addData("rotatePower: ", rotatePower);
-            opMode.telemetry.addData("currentX: ", currentX);
-            opMode.telemetry.addData("currentY: ", currentY);
-            opMode.telemetry.addData("xDiff: ", xDiff);
-            opMode.telemetry.addData("yDiff: ", yDiff);
-            opMode.telemetry.addData("powerX: ", xPower);
-            opMode.telemetry.addData("powerY: ", yPower);
-            opMode.telemetry.addData("xPassed: ", xPassed);
-            opMode.telemetry.addData("yPassed: ", yPassed);
-            opMode.telemetry.addData("currentDistance: ", currentDistanceTraveled);
-            opMode.telemetry.update();
         }
         stop();
     }
@@ -390,8 +368,6 @@ public class DrivingSystem {
         // Rotate until the desired angle is met within an error of 0.5 degrees
         while (abs(theta) > 0.5 && opMode.opModeIsActive()) {
             theta = getAngleDeviation();
-            opMode.telemetry.addData("angleDeviation", theta);
-            opMode.telemetry.update();
             double direction = (theta / abs(theta));
             driveByJoystick(0, 0,
                     max(abs(theta / speedDecrease), 0.5)
@@ -408,8 +384,6 @@ public class DrivingSystem {
         // Rotate until the desired angle is met within an error of 0.5 degrees
         while (abs(theta) > 0.5 && opMode.opModeIsActive()) {
             theta = getAngleDeviation();
-            opMode.telemetry.addData("angleDeviation", theta);
-            opMode.telemetry.update();
             double direction = (theta / abs(theta));
             driveByJoystick(0, 0,
                     max(abs(theta / speedDecrease), 0.5)
@@ -560,8 +534,6 @@ public class DrivingSystem {
         while ((distance * COUNTS_PER_MOTOR_REV) / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors && opMode.opModeIsActive()) {
             // x2 is used to fix the natural deviation of the robot from a straight line
             double angleDeviation = getAngleDeviation();
-            opMode.telemetry.addData("angleDeviation", angleDeviation);
-            opMode.telemetry.update();
             driveByJoystick(power, 0, angleDeviation / ROTATE_SPEED_DECREASE);
             averageMotors = abs(
                     (this.frontRight.getCurrentPosition() - this.frontLeft.getCurrentPosition()

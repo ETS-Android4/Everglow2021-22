@@ -24,7 +24,7 @@ public class Routes {
     /**
      * Picks up the totem and drives INITIAL_DRIVE_STRAIGHT_DISTANCE centimeters backwards.
      */
-    public void pickupTotem() {
+    public void pickupTotem(boolean moveArm) {
         systems.opMode.telemetry.addLine("Detecting Totem...");
         systems.opMode.telemetry.update();
         ElapsedTime elapsedTime = new ElapsedTime();
@@ -34,14 +34,16 @@ public class Routes {
         systems.opMode.telemetry.update();
         systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP);
         ArmSystem.Floors floorForPickup = floor.switchIfMirrored(mirror);
-        new Thread(() -> {
-            TimeUtils.sleep(500);
-            if (floor == ArmSystem.Floors.THIRD) {
-                systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
-            } else {
-                systems.armSystem.autonomousMoveArm(floor);
-            }
-        }).start();
+        if (moveArm) {
+            new Thread(() -> {
+                TimeUtils.sleep(500);
+                if (floor == ArmSystem.Floors.THIRD) {
+                    systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
+                } else {
+                    systems.armSystem.autonomousMoveArm(floor);
+                }
+            }).start();
+        }
         switch (floorForPickup) {
             case FIRST:
 //                if (mirror == 1) {
@@ -86,7 +88,7 @@ public class Routes {
     }
 
     public void craterPlaceFreight(boolean returnToWall) {
-        pickupTotem();
+        pickupTotem(true);
         if (floor == ArmSystem.Floors.THIRD) {
             systems.drivingSystem.driveToPoint((10 - pickupTotemX) * mirror, -47 - pickupTotemY, -57 * mirror, 0.5, 1.75);
             systems.armSystem.spitCargo();
@@ -110,8 +112,8 @@ public class Routes {
     }
 
     private void RZNCXLoop(int i) {
-//        systems.drivingSystem.driveUntilWhite(0.55, 125, false);
-        systems.drivingSystem.driveUntilWhite(0.55, 300, false);
+        systems.drivingSystem.driveUntilWhite(0.55, 150, false);
+//        systems.drivingSystem.driveUntilWhite(0.55, 300, false);
         if (i > 0) {
             systems.drivingSystem.driveStraight(10, 0.9, false);
         }
@@ -119,8 +121,7 @@ public class Routes {
 //        systems.drivingSystem.driveToPoint((distance / 2) * mirror, 15, -90 * mirror, 0.9, 1);
         systems.drivingSystem.driveStraight(10, -0.6, false);
         systems.drivingSystem.driveSideways(10 * mirror, 0.6, false);
-        systems.drivingSystem.driveUntilWhite(-0.55, 300, false);
-//        systems.drivingSystem.driveUntilWhite(-0.55, 150, false);
+        systems.drivingSystem.driveUntilWhite(-0.55, 90, false);
         systems.drivingSystem.driveStraight(35 - 2 * isMirrored(mirror), -0.9, false);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
         systems.drivingSystem.driveToPoint((20) * mirror, -60 - 0 * isMirrored(mirror), (-45 + 5 * isMirrored(mirror)) * mirror, 0.9, 1);
@@ -140,6 +141,7 @@ public class Routes {
         systems.totemSystem.setAltitude(TotemSystem.ALTITUDE1_MAX);
         systems.drivingSystem.turnAbsolute(80 * mirror, 100);
         systems.drivingSystem.driveStraight(160, 1);
+
     }
 
     /**
@@ -276,85 +278,109 @@ public class Routes {
         systems.drivingSystem.driveStraight(150, 1);
     }
 
-    public void LZYW(int mirror) {
-//        newPlaceFreightAndCarousel(mirror);
+
+
+
+    ///////////////////////// LEFT /////////////////////////////
+
+
+
+    public void carouselPlaceFreightAndCarousel() {
+        carouselPlaceFreight();
+        systems.drivingSystem.turn(-90 * mirror, 100);
+        systems.drivingSystem.driveSidewaysUntilBumping(0.5 * mirror, 20);
+        systems.drivingSystem.driveStraightUntilBumping(0.3, 20);
+        TimeUtils.sleep(250);
+        systems.duckSystem.runFor(3000);
+    }
+    public void carouselPlaceFreight() {
+        pickupTotem(false);
+        systems.drivingSystem.turnAbsolute(0, 150);
+        systems.drivingSystem.driveStraight(-77 - pickupTotemY, 0.5);
+        systems.armSystem.autonomousMoveArm(floor);
+        systems.drivingSystem.turn(90 * mirror, 200);
+        systems.drivingSystem.driveStraight(25 + pickupTotemX, 0.5);
+        systems.armSystem.awaitArmArrival();
+        TimeUtils.sleep(50);
+        systems.armSystem.spit();
+        TimeUtils.sleep(300);
+        systems.armSystem.stop();
+        systems.drivingSystem.driveStraight(20, -0.5);
+        systems.armSystem.autonomousReload();
+    }
+
+    /**
+     * Does Carousel, then parks in storage unit.
+     */
+    public void LZYW() {
+        carouselPlaceFreightAndCarousel();
         systems.drivingSystem.driveSideways(20, -0.5 * mirror);
         systems.drivingSystem.driveStraight(40, -0.5);
         systems.drivingSystem.turn(-90 * mirror, 200);
         systems.drivingSystem.driveStraight(25, 0.5);
-    }
-
-    /**
-     * Goes to Storage Unit.
-     */
-    public void LZNW(int mirror) {
-//        placeFreight(mirror);
-        systems.drivingSystem.driveStraight(55, -0.6);
-        systems.drivingSystem.driveSideways(30, 0.6 * mirror);
+        systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE1_MAX, 500);
     }
 
     /**
      * Goes to Carousel, and then to Crater in front of SH. Enters Crater through path.
      */
-    public void LFYCP(int mirror) {
-//        newPlaceFreightAndCarousel(mirror);
+    public void LFYCP() {
+        carouselPlaceFreightAndCarousel();
         // Go to Crater through path
         systems.drivingSystem.driveSideways(50, -0.6 * mirror);
         systems.drivingSystem.turn(90 * mirror, 150);
         systems.drivingSystem.driveSidewaysUntilBumping(0.6 * mirror, 10);
         systems.drivingSystem.driveStraight(230, 0.7);
+        systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE1_MAX, 500);
     }
 
     /**
      * Goes to Carousel, and then to Crater in front of SH. Rams through obstacle.
      */
-    public void LFYCO(int mirror) {
-//        newPlaceFreightAndCarousel(mirror);
-
+    public void LFYCO() {
+        carouselPlaceFreightAndCarousel();
         // Ram through obstacle
         systems.drivingSystem.driveSideways(30, -0.6 * mirror);
         systems.drivingSystem.driveStraight(20, -0.6);
         systems.drivingSystem.turn(90 * mirror, 150);
         systems.armSystem.moveArm(ArmSystem.Floors.OBSTACLE);
         systems.drivingSystem.driveStraight(300, 1);
+        systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE1_MAX, 500);
     }
 
     /**
      * Goes to Carousel, then to Crater behind SH. Rams through obstacle.
      */
-    public void LBNCO(int mirror) {
-//        placeFreight(mirror);
-
+    public void LBNCO() {
+        carouselPlaceFreightAndCarousel();
         // Go to the right of the shipping hub and dodge
         systems.drivingSystem.driveSideways(50, -0.6 * mirror);
         systems.drivingSystem.driveStraight(125, 0.6);
         systems.drivingSystem.driveSideways(45, 0.6 * mirror);
         systems.drivingSystem.turn(180, 200);
-//        dodgeOtherTotem(mirror);
-
         // Ram through obstacle
         systems.drivingSystem.turn(180, 200);
         systems.armSystem.moveArm(-200);
         systems.drivingSystem.driveStraight(30, -0.6);
         systems.drivingSystem.driveStraight(150, 1);
+        systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE1_MAX, 500);
     }
 
     /**
      * Goes to Carousel, then to Crater behind SH. Goes through path.
      */
-    public void LBNCP(int mirror) {
-//        placeFreight(mirror);
-
+    public void LBNCP() {
+        carouselPlaceFreightAndCarousel();
         // Go to right of the shipping hub and dodge
         systems.drivingSystem.driveSideways(50, -0.6 * mirror);
         systems.drivingSystem.driveStraight(125, 0.6);
         systems.drivingSystem.driveSideways(45, 0.6 * mirror);
         systems.drivingSystem.turn(180, 200);
-//        dodgeOtherTotem(mirror);
 
         // Go through path
         systems.drivingSystem.turn(180, 200);
         systems.drivingSystem.driveSideways(50, 0.6 * mirror);
         systems.drivingSystem.driveStraight(100, 0.6);
+        systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE1_MAX, 500);
     }
 }

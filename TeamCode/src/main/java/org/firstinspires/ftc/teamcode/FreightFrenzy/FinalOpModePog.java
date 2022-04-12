@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ColorSystem;
@@ -62,10 +63,6 @@ public class FinalOpModePog extends LinearOpMode {
                     left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
                     right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
                 }
-
-                telemetry.addData("left_x", left_stick_x);
-                telemetry.addData("left_y", left_stick_y);
-                telemetry.addData("right_x", right_stick_x);
 
                 drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
             }
@@ -161,10 +158,6 @@ public class FinalOpModePog extends LinearOpMode {
                 }
 
                 // floors
-                if (ourGamepad2.a()) {
-                    armSystem.autonomousMoveArm(ArmSystem.Floors.FIRST);
-                    passingObstacle = false;
-                }
                 if (ourGamepad2.b()) {
                     armSystem.autonomousMoveArm(ArmSystem.Floors.THIRD);
                     passingObstacle = false;
@@ -190,6 +183,13 @@ public class FinalOpModePog extends LinearOpMode {
                     armSystem.moveArm(armSystem.arm.getTargetPosition() - 50);
                 }
 
+                if (ourGamepad2.dpad_down()) {
+                    totemSystem.disable();
+                }
+                if (ourGamepad2.dpad_up()) {
+                    totemSystem.enable();
+                }
+
                 // rumble controller if touchSensor was just pressed
                 boolean touchPressed = armSystem.touch.isPressed();
 
@@ -205,7 +205,7 @@ public class FinalOpModePog extends LinearOpMode {
                 }
                 prevTouchPressed = touchPressed;
 
-                if (ourGamepad1.squareHold()) {
+                if (ourGamepad1.crossHold()) {
                     armSystem.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 }
 
@@ -215,10 +215,12 @@ public class FinalOpModePog extends LinearOpMode {
                 if (armSystem.collectState == ArmSystem.CollectState.COLLECTING) {
                     armSystem.stayDownOnLoad();
                 }
-
-                telemetry.addData("is cargo sensor: ", colorSystem.isCargo());
-                telemetry.update();
             }
+            telemetry.addData("is cargo sensor: ", colorSystem.isCargo());
+            telemetry.addData("altitude1 enabled? ", totemSystem.isEnabled());
+            telemetry.addData("altitude1: ", totemSystem.altitude1.getPosition());
+            telemetry.addData("altitude2: ", totemSystem.altitude2.getPosition());
+            telemetry.update();
         }
     }
 }

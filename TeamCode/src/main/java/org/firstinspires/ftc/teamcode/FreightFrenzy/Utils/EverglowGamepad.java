@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class EverglowGamepad {
     private final Gamepad gamepad;
-    private ElapsedTime squareHoldTimer;
+    private ElapsedTime crossHoldTimer;
 
     private boolean previousA;
     private boolean previousB;
@@ -37,7 +37,7 @@ public class EverglowGamepad {
 
     public EverglowGamepad(Gamepad gamepad) {
         this.gamepad = gamepad;
-        this.squareHoldTimer = new ElapsedTime();
+        this.crossHoldTimer = new ElapsedTime();
     }
 
     /**
@@ -114,8 +114,8 @@ public class EverglowGamepad {
         return currentLb && !previousLb;
     }
 
-    public boolean squareHold(){
-        if(squareHoldTimer.seconds() > 4) {
+    public boolean crossHold(){
+        if(crossHoldTimer.seconds() > 4) {
             return true;
         }
         return false;
@@ -140,6 +140,8 @@ public class EverglowGamepad {
         previousRb = currentRb;
         previousRt = currentRt;
 
+        previousShare = currentShare;
+
         currentA = gamepad.a;
         currentB = gamepad.b;
         currentX = gamepad.x;
@@ -152,12 +154,11 @@ public class EverglowGamepad {
         currentLt = gamepad.left_trigger > 0.1;
         currentRb = gamepad.right_bumper;
         currentRt = gamepad.right_trigger > 0.1;
+        currentShare = gamepad.share;
 
-        if(!gamepad.x){
-            squareHoldTimer.reset();
+        if(!gamepad.a){
+            crossHoldTimer.reset();
         }
-
-        previousShare = currentShare;
     }
 
 }

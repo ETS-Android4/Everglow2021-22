@@ -43,7 +43,6 @@ public class ColorSystem {
         float[] hsv = {0, 0, 0};
         Color.RGBToHSV(arm.red(), arm.green(), arm.blue(), hsv);
         if (hsv[1] < 0.25) {
-//            this.opMode.telemetry.update();
             return true;
         }
         return false;
