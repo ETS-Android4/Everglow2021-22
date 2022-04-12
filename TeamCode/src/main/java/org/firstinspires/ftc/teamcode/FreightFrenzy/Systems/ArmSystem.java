@@ -79,6 +79,11 @@ public class ArmSystem {
         flyWheels.setVelocity(-2000);
     }
 
+    public void spitWithVelocity(int velocity){
+        collectState = CollectState.SPITTING;
+        flyWheels.setVelocity(-velocity);
+    }
+
     /**
      * Toggle the deployment on and off
      */
@@ -252,7 +257,7 @@ public class ArmSystem {
                 moveArm(-580);
                 break;
             case FIRST:
-                moveArm(-300);
+                moveArm(-250);
                 break;
         }
     }

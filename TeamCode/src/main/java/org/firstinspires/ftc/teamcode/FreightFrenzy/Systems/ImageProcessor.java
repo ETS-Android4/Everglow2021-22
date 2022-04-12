@@ -67,6 +67,7 @@ public class ImageProcessor {
     private final Mat mask3;
     private final Mat coloredMask;
     private final TotemAreas totemAreas;
+    private final boolean useThreshold;
 
 
     public ImageProcessor(Mat frameTemplate, MathUtils.Side side) {
@@ -79,8 +80,10 @@ public class ImageProcessor {
         this.side = side;
         if (side == MathUtils.Side.RED) {
             totemAreas = RED_AREAS;
+            useThreshold = false;
         } else {
             totemAreas = BLUE_AREAS;
+            useThreshold = true;
         }
     }
 
@@ -109,18 +112,25 @@ public class ImageProcessor {
         int leftPixels = Core.countNonZero(left);
         int centerPixels = Core.countNonZero(center);
         int rightPixels = Core.countNonZero(right);
-
-        // on the red side, we can use all 3 tapes. On the blue side we must only use the center and right
-        if (leftPixels < rightPixels && leftPixels < centerPixels) {
-            return Floors.FIRST;
-        } else if (centerPixels < leftPixels && centerPixels < rightPixels) {
-            return Floors.SECOND;
-        } else {
-            return Floors.THIRD;
+        if (!useThreshold) {
+            // on the red side, we can use all 3 tapes. On the blue side we must only use the center and right
+            if (leftPixels < rightPixels && leftPixels < centerPixels) {
+                return Floors.FIRST;
+            } else if (centerPixels < leftPixels && centerPixels < rightPixels) {
+                return Floors.SECOND;
+            } else {
+                return Floors.THIRD;
+            }
+        }else {
+            if (centerPixels < THRESHOLD){
+                return Floors.SECOND;
+            }else if(rightPixels < THRESHOLD){
+                return Floors.THIRD;
+            }else {
+                return Floors.FIRST;
+            }
         }
     }
-
-
 
     public Floors findFloor(Bitmap input) {
         Utils.bitmapToMat(input, frame);

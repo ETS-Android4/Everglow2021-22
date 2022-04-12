@@ -24,7 +24,7 @@ public class Routes {
     /**
      * Picks up the totem and drives INITIAL_DRIVE_STRAIGHT_DISTANCE centimeters backwards.
      */
-    public void pickupTotem(boolean moveArm) {
+    public void pickupTotem(boolean isCrater) {
         systems.opMode.telemetry.addLine("Detecting Totem...");
         systems.opMode.telemetry.update();
         ElapsedTime elapsedTime = new ElapsedTime();
@@ -34,7 +34,7 @@ public class Routes {
         systems.opMode.telemetry.update();
         systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP);
         ArmSystem.Floors floorForPickup = floor.switchIfMirrored(mirror);
-        if (moveArm) {
+        if (isCrater) {
             new Thread(() -> {
                 TimeUtils.sleep(500);
                 if (floor == ArmSystem.Floors.THIRD) {
@@ -46,40 +46,39 @@ public class Routes {
         }
         switch (floorForPickup) {
             case FIRST:
-//                if (mirror == 1) {
                 pickupTotemX = 14;
-                pickupTotemY = -25;
-
+                pickupTotemY = -30;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
-//                }
                 break;
             case SECOND:
-//                if (mirror == 1) {
                 pickupTotemX = -4;
-                pickupTotemY = -25;
+                pickupTotemY = -30;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
-//                }
                 break;
             case THIRD:
-//                if (mirror == 1) {
                 pickupTotemX = -9;
-                pickupTotemY = -25;
-                systems.drivingSystem.driveToPoint(pickupTotemX * mirror, pickupTotemY, 21 * mirror, 0.5, 1.2);
-//                }
+                pickupTotemY = -(30 - 10 * isMirrored(mirror));
+                systems.drivingSystem.driveToPoint((pickupTotemX) * mirror, pickupTotemY, 21 * mirror, 0.5, 1.2);
+                // in THIRD floor on blue we need to move a bit more
+                if (isCrater) {
+                    // if moving the arm, the location sent needs to be different.
+                    pickupTotemY -= 7 * isMirrored(mirror);
+                    pickupTotemX += 7 * isMirrored(mirror);
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Floor Must be FIRST, SECOND, or THIRD");
         }
-        new Thread(() -> {
-            systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 500);
-            systems.totemSystem.extendLeft(-1);
-            systems.totemSystem.extendRight(1);
-            TimeUtils.sleep(500);
-            systems.totemSystem.stopLeft();
-            systems.totemSystem.stopRight();
-        }).start();
+        if (isCrater) {
+            new Thread(() -> {
+                systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 500);
+            }).start();
+        }else {
+            TimeUtils.sleep(250);
+            systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 1000);
+        }
     }
 
 
@@ -90,7 +89,7 @@ public class Routes {
     public void craterPlaceFreight(boolean returnToWall) {
         pickupTotem(true);
         if (floor == ArmSystem.Floors.THIRD) {
-            systems.drivingSystem.driveToPoint((10 - pickupTotemX) * mirror, -47 - pickupTotemY, -57 * mirror, 0.5, 1.75);
+            systems.drivingSystem.driveToPoint((10 + 5*isMirrored(mirror) - pickupTotemX) * mirror, -47 - 5*isMirrored(mirror) - pickupTotemY, -57 * mirror, 0.5, 1.75);
             systems.armSystem.spitCargo();
             sleep(200);
             systems.armSystem.stop();
@@ -99,8 +98,8 @@ public class Routes {
                 systems.drivingSystem.driveToPoint(-2 * mirror, 85, -90 * mirror, 0.9, 1);
             }
         } else {
-            systems.drivingSystem.driveToPoint((10 - pickupTotemX) * mirror, -40 - pickupTotemY, 135 * mirror, 0.5, 1.75);
-            systems.armSystem.spitCargo();
+            systems.drivingSystem.driveToPoint((13 - pickupTotemX) * mirror, -43 - pickupTotemY, (135 + 10 * isMirrored(mirror)) * mirror, 0.5, 1.75);
+            systems.armSystem.spit();
             sleep(200);
             systems.armSystem.stop();
             systems.drivingSystem.turnAbsolute(0, 50);
@@ -119,13 +118,13 @@ public class Routes {
         }
         double distance = systems.drivingSystem.driveUntilCollect(200, 0.2);
 //        systems.drivingSystem.driveToPoint((distance / 2) * mirror, 15, -90 * mirror, 0.9, 1);
-        systems.drivingSystem.driveStraight(10, -0.6, false);
-        systems.drivingSystem.driveSideways(10 * mirror, 0.6, false);
+        systems.drivingSystem.driveStraight(10, -0.45, false);
+        systems.drivingSystem.driveSideways(10 * mirror, 0.45, false);
         systems.drivingSystem.driveUntilWhite(-0.55, 90, false);
-        systems.drivingSystem.driveStraight(35 - 2 * isMirrored(mirror), -0.9, false);
+        systems.drivingSystem.driveStraight(35 + 0 * isMirrored(mirror), -0.9, false);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
-        systems.drivingSystem.driveToPoint((20) * mirror, -60 - 0 * isMirrored(mirror), (-45 + 5 * isMirrored(mirror)) * mirror, 0.9, 1);
-        systems.armSystem.spitCargo();
+        systems.drivingSystem.driveToPoint((20) * mirror, -60 - 5 * isMirrored(mirror), (-45 + 0 * isMirrored(mirror)) * mirror, 0.9, 1);
+        systems.armSystem.spitWithVelocity(2300);
         sleep(200);
         systems.armSystem.autonomousReload();
     }
@@ -138,9 +137,10 @@ public class Routes {
             systems.drivingSystem.driveToPoint((-20 + 10 * isMirrored(mirror)) * mirror, 55, -90 * mirror, 0.9, 1);
         }
         RZNCXLoop(3);
-        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE1_MAX);
         systems.drivingSystem.turnAbsolute(80 * mirror, 100);
         systems.drivingSystem.driveStraight(160, 1);
+        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE1_MAX);
+        TimeUtils.sleep(2000);
 
     }
 
@@ -312,7 +312,7 @@ public class Routes {
     /**
      * Does Carousel, then parks in storage unit.
      */
-    public void LZYW() {
+    public void RZYW() {
         carouselPlaceFreightAndCarousel();
         systems.drivingSystem.driveSideways(20, -0.5 * mirror);
         systems.drivingSystem.driveStraight(40, -0.5);

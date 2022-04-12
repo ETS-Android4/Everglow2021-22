@@ -16,6 +16,6 @@ public class RedLZYW extends LinearOpMode {
         routes = new Routes(AllSystems.init(this, MathUtils.Side.RED));
         waitForStart();
 
-        routes.LZYW();
+        routes.RZYW();
     }
 }

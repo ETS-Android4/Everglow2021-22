@@ -16,6 +16,6 @@ public class BlueRZYW extends LinearOpMode {
         routes = new Routes(AllSystems.init(this, MathUtils.Side.BLUE));
         waitForStart();
 
-        routes.LZYW();
+        routes.RZYW();
     }
 }

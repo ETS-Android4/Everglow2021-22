@@ -294,7 +294,7 @@ public class DrivingSystem {
         double currentY = 0;
         this.targetAngle = -ang;
 
-        final double ROTATE_SPEED_MIN = 0.2;
+        final double ROTATE_SPEED_MIN = 0.2; // todo: increase
         final double MIN_MOVE_SPEED = 0.2;
         double lastDistanceTravelled = 0;
         while (opMode.opModeIsActive()) {
