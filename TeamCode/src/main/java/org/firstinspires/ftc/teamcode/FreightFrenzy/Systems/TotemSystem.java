@@ -16,7 +16,7 @@ public class TotemSystem {
 
     private static final double ALTITUDE1_ZERO = 0.5;
     private static final double ALTITUDE2_ZERO = 0.5;
-    private static final double ALTITUDE1_MAX = 0.67;
+    public static final double ALTITUDE1_MAX = 0.7;
     private static final double ALTITUDE2_MAX = 0.32;
 
     public static final double ALTITUDE_PICKUP = 0.30;

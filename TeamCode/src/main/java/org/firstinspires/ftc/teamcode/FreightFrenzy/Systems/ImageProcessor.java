@@ -50,8 +50,10 @@ public class ImageProcessor {
         return new Rect(x - RECT_X_INCREASE / 2, y - RECT_Y_INCRASE, width + RECT_X_INCREASE, height + RECT_Y_INCRASE);
     }
 
-    private static final Scalar low_blue = new Scalar(94, 80, 2);
-    private static final Scalar high_blue = new Scalar(126, 255, 255);
+    private static final Scalar low_blue = new Scalar(80, 80, 2);
+    private static final Scalar high_blue = new Scalar(140, 255, 255);
+//    private static final Scalar low_blue = new Scalar(94, 80, 2);
+//    private static final Scalar high_blue = new Scalar(126, 255, 255);
 
     private static final Scalar low_red1 = new Scalar(151, 80, 2);
     private static final Scalar high_red1 = new Scalar(180, 255, 255);
@@ -82,7 +84,7 @@ public class ImageProcessor {
         }
     }
 
-    public ImageProcessor(Bitmap bitmap, MathUtils.Side side){
+    public ImageProcessor(Bitmap bitmap, MathUtils.Side side) {
         this(AndroidUtils.bitmapToMat(bitmap), side);
     }
 
@@ -109,42 +111,35 @@ public class ImageProcessor {
         int rightPixels = Core.countNonZero(right);
 
         // on the red side, we can use all 3 tapes. On the blue side we must only use the center and right
-        if (side == MathUtils.Side.RED) {
-            if (leftPixels < rightPixels && leftPixels < centerPixels) {
-                return Floors.FIRST;
-            } else if (centerPixels < leftPixels && centerPixels < rightPixels) {
-                return Floors.SECOND;
-            } else {
-                return Floors.THIRD;
-            }
-        }else {
-            if (centerPixels < THRESHOLD){
-                return Floors.SECOND;
-            }else if (rightPixels < THRESHOLD){
-                return Floors.THIRD;
-            }else {
-                return Floors.FIRST;
-            }
+        if (leftPixels < rightPixels && leftPixels < centerPixels) {
+            return Floors.FIRST;
+        } else if (centerPixels < leftPixels && centerPixels < rightPixels) {
+            return Floors.SECOND;
+        } else {
+            return Floors.THIRD;
         }
     }
 
-    public Floors findFloor(Bitmap input){
+
+
+    public Floors findFloor(Bitmap input) {
         Utils.bitmapToMat(input, frame);
         return findFloor(frame);
     }
 
     /**
      * Checks wether a frame is completely black, since a completely black frame means the input is invalid.
+     *
      * @param input a frame from the camera
      * @return true if the frame is ok, false if the frame is fully black.
      */
-    public boolean isFrameValid(Bitmap input){
+    public boolean isFrameValid(Bitmap input) {
         Utils.bitmapToMat(input, frame);
         return isFrameValid(frame);
     }
 
-    public boolean isFrameValid(Mat input){
-        Core.inRange(input, new Scalar(1,1,1), new Scalar(255, 255, 255), mask1);
+    public boolean isFrameValid(Mat input) {
+        Core.inRange(input, new Scalar(1, 1, 1), new Scalar(255, 255, 255), mask1);
         return Core.countNonZero(mask1) > 10;
     }
 
@@ -158,7 +153,7 @@ public class ImageProcessor {
         int leftThickness = 7;
         int centerThickness = 7;
         int rightThickness = 7;
-        switch (floor){
+        switch (floor) {
             case FIRST:
                 leftThickness = 18;
                 break;

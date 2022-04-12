@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils.Side;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class AllSystems {
     public final LinearOpMode opMode;
@@ -33,6 +34,7 @@ public class AllSystems {
         opMode.telemetry.update();
         this.cameraSystem = new CameraSystem(opMode, side);
         this.side = side;
+        TimeUtils.sleep(1500);
         opMode.telemetry.addLine("Autonomous Ready");
         opMode.telemetry.update();
 

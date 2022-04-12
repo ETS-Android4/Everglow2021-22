@@ -16,8 +16,6 @@ public class BlueLZNCX extends LinearOpMode {
         routes = new Routes(AllSystems.init(this, MathUtils.Side.BLUE));
         waitForStart();
 
-        while (opModeIsActive()) {
-            routes.RZNCX();
-        }
+        routes.RZNCX();
     }
 }

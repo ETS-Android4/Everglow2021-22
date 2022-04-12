@@ -401,6 +401,24 @@ public class DrivingSystem {
         stop();
     }
 
+    public void turnAbsolute(float deg, int speedDecrease) {
+        this.targetAngle = normalizeAngle(deg);
+        double theta = getAngleDeviation();
+
+        // Rotate until the desired angle is met within an error of 0.5 degrees
+        while (abs(theta) > 0.5 && opMode.opModeIsActive()) {
+            theta = getAngleDeviation();
+            opMode.telemetry.addData("angleDeviation", theta);
+            opMode.telemetry.update();
+            double direction = (theta / abs(theta));
+            driveByJoystick(0, 0,
+                    max(abs(theta / speedDecrease), 0.5)
+                            * direction
+            );
+        }
+        stop();
+    }
+
     /**
      * @param maxDistance max distance until robot stops
      * @param power       driving power
@@ -413,7 +431,6 @@ public class DrivingSystem {
 
         resetDistance();
         double averageMotors = 0;
-        double distanceLeft = 0;
 
         while ((maxDistance * COUNTS_PER_MOTOR_REV / (2.0 * Math.PI * WHEEL_RADIUS_CM) > averageMotors) && opMode.opModeIsActive()) {
             averageMotors = abs(
@@ -424,10 +441,12 @@ public class DrivingSystem {
 
             double angleDeviation = getAngleDeviation();
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
+            armSystem.stayDownOnLoad();
             if (armSystem.touch.isPressed()) {
+                int driveStraightDistance = 5;
+                driveStraight(driveStraightDistance, power);
                 armSystem.stop();
-                armSystem.arm.setPower(0);
-                return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
+                return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV + driveStraightDistance;
             }
         }
 
