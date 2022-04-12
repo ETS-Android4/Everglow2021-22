@@ -24,7 +24,7 @@ public class Routes {
     /**
      * Picks up the totem and drives INITIAL_DRIVE_STRAIGHT_DISTANCE centimeters backwards.
      */
-    public void pickupTotem(boolean isCrater) {
+    public void pickupTotemBlue(boolean isCrater) {
         systems.opMode.telemetry.addLine("Detecting Totem...");
         systems.opMode.telemetry.update();
         ElapsedTime elapsedTime = new ElapsedTime();
@@ -81,12 +81,76 @@ public class Routes {
         }
     }
 
+    public void pickupTotemRed(boolean isCrater) {
+        systems.opMode.telemetry.addLine("Detecting Totem...");
+        systems.opMode.telemetry.update();
+        ElapsedTime elapsedTime = new ElapsedTime();
+        floor = systems.cameraSystem.detectTotem();
+        systems.opMode.telemetry.addData("Floor: ", floor);
+        systems.opMode.telemetry.addData("Camera Time: ", elapsedTime.seconds());
+        systems.opMode.telemetry.update();
+        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP);
+        ArmSystem.Floors floorForPickup = floor.switchIfMirrored(mirror);
+        if (isCrater) {
+            new Thread(() -> {
+                TimeUtils.sleep(500);
+                if (floor == ArmSystem.Floors.THIRD) {
+                    systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
+                } else {
+                    systems.armSystem.autonomousMoveArm(floor);
+                }
+            }).start();
+        }
+        switch (floorForPickup) {
+            case FIRST:
+                pickupTotemX = 14;
+                pickupTotemY = -30;
+                systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
+                systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
+                break;
+            case SECOND:
+                pickupTotemX = -4;
+                pickupTotemY = -30;
+                systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
+                systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
+                break;
+            case THIRD:
+                pickupTotemX = -9;
+                pickupTotemY = -(30 - 10 * isMirrored(mirror));
+                systems.drivingSystem.driveToPoint((pickupTotemX) * mirror, pickupTotemY, 21 * mirror, 0.5, 1.2);
+                // in THIRD floor on blue we need to move a bit more
+                if (isCrater) {
+                    // if moving the arm, the location sent needs to be different.
+                    pickupTotemY -= 7 * isMirrored(mirror);
+                    pickupTotemX += 7 * isMirrored(mirror);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Floor Must be FIRST, SECOND, or THIRD");
+        }
+        if (isCrater) {
+            new Thread(() -> {
+                systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 500);
+            }).start();
+        }else {
+            TimeUtils.sleep(250);
+            systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 1000);
+        }
+    }
+
+    private void pickupTotem(boolean isCrater){
+        if (mirror == 1){
+            pickupTotemRed(isCrater);
+        }else {
+            pickupTotemBlue(isCrater);
+        }
+    }
 
     private void goToCarouselB() {
         //
     }
 
-    public void craterPlaceFreight(boolean returnToWall) {
+    public void craterPlaceFreightBlue(boolean returnToWall) {
         pickupTotem(true);
         if (floor == ArmSystem.Floors.THIRD) {
             systems.drivingSystem.driveToPoint((10 + 5*isMirrored(mirror) - pickupTotemX) * mirror, -47 - 5*isMirrored(mirror) - pickupTotemY, -57 * mirror, 0.5, 1.75);
@@ -110,7 +174,50 @@ public class Routes {
         }
     }
 
-    private void RZNCXLoop(int i) {
+    private void RZNCXLoopBlue(int i) {
+        systems.drivingSystem.driveUntilWhite(0.55, 150, false);
+//        systems.drivingSystem.driveUntilWhite(0.55, 300, false);
+        if (i > 0) {
+            systems.drivingSystem.driveStraight(10, 0.9, false);
+        }
+        double distance = systems.drivingSystem.driveUntilCollect(200, 0.2);
+//        systems.drivingSystem.driveToPoint((distance / 2) * mirror, 15, -90 * mirror, 0.9, 1);
+        systems.drivingSystem.driveStraight(10, -0.45, false);
+        systems.drivingSystem.driveSideways(10 * mirror, 0.45, false);
+        systems.drivingSystem.driveUntilWhite(-0.55, 90, false);
+        systems.drivingSystem.driveStraight(35 + 0 * isMirrored(mirror), -0.9, false);
+        systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
+        systems.drivingSystem.driveToPoint((20) * mirror, -60 - 5 * isMirrored(mirror), (-45 + 0 * isMirrored(mirror)) * mirror, 0.9, 1);
+        systems.armSystem.spitWithVelocity(2300);
+        sleep(200);
+        systems.armSystem.autonomousReload();
+    }
+
+    public void craterPlaceFreightRed(boolean returnToWall) {
+        pickupTotem(true);
+        if (floor == ArmSystem.Floors.THIRD) {
+            systems.drivingSystem.driveToPoint((10 + 5*isMirrored(mirror) - pickupTotemX) * mirror, -47 - 5*isMirrored(mirror) - pickupTotemY, -57 * mirror, 0.5, 1.75);
+            systems.armSystem.spitCargo();
+            sleep(200);
+            systems.armSystem.stop();
+            if (returnToWall) {
+                systems.armSystem.autonomousReload();
+                systems.drivingSystem.driveToPoint(-2 * mirror, 85, -90 * mirror, 0.9, 1);
+            }
+        } else {
+            systems.drivingSystem.driveToPoint((13 - pickupTotemX) * mirror, -43 - pickupTotemY, (135 + 10 * isMirrored(mirror)) * mirror, 0.5, 1.75);
+            systems.armSystem.spit();
+            sleep(200);
+            systems.armSystem.stop();
+            systems.drivingSystem.turnAbsolute(0, 50);
+            systems.armSystem.autonomousReload();
+            if (returnToWall) {
+                systems.drivingSystem.driveToPoint(-2 * mirror, 55, -90 * mirror, 0.9, 2);
+            }
+        }
+    }
+
+    private void RZNCXLoopRed(int i) {
         systems.drivingSystem.driveUntilWhite(0.55, 150, false);
 //        systems.drivingSystem.driveUntilWhite(0.55, 300, false);
         if (i > 0) {
@@ -131,16 +238,29 @@ public class Routes {
 
 
     public void RZNCX() {
-        craterPlaceFreight(true);
-        for (int i = 0; i < 2; i++) {
-            RZNCXLoop(i);
-            systems.drivingSystem.driveToPoint((-20 + 10 * isMirrored(mirror)) * mirror, 55, -90 * mirror, 0.9, 1);
+        if (mirror == 1){
+            craterPlaceFreightRed(true);
+            for (int i = 0; i < 2; i++) {
+                RZNCXLoopBlue(i);
+                systems.drivingSystem.driveToPoint((-20 + 10 * isMirrored(mirror)) * mirror, 55, -90 * mirror, 0.9, 1);
+            }
+            RZNCXLoopRed(3);
+            systems.drivingSystem.turnAbsolute(80 * mirror, 100);
+            systems.drivingSystem.driveStraight(160, 1);
+            systems.totemSystem.setAltitude(TotemSystem.ALTITUDE1_MAX);
+            TimeUtils.sleep(2000);
+        }else {
+            craterPlaceFreightBlue(true);
+            for (int i = 0; i < 2; i++) {
+                RZNCXLoopRed(i);
+                systems.drivingSystem.driveToPoint((-20 + 10 * isMirrored(mirror)) * mirror, 55, -90 * mirror, 0.9, 1);
+            }
+            RZNCXLoopRed(3);
+            systems.drivingSystem.turnAbsolute(80 * mirror, 100);
+            systems.drivingSystem.driveStraight(160, 1);
+            systems.totemSystem.setAltitude(TotemSystem.ALTITUDE1_MAX);
+            TimeUtils.sleep(2000);
         }
-        RZNCXLoop(3);
-        systems.drivingSystem.turnAbsolute(80 * mirror, 100);
-        systems.drivingSystem.driveStraight(160, 1);
-        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE1_MAX);
-        TimeUtils.sleep(2000);
 
     }
 
@@ -148,7 +268,7 @@ public class Routes {
      * Goes to carousel behind SH, then to crater. Rams through obstacle.
      */
     public void RBYCO(int mirror) {
-        craterPlaceFreight(true);
+        craterPlaceFreightBlue(true);
         goToCarouselB();
         sleep(500);
         systems.duckSystem.runFor(3000);
@@ -163,7 +283,7 @@ public class Routes {
      * Goes to carousel behind SH, then to crater. Enters through path.
      */
     public void RBYCP(int mirror) {
-        craterPlaceFreight(true);
+        craterPlaceFreightBlue(true);
         goToCarouselB();
         sleep(500);
         systems.duckSystem.runFor(3000);
@@ -179,7 +299,7 @@ public class Routes {
      * Goes to carousel behind SH, then to warehouse.
      */
     public void RBYW(int mirror) {
-        craterPlaceFreight(true);
+        craterPlaceFreightBlue(true);
         goToCarouselB();
         sleep(500);
         systems.duckSystem.runFor(3000);
@@ -192,7 +312,7 @@ public class Routes {
      * Goes to warehouse behind SH.
      */
     public void RBNW(int mirror) {
-        craterPlaceFreight(true);
+        craterPlaceFreightBlue(true);
 
         systems.drivingSystem.driveSideways(50, 0.6 * mirror);
         systems.drivingSystem.driveStraight(185, 0.6);
@@ -203,7 +323,7 @@ public class Routes {
      * Goes to carousel in front of SH, then to warehouse.
      */
     public void RFYW(int mirror) {
-        craterPlaceFreight(true);
+        craterPlaceFreightBlue(true);
 
         if (floor == ArmSystem.Floors.FIRST) {
             systems.drivingSystem.driveSideways(20, -0.6 * mirror);
@@ -223,7 +343,7 @@ public class Routes {
      * Goes to warehouse in front of SH.
      */
     public void RFNW(int mirror) {
-        craterPlaceFreight(true);
+        craterPlaceFreightBlue(true);
 
         if (floor == ArmSystem.Floors.FIRST) {
             systems.drivingSystem.driveSideways(20, -0.6 * mirror);
@@ -238,7 +358,7 @@ public class Routes {
      * Goes to carousel, then to crater through path.
      */
     public void RFYCO(int mirror) {
-        craterPlaceFreight(true);
+        craterPlaceFreightBlue(true);
 
         if (floor == ArmSystem.Floors.FIRST) {
             systems.drivingSystem.driveSideways(20, -0.6 * mirror);
@@ -260,7 +380,7 @@ public class Routes {
      * Goes to carousel, then to crater from obstacle.
      */
     public void RFYCP(int mirror) {
-        craterPlaceFreight(true);
+        craterPlaceFreightBlue(true);
 
         if (floor == ArmSystem.Floors.FIRST) {
             systems.drivingSystem.driveSideways(20, -0.6 * mirror);
@@ -294,7 +414,7 @@ public class Routes {
         systems.duckSystem.runFor(3000);
     }
     public void carouselPlaceFreight() {
-        pickupTotem(false);
+        pickupTotemBlue(false);
         systems.drivingSystem.turnAbsolute(0, 150);
         systems.drivingSystem.driveStraight(-77 - pickupTotemY, 0.5);
         systems.armSystem.autonomousMoveArm(floor);

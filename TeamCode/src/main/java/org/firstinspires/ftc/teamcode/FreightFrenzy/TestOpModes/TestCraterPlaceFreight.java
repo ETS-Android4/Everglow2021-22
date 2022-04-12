@@ -20,7 +20,7 @@ public class TestCraterPlaceFreight extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            routes.craterPlaceFreight(true);
+            routes.craterPlaceFreightBlue(true);
             stop();
         }
     }
