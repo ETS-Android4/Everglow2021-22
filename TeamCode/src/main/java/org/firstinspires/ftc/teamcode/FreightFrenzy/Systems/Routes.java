@@ -121,9 +121,9 @@ public class Routes {
         systems.drivingSystem.driveSideways(10 * mirror, 0.6, false);
         systems.drivingSystem.driveUntilWhite(-0.55, 300, false);
 //        systems.drivingSystem.driveUntilWhite(-0.55, 150, false);
-        systems.drivingSystem.driveStraight(35 + 10 * isMirrored(mirror), -0.9, false);
+        systems.drivingSystem.driveStraight(35 - 2 * isMirrored(mirror), -0.9, false);
         systems.armSystem.moveArm(ArmSystem.Floors.THIRD);
-        systems.drivingSystem.driveToPoint((20) * mirror, -60 - 0 * isMirrored(mirror), (-45 * isMirrored(mirror)) * mirror, 0.9, 1);
+        systems.drivingSystem.driveToPoint((20) * mirror, -60 - 0 * isMirrored(mirror), (-45 + 5 * isMirrored(mirror)) * mirror, 0.9, 1);
         systems.armSystem.spitCargo();
         sleep(200);
         systems.armSystem.autonomousReload();
@@ -131,7 +131,6 @@ public class Routes {
 
 
     public void RZNCX() {
-        final boolean DO_DRIVE_TO_POINT = true;
         craterPlaceFreight(true);
         for (int i = 0; i < 2; i++) {
             RZNCXLoop(i);
@@ -139,8 +138,8 @@ public class Routes {
         }
         RZNCXLoop(3);
         systems.totemSystem.setAltitude(TotemSystem.ALTITUDE1_MAX);
-        systems.drivingSystem.turnAbsolute(80 * mirror, 150);
-        systems.drivingSystem.driveStraight(180 - 80 * isMirrored(mirror), 1);
+        systems.drivingSystem.turnAbsolute(80 * mirror, 100);
+        systems.drivingSystem.driveStraight(160, 1);
     }
 
     /**

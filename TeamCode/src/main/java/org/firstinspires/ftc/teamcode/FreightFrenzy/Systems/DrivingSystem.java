@@ -443,10 +443,10 @@ public class DrivingSystem {
             driveByJoystick(0, -power, angleDeviation / ROTATE_SPEED_DECREASE);
             armSystem.stayDownOnLoad();
             if (armSystem.touch.isPressed()) {
-                int driveStraightDistance = 5;
-                driveStraight(driveStraightDistance, power);
+//                int driveStraightDistance = 5;
+//                driveStraight(driveStraightDistance, power);
                 armSystem.stop();
-                return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV + driveStraightDistance;
+                return (2.0 * Math.PI * WHEEL_RADIUS_CM) * averageMotors / COUNTS_PER_MOTOR_REV;
             }
         }
 
