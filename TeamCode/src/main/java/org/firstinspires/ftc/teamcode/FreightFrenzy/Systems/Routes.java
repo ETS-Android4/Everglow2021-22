@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem.Floors;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Routes {
-    public static final int TIME_TO_STOP = 26;
+    public static final int TIME_TO_STOP = 27;
     private final AllSystems systems;
     private final int mirror;
     private Floors floor;
@@ -48,20 +48,21 @@ public class Routes {
         }
         switch (floorForPickup) {
             case FIRST:
-                pickupTotemX = 16;
-                pickupTotemY = -30;
+                pickupTotemX = 14;
+                pickupTotemY = -22;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case SECOND:
-                pickupTotemX = -4;
-                pickupTotemY = -30;
+                pickupTotemX = -5.5;
+                pickupTotemY = -22;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case THIRD:
                 pickupTotemX = -9;
                 pickupTotemY = -(30 - 10 * isMirrored(mirror));
+                TimeUtils.sleep(500);
                 systems.drivingSystem.driveToPoint((pickupTotemX) * mirror, pickupTotemY, 21 * mirror, 0.5, 1.2);
                 // in THIRD floor on blue we need to move a bit more
                 if (isCrater) {
@@ -105,20 +106,21 @@ public class Routes {
         }
         switch (floorForPickup) {
             case FIRST:
-                pickupTotemX = 17;
-                pickupTotemY = -27;
+                pickupTotemX = 14;
+                pickupTotemY = -22;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case SECOND:
-                pickupTotemX = -4;
-                pickupTotemY = -27;
+                pickupTotemX = -5.5;
+                pickupTotemY = -22;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case THIRD:
                 pickupTotemX = -9;
                 pickupTotemY = -(25 - 10 * isMirrored(mirror));
+                TimeUtils.sleep(500);
                 systems.drivingSystem.driveToPoint((pickupTotemX) * mirror, pickupTotemY, 21 * mirror, 0.5, 1.2);
                 // in THIRD floor on blue we need to move a bit more
                 if (isCrater) {
@@ -289,7 +291,6 @@ public class Routes {
         goToCarouselB();
         sleep(500);
         systems.duckSystem.runFor(3000);
-
         systems.drivingSystem.driveSideways(30, 0.7 * mirror);
         systems.drivingSystem.turn(180, 200);
         systems.armSystem.moveArm(-200);

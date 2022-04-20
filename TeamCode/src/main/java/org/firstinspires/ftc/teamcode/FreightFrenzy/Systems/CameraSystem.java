@@ -27,7 +27,7 @@ public class CameraSystem {
 
         @Override
         public void init(Mat mat) {
-            imageProcessor = new ImageProcessor(mat, side);
+            imageProcessor = new ImageProcessor(mat, side, opMode);
         }
 
         @Override
@@ -69,7 +69,7 @@ public class CameraSystem {
 
         @Override
         public void init(Mat mat) {
-            imageProcessor = new ImageProcessor(mat, side);
+            imageProcessor = new ImageProcessor(mat, side, opMode);
         }
 
         @Override

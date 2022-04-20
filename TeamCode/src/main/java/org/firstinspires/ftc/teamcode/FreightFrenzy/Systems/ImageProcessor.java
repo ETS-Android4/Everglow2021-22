@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy.Systems;
 
 import android.graphics.Bitmap;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem.Floors;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.AndroidUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
+import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -28,20 +31,22 @@ public class ImageProcessor {
     }
 
     private static final TotemAreas BLUE_AREAS = new TotemAreas(
-            createRect(0, 340, 250, 250),
-            createRect(381, 308, 250, 250),
-            createRect(828, 281, 250, 250)
+            createRect(0, 278, 250, 250),
+            createRect(291, 337, 250, 250),
+            createRect(790, 350, 250, 250)
     );
 
     private static final TotemAreas RED_AREAS = new TotemAreas(
-            createRect(584, 361, 250, 250),
-            createRect(1050, 341, 250, 250),
-            createRect(1424, 318, 250, 250)
+            createRect(388, 295, 250, 250),
+            createRect(873, 300, 250, 250),
+            createRect(1354, 307, 250, 250)
     );
 
-    private final MathUtils.Side side;
 
-    private static final int THRESHOLD = 1000;
+    private final MathUtils.Side side;
+    private final LinearOpMode opMode;
+
+    private static final int THRESHOLD = 4000;
 
     private static final int RECT_X_INCREASE = 0;
     private static final int RECT_Y_INCRASE = 0;
@@ -50,10 +55,9 @@ public class ImageProcessor {
         return new Rect(x - RECT_X_INCREASE / 2, y - RECT_Y_INCRASE, width + RECT_X_INCREASE, height + RECT_Y_INCRASE);
     }
 
-    private static final Scalar low_blue = new Scalar(80, 80, 2);
+//    private static final Scalar low_blue = new Scalar(80, 80, 2);
+    private static final Scalar low_blue = new Scalar(80, 140, 40);
     private static final Scalar high_blue = new Scalar(140, 255, 255);
-//    private static final Scalar low_blue = new Scalar(94, 80, 2);
-//    private static final Scalar high_blue = new Scalar(126, 255, 255);
 
     private static final Scalar low_red1 = new Scalar(151, 80, 2);
     private static final Scalar high_red1 = new Scalar(180, 255, 255);
@@ -70,7 +74,7 @@ public class ImageProcessor {
     private final boolean useThreshold;
 
 
-    public ImageProcessor(Mat frameTemplate, MathUtils.Side side) {
+    public ImageProcessor(Mat frameTemplate, MathUtils.Side side, LinearOpMode opMode) {
         frame = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         hsvAll = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         mask1 = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
@@ -78,6 +82,7 @@ public class ImageProcessor {
         mask3 = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         coloredMask = new Mat(frameTemplate.rows(), frameTemplate.cols(), frameTemplate.type());
         this.side = side;
+        this.opMode = opMode;
         if (side == MathUtils.Side.RED) {
             totemAreas = RED_AREAS;
             useThreshold = false;
@@ -87,8 +92,8 @@ public class ImageProcessor {
         }
     }
 
-    public ImageProcessor(Bitmap bitmap, MathUtils.Side side) {
-        this(AndroidUtils.bitmapToMat(bitmap), side);
+    public ImageProcessor(Bitmap bitmap, MathUtils.Side side, LinearOpMode opMode) {
+        this(AndroidUtils.bitmapToMat(bitmap), side, opMode);
     }
 
     private void findColoredAreas() {
@@ -112,6 +117,14 @@ public class ImageProcessor {
         int leftPixels = Core.countNonZero(left);
         int centerPixels = Core.countNonZero(center);
         int rightPixels = Core.countNonZero(right);
+
+//        opMode.telemetry.addData("left Pixels", leftPixels);
+//        opMode.telemetry.addData("Center Pixels", centerPixels);
+//        opMode.telemetry.addData("Right Pixels", rightPixels);
+//        opMode.telemetry.update();
+//        TimeUtils.sleep(1000);
+
+
         if (!useThreshold) {
             // on the red side, we can use all 3 tapes. On the blue side we must only use the center and right
             if (leftPixels < rightPixels && leftPixels < centerPixels) {
