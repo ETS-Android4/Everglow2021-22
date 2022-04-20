@@ -91,8 +91,8 @@ public class FinalOpModePog extends LinearOpMode {
                 }
 
                 // totem system azimuth
-                double aziPowerRed = gamepad2.right_stick_x / 1000;
-                double aziPowerBlue = gamepad2.left_stick_x / 1000;
+                double aziPowerRed = gamepad2.right_stick_x / 5;
+                double aziPowerBlue = gamepad2.left_stick_x / 5;
                 if (gamepad2.right_stick_button) {
                     aziPowerRed /= 2;
                 }
