@@ -18,6 +18,8 @@ public class Routes {
     private double pickupTotemX = 0;
     private double pickupTotemY = 0;
 
+    private static final double RETURN_TO_WALL_EXTRA_DISTANCE = 0;
+
     public Routes(AllSystems systems) {
         this.systems = systems;
         this.mirror = systems.side.mirror;
@@ -172,7 +174,7 @@ public class Routes {
             systems.drivingSystem.turnAbsolute(0, 50);
             systems.armSystem.autonomousReload();
             if (returnToWall) {
-                systems.drivingSystem.driveToPoint(-2 * mirror, 55, -90 * mirror, 0.9, 2);
+                systems.drivingSystem.driveToPoint(-2 * mirror, 55 + RETURN_TO_WALL_EXTRA_DISTANCE, -90 * mirror, 0.9, 2);
             }
         }
     }
@@ -222,7 +224,7 @@ public class Routes {
             systems.drivingSystem.turnAbsolute(0, 50);
             systems.armSystem.autonomousReload();
             if (returnToWall) {
-                systems.drivingSystem.driveToPoint(-2 * mirror, 55, -90 * mirror, 0.9, 2);
+                systems.drivingSystem.driveToPoint(-2 * mirror, 55 + RETURN_TO_WALL_EXTRA_DISTANCE, -90 * mirror, 0.9, 2);
             }
         }
     }
@@ -256,7 +258,7 @@ public class Routes {
             craterPlaceFreightRed(true);
             for (int i = 0; i < 2; i++) {
                 RZNCXLoopRed(i, false);
-                systems.drivingSystem.driveToPoint((-20 + 10 * isMirrored(mirror)) * mirror, 48, -90 * mirror, 0.9, 1);
+                systems.drivingSystem.driveToPoint((-20 + 10 * isMirrored(mirror)) * mirror, 48 + RETURN_TO_WALL_EXTRA_DISTANCE, -90 * mirror, 0.9, 1);
             }
             if(RZNCXLoopRed(3, false)) {
                 systems.drivingSystem.turnAbsolute(80 * mirror, 100);

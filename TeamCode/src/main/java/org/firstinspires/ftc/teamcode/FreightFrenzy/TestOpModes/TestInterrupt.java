@@ -15,6 +15,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name = "Test Interrupt", group = "Test")
+@Disabled
 public class TestInterrupt extends LinearOpMode {
 
     class MockCameraPipeline extends OpenCvPipeline{

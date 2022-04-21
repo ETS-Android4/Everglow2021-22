@@ -24,14 +24,21 @@ public class TotemSystem {
     public static final double ALTITUDE_AFTER_PICKUP = 0.6;
 
 
-
     public TotemSystem(LinearOpMode opMode) {
+        this(opMode, true);
+    }
+
+    public TotemSystem(LinearOpMode opMode, boolean isAutonomous) {
         this.opMode = opMode;
         altitude1 = opMode.hardwareMap.get(Servo.class, "altitude_right");
         altitude2 = opMode.hardwareMap.get(Servo.class, "altitude_left");
         meterLeft = opMode.hardwareMap.get(CRServo.class, "meter_left");
         meterRight = opMode.hardwareMap.get(CRServo.class, "meter_right");
-        setAltitude(ALTITUDE1_MAX);
+        if (isAutonomous){
+            setAltitude(ALTITUDE1_MAX);
+        }else {
+            setAltitude(ALTITUDE_AFTER_PICKUP);
+        }
     }
 
     public void extendLeft(double power) {

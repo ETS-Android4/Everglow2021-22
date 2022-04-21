@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "Totem Test", group = "Test")
+@Disabled
 public class TestTotemSystem extends LinearOpMode {
 
     TotemSystem totemSystem;

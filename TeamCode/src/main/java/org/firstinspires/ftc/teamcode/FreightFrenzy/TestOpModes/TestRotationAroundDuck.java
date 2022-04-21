@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy.TestOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "Test rotateAroundDuck", group = "Test")
+@Disabled
 public class TestRotationAroundDuck extends LinearOpMode {
 
     DrivingSystem drivingSystem;

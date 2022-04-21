@@ -240,6 +240,10 @@ public class ArmSystem {
                 break;
             case CAROUSEL_BACK:
                 moveArm(-2500);
+                break;
+            case TOP:
+                moveArm(-1500);
+                break;
         }
     }
 
@@ -308,7 +312,7 @@ public class ArmSystem {
      * Enum of the different floors the arm should be able reach: FIRST, SECOND, THIRD, TOTEM.
      */
     public enum Floors {
-        FIRST, SECOND, THIRD, TOTEM, OBSTACLE, CAROUSEL, CAROUSEL_BACK;
+        FIRST, SECOND, THIRD, TOTEM, OBSTACLE, CAROUSEL, CAROUSEL_BACK, TOP;
 
         /**
          * When on the blue side, the totem pickup needs to be adjusted. This method returns the location the totem system should go to given the detected floor.

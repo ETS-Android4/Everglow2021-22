@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.AllSystems;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.Routes;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 
-@Autonomous(name = "BlueLZYW", group = "BlueAuto")
+@Autonomous(name = "BlueRZYW", group = "BlueAuto")
 public class BlueRZYW extends LinearOpMode {
     Routes routes;
 

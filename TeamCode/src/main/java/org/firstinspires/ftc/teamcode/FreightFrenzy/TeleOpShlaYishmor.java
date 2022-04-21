@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.FreightFrenzy;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ColorSystem;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
 @TeleOp(name = "teleop shlayismhor", group = "Linear Opmode")
-public class FinalOpModePog extends LinearOpMode {
+public class TeleOpShlaYishmor extends LinearOpMode {
 
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
     private static final double LEFT_STICK_DOWN_MOVE_REDUCTION = 2;
@@ -34,7 +34,7 @@ public class FinalOpModePog extends LinearOpMode {
         drivingSystem = new DrivingSystem(this);
         armSystem = new ArmSystem(this);
         duckSystem = new DuckSystem(this);
-        totemSystem = new TotemSystem(this);
+        totemSystem = new TotemSystem(this, false);
         colorSystem = new ColorSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         ourGamepad2   = new EverglowGamepad(gamepad2);
@@ -69,6 +69,7 @@ public class FinalOpModePog extends LinearOpMode {
 
             if (ourGamepad2.share()) {
                 isEndgame = !isEndgame;
+                armSystem.moveArm(ArmSystem.Floors.TOP);
             }
 
             if (isEndgame) {
@@ -106,15 +107,15 @@ public class FinalOpModePog extends LinearOpMode {
                 }
 
                 // totem system altitude
-                totemSystem.moveAltitude(-gamepad2.right_stick_y / 500);
-                totemSystem.moveAltitude(-gamepad2.left_stick_y / 500);
+                totemSystem.moveAltitude(-gamepad2.right_stick_y / 3000);
+                totemSystem.moveAltitude(-gamepad2.left_stick_y / 3000);
 
                 // extend meter
-                if (gamepad2.dpad_up) {
+                if (gamepad2.dpad_up || gamepad2.y) {
                     totemSystem.extendLeft(1);
                     totemSystem.extendRight(-1);
                 }
-                if (gamepad2.dpad_down) {
+                if (gamepad2.dpad_down || gamepad2.a) {
                     totemSystem.extendLeft(-1);
                     totemSystem.extendRight(1);
                 }
@@ -126,22 +127,23 @@ public class FinalOpModePog extends LinearOpMode {
                     dirL = -dirL;
                 }
 
-                if (gamepad2.left_trigger > 0) {
-                    totemSystem.extendLeft(dirL * Math.sqrt(
-                            1 - (gamepad1.left_trigger - 1) * (gamepad1.left_trigger - 1)
-                    ));
-                }
-
-                if (gamepad2.right_trigger > 0) {
+                boolean rightTriggerPressed = gamepad2.right_trigger > 0;
+                boolean leftTriggerPressed = gamepad2.left_trigger > 0;
+                if (rightTriggerPressed) {
                     totemSystem.extendRight(dirR * Math.sqrt(
-                            1 - (gamepad1.right_trigger - 1) * (gamepad1.right_trigger - 1)
+                            1 - (gamepad2.right_trigger - 1) * (gamepad2.right_trigger - 1)
+                    ));
+                }
+                if (leftTriggerPressed) {
+                    totemSystem.extendLeft(dirL * Math.sqrt(
+                            1 - (gamepad2.left_trigger - 1) * (gamepad2.left_trigger - 1)
                     ));
                 }
 
-                if (gamepad2.right_trigger == 0 && !gamepad2.dpad_down && !gamepad2.dpad_up) {
+                if (!rightTriggerPressed && !gamepad2.dpad_down && !gamepad2.dpad_up && !gamepad2.y && !gamepad2.a) {
                     totemSystem.stopRight();
                 }
-                if (gamepad2.left_trigger == 0 && !gamepad2.dpad_down && !gamepad2.dpad_up) {
+                if (!leftTriggerPressed && !gamepad2.dpad_down && !gamepad2.dpad_up && !gamepad2.y && !gamepad2.a) {
                     totemSystem.stopLeft();
                 }
             } else {
@@ -205,7 +207,7 @@ public class FinalOpModePog extends LinearOpMode {
                 }
                 prevTouchPressed = touchPressed;
 
-                if (ourGamepad1.crossHold()) {
+                if (ourGamepad1.a()) {
                     armSystem.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 }
 
@@ -216,10 +218,11 @@ public class FinalOpModePog extends LinearOpMode {
                     armSystem.stayDownOnLoad();
                 }
             }
-            telemetry.addData("is cargo sensor: ", colorSystem.isCargo());
-            telemetry.addData("altitude1 enabled? ", totemSystem.isEnabled());
-            telemetry.addData("altitude1: ", totemSystem.altitude1.getPosition());
-            telemetry.addData("altitude2: ", totemSystem.altitude2.getPosition());
+            telemetry.addData("is Endgame: ", isEndgame);
+//            telemetry.addData("is cargo sensor: ", colorSystem.isCargo());
+//            telemetry.addData("altitude1 enabled? ", totemSystem.isEnabled());
+//            telemetry.addData("altitude1: ", totemSystem.altitude1.getPosition());
+//            telemetry.addData("altitude2: ", totemSystem.altitude2.getPosition());
             telemetry.update();
         }
     }

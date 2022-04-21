@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 @TeleOp(name = "driveWithRelationToAxis", group = "Test")
+@Disabled
 public class driveWithRelationToAxis extends LinearOpMode {
     DrivingSystem drivingSystem;
     ArmSystem armSystem;
