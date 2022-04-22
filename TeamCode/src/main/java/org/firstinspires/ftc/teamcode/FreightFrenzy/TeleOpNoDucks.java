@@ -13,9 +13,8 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.DuckSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.EverglowGamepad;
 
-@TeleOp(name = "teleop shlayismhor", group = "Linear Opmode")
-public class TeleOpShlaYishmor extends LinearOpMode {
-
+@TeleOp(name = "teleop no ducks", group = "Linear Opmode")
+public class TeleOpNoDucks extends LinearOpMode {
 
     private static final double RIGHT_STICK_DOWN_MOVE_REDUCTION = 10;
     private static final double LEFT_STICK_DOWN_MOVE_REDUCTION = 2;
@@ -54,21 +53,6 @@ public class TeleOpShlaYishmor extends LinearOpMode {
             ourGamepad1.update();
             ourGamepad2.update();
 
-            // nati
-            if (gamepad2.right_stick_x == 0 && gamepad2.left_stick_x == 0) {
-                double left_stick_x = gamepad1.left_stick_x;
-                double left_stick_y = gamepad1.left_stick_y;
-                double right_stick_x = gamepad1.right_stick_x;
-
-                if (gamepad1.right_trigger > 0.1) {
-                    left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
-                    left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
-                    right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
-                }
-
-                drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
-            }
-
             if (ourGamepad2.share()) {
                 isEndgame = !isEndgame;
                 armSystem.moveArm(ArmSystem.Floors.TOP);
@@ -76,37 +60,20 @@ public class TeleOpShlaYishmor extends LinearOpMode {
             }
 
             if (isEndgame) {
-                // activate ducks
-                if (ourGamepad1.dpad_left()) {
-                    if (!duckSpin) {
-                        duckSystem.speed = 0.7;
-                        duckSystem.runRev();
-                        duckSpin = true;
-                    } else {
-                        duckSystem.speed = 1;
-                        duckSystem.runRev();
-                        duckSpin = false;
-                    }
-                }
-                // stop ducks
-                if (ourGamepad1.dpad_right()) {
-                    duckSystem.stop();
-                    duckSpin = false;
-                }
+                {
+                    double left_stick_x = gamepad2.left_stick_x;
+                    double left_stick_y = gamepad2.left_stick_y;
+                    double right_stick_x = gamepad2.right_stick_x;
 
-                // totem system azimuth
-                double aziPowerRed = gamepad2.right_stick_x / 5;
-                double aziPowerBlue = gamepad2.left_stick_x / 5;
-                if (gamepad2.right_stick_button) {
-                    aziPowerRed /= 2;
-                }
-                if (gamepad2.left_stick_button) {
-                    aziPowerBlue /= 2;
-                }
-                if (Math.abs(aziPowerRed) > 0) {
-                    drivingSystem.rotateAroundDucks(aziPowerRed, true);
-                } else if (Math.abs(aziPowerBlue) > 0) {
-                    drivingSystem.rotateAroundDucks(aziPowerBlue, false);
+//                    if (gamepad2.left_stick_button) {
+                    left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                    left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
+//                    }
+//                    if (gamepad2.right_stick_button) {
+                    right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
+//                    }
+
+                    drivingSystem.driveByJoystick(-left_stick_x, -left_stick_y, right_stick_x);
                 }
 
                 // totem system altitude
@@ -150,6 +117,21 @@ public class TeleOpShlaYishmor extends LinearOpMode {
                     totemSystem.stopLeft();
                 }
             } else {
+                // nati
+                if (gamepad2.right_stick_x == 0 && gamepad2.left_stick_x == 0) {
+                    double left_stick_x = gamepad1.left_stick_x;
+                    double left_stick_y = gamepad1.left_stick_y;
+                    double right_stick_x = gamepad1.right_stick_x;
+
+                    if (gamepad1.right_trigger > 0.1) {
+                        left_stick_x /= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                        left_stick_y /= LEFT_STICK_DOWN_MOVE_REDUCTION;
+                        right_stick_x /= RIGHT_STICK_DOWN_MOVE_REDUCTION;
+                    }
+
+                    drivingSystem.driveByJoystick(left_stick_x, left_stick_y, right_stick_x);
+                }
+
                 // square
                 if (ourGamepad2.x()) {
                     passingObstacle = false;

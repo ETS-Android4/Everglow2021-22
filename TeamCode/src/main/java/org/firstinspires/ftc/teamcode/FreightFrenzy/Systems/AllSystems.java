@@ -34,7 +34,8 @@ public class AllSystems {
         opMode.telemetry.update();
         this.cameraSystem = new CameraSystem(opMode, side);
         this.side = side;
-        TimeUtils.sleep(1500);
+        cameraSystem.captureImage();
+        TimeUtils.sleep(2500);
         opMode.telemetry.addLine("Autonomous Ready");
         opMode.telemetry.update();
 

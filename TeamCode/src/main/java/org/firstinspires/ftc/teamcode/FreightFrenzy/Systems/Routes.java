@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.TimeUtils;
 
 public class Routes {
     public static final int TIME_TO_STOP = 27;
+    private static final ElapsedTime elapsedTime = new ElapsedTime();
     private final AllSystems systems;
     private final int mirror;
     private Floors floor;
@@ -18,7 +19,7 @@ public class Routes {
     private double pickupTotemX = 0;
     private double pickupTotemY = 0;
 
-    private static final double RETURN_TO_WALL_EXTRA_DISTANCE = 0;
+    private static final double RETURN_TO_WALL_EXTRA_DISTANCE = 3;
 
     public Routes(AllSystems systems) {
         this.systems = systems;
@@ -29,12 +30,13 @@ public class Routes {
      * Picks up the totem and drives INITIAL_DRIVE_STRAIGHT_DISTANCE centimeters backwards.
      */
     public void pickupTotemBlue(boolean isCrater) {
+        elapsedTime.reset();
         systems.opMode.telemetry.addLine("Detecting Totem...");
         systems.opMode.telemetry.update();
-        ElapsedTime elapsedTime = new ElapsedTime();
+        ElapsedTime detectionElapsedTime = new ElapsedTime();
         floor = systems.cameraSystem.detectTotem();
         systems.opMode.telemetry.addData("Floor: ", floor);
-        systems.opMode.telemetry.addData("Camera Time: ", elapsedTime.seconds());
+        systems.opMode.telemetry.addData("Camera Time: ", detectionElapsedTime.seconds());
         systems.opMode.telemetry.update();
         systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP);
         Floors floorForPickup = floor.switchIfMirrored(mirror);
@@ -50,7 +52,7 @@ public class Routes {
         }
         switch (floorForPickup) {
             case FIRST:
-                pickupTotemX = 14;
+                pickupTotemX = 16;
                 pickupTotemY = -22;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
@@ -87,12 +89,13 @@ public class Routes {
     }
 
     public void pickupTotemRed(boolean isCrater) {
+        elapsedTime.reset();
         systems.opMode.telemetry.addLine("Detecting Totem...");
         systems.opMode.telemetry.update();
-        ElapsedTime elapsedTime = new ElapsedTime();
+        ElapsedTime detectionElapsedTime = new ElapsedTime();
         floor = systems.cameraSystem.detectTotem();
         systems.opMode.telemetry.addData("Floor: ", floor);
-        systems.opMode.telemetry.addData("Camera Time: ", elapsedTime.seconds());
+        systems.opMode.telemetry.addData("Camera Time: ", detectionElapsedTime.seconds());
         systems.opMode.telemetry.update();
         systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP);
         Floors floorForPickup = floor.switchIfMirrored(mirror);
@@ -109,19 +112,19 @@ public class Routes {
         switch (floorForPickup) {
             case FIRST:
                 pickupTotemX = 14;
-                pickupTotemY = -22;
+                pickupTotemY = -28;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case SECOND:
                 pickupTotemX = -5.5;
-                pickupTotemY = -22;
+                pickupTotemY = -28;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case THIRD:
                 pickupTotemX = -9;
-                pickupTotemY = -(25 - 10 * isMirrored(mirror));
+                pickupTotemY = -(28 - 10 * isMirrored(mirror));
                 TimeUtils.sleep(500);
                 systems.drivingSystem.driveToPoint((pickupTotemX) * mirror, pickupTotemY, 21 * mirror, 0.5, 1.2);
                 // in THIRD floor on blue we need to move a bit more
@@ -167,7 +170,7 @@ public class Routes {
                 systems.drivingSystem.driveToPoint(-2 * mirror, 85, -90 * mirror, 0.9, 1);
             }
         } else {
-            systems.drivingSystem.driveToPoint((13 - pickupTotemX) * mirror, -43 - pickupTotemY, (135 + 10 * isMirrored(mirror)) * mirror, 0.5, 1.75);
+            systems.drivingSystem.driveToPoint((13 - pickupTotemX - (floor == Floors.SECOND ? 5 : 0)) * mirror, -43 - pickupTotemY + (floor == Floors.SECOND ? 5 : 0) , (135 + 10 * isMirrored(mirror)) * mirror, 0.5, 1.75);
             systems.armSystem.spit();
             sleep(200);
             systems.armSystem.stop();
@@ -189,7 +192,7 @@ public class Routes {
         systems.drivingSystem.driveStraight(10, -0.45, false);
         systems.drivingSystem.driveSideways(10 * mirror, 0.45, false);
         systems.drivingSystem.driveUntilWhite(-0.55, 90, false);
-        if (canInterrupt && systems.opMode.getRuntime() > TIME_TO_STOP){
+        if (canInterrupt && elapsedTime.seconds() > TIME_TO_STOP){
             return false;
         }
         systems.drivingSystem.driveStraight(35 + 0 * isMirrored(mirror), -0.9, false);
@@ -239,7 +242,7 @@ public class Routes {
         systems.drivingSystem.driveStraight(10, -0.45, false);
         systems.drivingSystem.driveSideways(10 * mirror, 0.45, false);
         systems.drivingSystem.driveUntilWhite(-0.55, 90, false);
-        if (canInterrupt && systems.opMode.getRuntime() > TIME_TO_STOP){
+        if (canInterrupt && elapsedTime.seconds() > TIME_TO_STOP){
             return false;
         }
         systems.drivingSystem.driveStraight(35 + 0 * isMirrored(mirror), -0.9, false);

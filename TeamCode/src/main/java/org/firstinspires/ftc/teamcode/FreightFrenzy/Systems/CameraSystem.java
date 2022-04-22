@@ -15,6 +15,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class CameraSystem {
@@ -75,10 +77,14 @@ public class CameraSystem {
         @Override
         public Mat processFrame(Mat input) {
             if (isCapturingImage) {
-                isCapturingImage = false;
-                String timeStamp = AndroidUtils.timestampString();
-                String filepath = new File(AppUtil.ROBOT_DATA_DIR, String.format("img_%s.png", timeStamp)).getAbsolutePath();
-                saveMatToDiskFullPath(input, filepath);
+                try {
+                    isCapturingImage = false;
+                    String timeStamp = AndroidUtils.timestampString();
+                    String filepath = new File(AppUtil.ROBOT_DATA_DIR, String.format("img_%s.png", timeStamp)).getAbsolutePath();
+                    saveMatToDiskFullPath(input, filepath);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             Floors floor = imageProcessor.drawOnPreviewAndDetect(input);
             this.floorShared.set(floor);
