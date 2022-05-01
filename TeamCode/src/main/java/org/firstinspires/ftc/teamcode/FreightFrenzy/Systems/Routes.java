@@ -112,19 +112,19 @@ public class Routes {
         switch (floorForPickup) {
             case FIRST:
                 pickupTotemX = 14;
-                pickupTotemY = -28;
+                pickupTotemY = -25;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case SECOND:
                 pickupTotemX = -5.5;
-                pickupTotemY = -28;
+                pickupTotemY = -25;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case THIRD:
                 pickupTotemX = -9;
-                pickupTotemY = -(28 - 10 * isMirrored(mirror));
+                pickupTotemY = -(25 - 10 * isMirrored(mirror));
                 TimeUtils.sleep(500);
                 systems.drivingSystem.driveToPoint((pickupTotemX) * mirror, pickupTotemY, 21 * mirror, 0.5, 1.2);
                 // in THIRD floor on blue we need to move a bit more
