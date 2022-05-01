@@ -34,9 +34,9 @@ public class TotemSystem {
         altitude2 = opMode.hardwareMap.get(Servo.class, "altitude_left");
         meterLeft = opMode.hardwareMap.get(CRServo.class, "meter_left");
         meterRight = opMode.hardwareMap.get(CRServo.class, "meter_right");
-        if (isAutonomous){
+        if (isAutonomous) {
             setAltitude(ALTITUDE1_MAX);
-        }else {
+        } else {
             setAltitude(ALTITUDE_AFTER_PICKUP);
         }
     }
@@ -96,7 +96,7 @@ public class TotemSystem {
         ((PwmControl) altitude1).setPwmEnable();
     }
 
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return ((PwmControl) altitude1).isPwmEnabled();
     }
 

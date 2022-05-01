@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.FreightFrenzy;
 
+import static org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.TotemSystem.ALTITUDE_AFTER_PICKUP;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -35,6 +37,7 @@ public class GameTeleOp extends LinearOpMode {
         colorSystem = new ColorSystem(this);
         ourGamepad1   = new EverglowGamepad(gamepad1);
         totemSystem =  new TotemSystem(this);
+        totemSystem.setAltitude(ALTITUDE_AFTER_PICKUP);
 
         boolean prevTouchPressed = false;
         boolean toggleReload = true;
