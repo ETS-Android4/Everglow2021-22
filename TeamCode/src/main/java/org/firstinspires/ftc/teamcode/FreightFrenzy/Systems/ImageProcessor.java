@@ -49,7 +49,7 @@ public class ImageProcessor {
             createRect(1459, 299, 250, 250)
     );
 
-    private static final boolean FORCE_DETECT_BLUE = true;
+    private static final boolean FORCE_DETECT_BLUE = false;
 
 
 

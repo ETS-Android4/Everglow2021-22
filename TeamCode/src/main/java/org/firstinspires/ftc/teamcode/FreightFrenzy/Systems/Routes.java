@@ -38,7 +38,7 @@ public class Routes {
         systems.opMode.telemetry.addData("Floor: ", floor);
         systems.opMode.telemetry.addData("Camera Time: ", detectionElapsedTime.seconds());
         systems.opMode.telemetry.update();
-        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP_HIGH);
+        systems.totemSystem.setAltitude(isCrater ? TotemSystem.ALTITUDE_PICKUP : TotemSystem.ALTITUDE_PICKUP_HIGH);
         Floors floorForPickup = floor.switchIfMirrored(mirror);
         if (isCrater) {
             new Thread(() -> {
@@ -52,22 +52,22 @@ public class Routes {
         }
         switch (floorForPickup) {
             case FIRST:
-                pickupTotemX = 16;
-                pickupTotemY = -22;
+                pickupTotemX = 15.5;
+                pickupTotemY = -25;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case SECOND:
                 pickupTotemX = -5.5;
-                pickupTotemY = -22;
+                pickupTotemY = -25;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
                 break;
             case THIRD:
-                pickupTotemX = -9;
+                pickupTotemX = -14;
                 pickupTotemY = -(30 - 10 * isMirrored(mirror));
                 TimeUtils.sleep(500);
-                systems.drivingSystem.driveToPoint((pickupTotemX) * mirror, pickupTotemY, 21 * mirror, 0.5, 1.2);
+                systems.drivingSystem.driveToPoint((pickupTotemX) * mirror, pickupTotemY, 21 * mirror, 0.5, 2.2);
                 // in THIRD floor on blue we need to move a bit more
                 if (isCrater) {
                     // if moving the arm, the location sent needs to be different.
@@ -80,11 +80,10 @@ public class Routes {
         }
         if (isCrater) {
             new Thread(() -> {
-                systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 500);
+                systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, floor == Floors.FIRST ? 100: 400);
             }).start();
         }else {
-            TimeUtils.sleep(250);
-            systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 1000);
+            systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 400);
         }
     }
 
