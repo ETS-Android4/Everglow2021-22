@@ -38,7 +38,7 @@ public class Routes {
         systems.opMode.telemetry.addData("Floor: ", floor);
         systems.opMode.telemetry.addData("Camera Time: ", detectionElapsedTime.seconds());
         systems.opMode.telemetry.update();
-        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP);
+        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP_HIGH);
         Floors floorForPickup = floor.switchIfMirrored(mirror);
         if (isCrater) {
             new Thread(() -> {
@@ -97,7 +97,7 @@ public class Routes {
         systems.opMode.telemetry.addData("Floor: ", floor);
         systems.opMode.telemetry.addData("Camera Time: ", detectionElapsedTime.seconds());
         systems.opMode.telemetry.update();
-        systems.totemSystem.setAltitude(TotemSystem.ALTITUDE_PICKUP);
+        systems.totemSystem.setAltitude(isCrater ? TotemSystem.ALTITUDE_PICKUP : TotemSystem.ALTITUDE_PICKUP_HIGH);
         Floors floorForPickup = floor.switchIfMirrored(mirror);
         if (isCrater) {
             new Thread(() -> {
@@ -111,7 +111,7 @@ public class Routes {
         }
         switch (floorForPickup) {
             case FIRST:
-                pickupTotemX = 14;
+                pickupTotemX = 15.5;
                 pickupTotemY = -25;
                 systems.drivingSystem.driveSideways(pickupTotemX * mirror, 0.5);
                 systems.drivingSystem.driveStraight(pickupTotemY, 0.5);
@@ -139,7 +139,7 @@ public class Routes {
         }
         if (isCrater) {
             new Thread(() -> {
-                systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 500);
+                systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, floor == Floors.FIRST ? 100: 400);
             }).start();
         }else {
             systems.totemSystem.setAltitudeSlowly(TotemSystem.ALTITUDE_AFTER_PICKUP, 400);
@@ -437,7 +437,7 @@ public class Routes {
         systems.duckSystem.runFor(3000);
     }
     public void carouselPlaceFreight() {
-        pickupTotemBlue(false);
+        pickupTotem(false);
         systems.drivingSystem.turnAbsolute(0, 150);
         systems.drivingSystem.driveStraight(-77 - pickupTotemY, 0.5);
         systems.armSystem.autonomousMoveArm(floor);

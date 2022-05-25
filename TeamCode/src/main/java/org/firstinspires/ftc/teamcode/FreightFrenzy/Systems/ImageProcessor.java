@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcontroller.internal.FtcOpModeRegister;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Systems.ArmSystem.Floors;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.AndroidUtils;
 import org.firstinspires.ftc.teamcode.FreightFrenzy.Utils.MathUtils;
@@ -36,11 +37,20 @@ public class ImageProcessor {
             createRect(790, 350, 250, 250)
     );
 
+//    private static final TotemAreas RED_AREAS = new TotemAreas(
+//            createRect(388, 295, 250, 250),
+//            createRect(873, 300, 250, 250),
+//            createRect(1354, 307, 250, 250)
+//    );
+
     private static final TotemAreas RED_AREAS = new TotemAreas(
-            createRect(388, 295, 250, 250),
-            createRect(873, 300, 250, 250),
-            createRect(1354, 307, 250, 250)
+            createRect(474, 310, 250, 250),
+            createRect(968, 304, 250, 250),
+            createRect(1459, 299, 250, 250)
     );
+
+    private static final boolean FORCE_DETECT_BLUE = true;
+
 
 
     private final MathUtils.Side side;
@@ -97,7 +107,7 @@ public class ImageProcessor {
     }
 
     private void findColoredAreas() {
-        if (side == MathUtils.Side.RED) {
+        if (side == MathUtils.Side.RED && !FORCE_DETECT_BLUE) {
             Core.inRange(hsvAll, low_red1, high_red1, mask1);
             Core.inRange(hsvAll, low_red2, high_red2, mask2);
             Core.bitwise_or(mask1, mask2, coloredMask);
@@ -168,7 +178,7 @@ public class ImageProcessor {
 
     public Floors drawOnPreviewAndDetect(Mat input) {
         Floors floor = findFloor(input);
-        if (side == MathUtils.Side.RED) {
+        if (side == MathUtils.Side.RED && !FORCE_DETECT_BLUE) {
             input.setTo(new Scalar(72, 224, 251), coloredMask);
         } else {
             input.setTo(new Scalar(251, 72, 196), coloredMask);
